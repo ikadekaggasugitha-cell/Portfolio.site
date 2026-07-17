@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Projects Portfolio | TECH_CONSULTANT</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#2c3a4c",
+                    "on-primary": "#00363d",
+                    "on-secondary": "#002d6e",
+                    "on-background": "#d4e4fa",
+                    "surface-variant": "#273647",
+                    "error-container": "#93000a",
+                    "inverse-primary": "#006875",
+                    "on-secondary-fixed": "#001945",
+                    "surface-container-highest": "#273647",
+                    "primary-container": "#00e5ff",
+                    "on-tertiary-container": "#51596f",
+                    "secondary-fixed-dim": "#b0c6ff",
+                    "inverse-on-surface": "#233143",
+                    "outline": "#849396",
+                    "primary": "#c3f5ff",
+                    "primary-fixed-dim": "#00daf3",
+                    "on-primary-container": "#00626e",
+                    "outline-variant": "#3b494c",
+                    "on-surface": "#d4e4fa",
+                    "tertiary-fixed": "#dae2fd",
+                    "on-tertiary": "#283044",
+                    "on-primary-fixed": "#001f24",
+                    "surface-container": "#122131",
+                    "primary-fixed": "#9cf0ff",
+                    "on-error-container": "#ffdad6",
+                    "secondary": "#b0c6ff",
+                    "tertiary": "#e8ecff",
+                    "inverse-surface": "#d4e4fa",
+                    "background": "#051424",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "on-tertiary-fixed": "#131b2e",
+                    "secondary-fixed": "#d9e2ff",
+                    "on-primary-fixed-variant": "#004f58",
+                    "on-surface-variant": "#bac9cc",
+                    "on-secondary-fixed-variant": "#00429b",
+                    "surface": "#051424",
+                    "tertiary-container": "#c8d0ea",
+                    "surface-container-high": "#1c2b3c",
+                    "surface-container-lowest": "#010f1f",
+                    "error": "#ffb4ab",
+                    "on-secondary-container": "#f2f3ff",
+                    "surface-tint": "#00daf3",
+                    "on-error": "#690005",
+                    "secondary-container": "#0068ed",
+                    "surface-container-low": "#0d1c2d",
+                    "surface-dim": "#051424",
+                    "on-tertiary-fixed-variant": "#3f465c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "lg": "48px",
+                    "gutter": "24px",
+                    "xs": "4px",
+                    "container-max": "1280px",
+                    "sm": "12px",
+                    "xl": "80px",
+                    "md": "24px"
+            },
+            "fontFamily": {
+                    "headline-md": ["JetBrains Mono"],
+                    "headline-lg": ["JetBrains Mono"],
+                    "body-md": ["Inter"],
+                    "headline-xl": ["JetBrains Mono"],
+                    "headline-lg-mobile": ["JetBrains Mono"],
+                    "body-lg": ["Inter"],
+                    "label-sm": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .inner-glow-top {
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 178, 172, 0.1);
+        }
+        .code-syntax {
+            background: #020617;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .system-live-pulse {
+            width: 8px;
+            height: 8px;
+            background: #00daf3;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(0, 218, 243, 0.7);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 218, 243, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(0, 218, 243, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 218, 243, 0); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-md border-b border-outline-variant/20 inner-glow-top shadow-sm">
+<nav class="flex justify-between items-center h-20 px-gutter max-w-container-max mx-auto">
+<div class="font-headline-lg text-headline-lg font-bold text-primary tracking-tighter">
+                TECH_CONSULTANT
+            </div>
+<div class="hidden md:flex items-center gap-md">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Home</a>
+<a class="font-body-md text-body-md text-primary-fixed-dim border-b-2 border-primary-fixed-dim pb-1" href="#">Projects</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Services</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Contact</a>
+<button class="ml-4 px-md py-xs bg-primary-container text-on-primary-container font-label-sm text-label-sm rounded hover:scale-95 duration-150 ease-in-out">
+                    Hire Me
+                </button>
+</div>
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</nav>
+</header>
+<div class="flex pt-20 min-h-screen">
+<!-- SideNavBar -->
+<aside class="hidden lg:flex flex-col py-md h-screen w-64 border-r border-outline-variant/30 bg-surface-container-lowest sticky top-20">
+<div class="px-md mb-xl">
+<div class="flex items-center gap-sm mb-base">
+<div class="w-10 h-10 rounded bg-primary-container/20 border border-primary/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<div>
+<div class="text-primary font-headline-md font-black">Dev_Architect</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Cloud &amp; Security Expert</div>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-xs px-sm">
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant/40 rounded transition-all active:translate-x-1" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm bg-primary-container/10 text-primary-fixed-dim border-r-4 border-primary-fixed-dim rounded-l transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">terminal</span>
+<span class="font-label-sm text-label-sm">Projects</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant/40 rounded transition-all active:translate-x-1" href="#">
+<span class="material-symbols-outlined">settings_suggest</span>
+<span class="font-label-sm text-label-sm">Services</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant/40 rounded transition-all active:translate-x-1" href="#">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-label-sm text-label-sm">Contact</span>
+</a>
+</nav>
+<div class="px-md mt-auto pt-md border-t border-outline-variant/10">
+<button class="w-full py-sm px-md bg-surface-container-high text-primary border border-primary/20 rounded font-label-sm text-label-sm hover:bg-primary/10 transition-colors mb-md">
+                    Download CV
+                </button>
+<div class="flex justify-around text-on-surface-variant">
+<a class="hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">code</span></a>
+<a class="hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">rebase_edit</span></a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-x-hidden">
+<!-- Hero Section -->
+<section class="px-gutter py-xl relative overflow-hidden">
+
+<div class="max-w-container-max mx-auto relative z-10">
+<div class="flex items-center gap-base mb-sm">
+<div class="system-live-pulse"></div>
+<span class="font-label-sm text-label-sm text-primary tracking-widest">REPOSITORY_EXPLORER_V2.0</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface max-w-2xl mb-md">
+                        Technical <span class="text-primary-fixed-dim">Implementations</span> &amp; Architectural Proofs
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
+                        A curated collection of production-ready systems, cloud infrastructures, and high-performance engineering projects.
+                    </p>
+</div>
+</section>
+<!-- Projects Grid -->
+<section class="px-gutter pb-xl max-w-container-max mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-md">
+<!-- Project Card 1: Cloud Architecture -->
+<div class="glass-card group p-md flex flex-col rounded-lg transition-all duration-300 hover:border-primary/40 hover:-translate-y-1">
+<div class="relative w-full aspect-video rounded overflow-hidden mb-md border border-outline-variant/30">
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10"></div>
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="A sophisticated 3D visualization of a global cloud network with glowing blue nodes and data pathways connecting continents on a dark digital sphere. The aesthetic is high-tech corporate with neon cyan accents and deep navy blue shadows, emphasizing cybersecurity and global connectivity." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD2VqVxGtMFcwLJrI72Ra2JMDWN-COvJCFvZTQFAu-_7L4zN9TgbB10L9B_NgW5hWAJDmsQYLau854zQzysNC5nNOuuwhpq0JSfTUHbVbw_PUWaqC6mwupIgS4xkqGxMdStyFOJ6XGafNkig-CacTJ6BPS17khC4uiZb7Llh4_WmpoP2IMxlJLYixTRBSmaMCIP3dLk3uDUlH7gv5lPKg0fgtqn9c6UENPslU0YRQvxhIExKPaCtaLN')"></div>
+<div class="absolute top-sm right-sm z-20">
+<span class="px-sm py-xs bg-primary-container/10 text-primary-fixed-dim border border-primary/30 rounded-xs font-label-sm text-label-sm backdrop-blur-sm">PROD_READY</span>
+</div>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs">NeuralShield Gateway</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md line-clamp-3">
+                                Multi-region Kubernetes infrastructure deployed on AWS with automated CI/CD pipelines, Terraform orchestration, and Prometheus monitoring.
+                            </p>
+<div class="flex flex-wrap gap-xs mb-lg">
+<span class="px-xs py-[2px] bg-primary/5 text-primary-fixed-dim border border-primary/20 rounded-sm font-label-sm text-[10px]">TERRAFORM</span>
+<span class="px-xs py-[2px] bg-primary/5 text-primary-fixed-dim border border-primary/20 rounded-sm font-label-sm text-[10px]">K8S</span>
+<span class="px-xs py-[2px] bg-primary/5 text-primary-fixed-dim border border-primary/20 rounded-sm font-label-sm text-[10px]">AWS_EKS</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-auto">
+<a class="font-label-sm text-label-sm text-primary flex items-center gap-xs hover:underline decoration-2 underline-offset-4 transition-all" href="#">
+                                VIEW DETAILS <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">code</span>
+</a>
+</div>
+</div>
+<!-- Project Card 2: Security Tool -->
+<div class="glass-card group p-md flex flex-col rounded-lg transition-all duration-300 hover:border-primary/40 hover:-translate-y-1">
+<div class="relative w-full aspect-video rounded overflow-hidden mb-md border border-outline-variant/30">
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10"></div>
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Close-up shot of a high-end mechanical keyboard illuminated by a sharp cyan backlight in a dark room. Lines of green and blue code reflect on a sleek glass desk surface. The mood is focused and intense, capturing the essence of professional software development and late-night security audits." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCK2PSpH9veFhulrETlLLqQRho0KI1urBc04J0Pej_2l9xppNM3LMxIBf37wqgpeYG-Y9BT5VL5grPaPHnjWHTcyUI_MEn0ghvR7k1moXAGjilpL7oo6lGFCkqPd2nUepuf7rMBuhQSpQf6i-C9rD5kTzaziw8psA5eBord7nNmNcrB_jXkQLm9irAhdullgb1jvcYOwRoB6ZyVSVgbDdRg5R1R88Gr1IhzO0H6J5b-iFcFHNLQWvzB')"></div>
+<div class="absolute top-sm right-sm z-20">
+<span class="px-sm py-xs bg-error-container/20 text-error border border-error/30 rounded-xs font-label-sm text-label-sm backdrop-blur-sm">CRITICAL_TOOL</span>
+</div>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs">Sentinel Engine</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md line-clamp-3">
+                                Python-based automated vulnerability scanner utilizing distributed worker nodes to analyze enterprise-level network surfaces in real-time.
+                            </p>
+<div class="flex flex-wrap gap-xs mb-lg">
+<span class="px-xs py-[2px] bg-primary/5 text-primary-fixed-dim border border-primary/20 rounded-sm font-label-sm text-[10px]">PYTHON</span>
+<span class="px-xs py-[2px] bg-primary/5 text-primary-fixed-dim border border-primary/20 rounded-sm font-label-sm text-[10px]">REDIS</span>
+<span class="px-xs py-[2px] bg-primary/5 text-primary-fixed-dim border border-primary/20 rounded-sm font-label-sm text-[10px]">DOCKER</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-auto">
+<a class="font-label-sm text-label-sm text-primary flex items-center gap-xs hover:underline decoration-2 underline-offset-4 transition-all" href="#">
+                                VIEW DETAILS <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">code</span>
+</a>
+</div>
+</div>
+<!-- Project Card 3: Full-Stack App -->
+<div class="glass-card group p-md flex flex-col rounded-lg transition-all duration-300 hover:border-primary/40 hover:-translate-y-1">
+<div class="relative w-full aspect-video rounded overflow-hidden mb-md border border-outline-variant/30">
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10"></div>
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="An abstract visualization of a modern web application dashboard on a tablet. The UI features sleek charts, glowing data points, and minimalist glassmorphism elements. The color palette is dominated by dark slate with vibrant cyan and electric blue highlights, creating a professional and futuristic analytical atmosphere." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC-i8Jwcon-89mvuFAoLpZIvOg_afy9cQWWwEE-UNLEJvlZrUlw3VgmKd2O6e7UpVtyhyPdfRK5_w76Hpupl5mvJT8sO9VILX7ByYDv6I1AEh7HSxWhkBkTEHFZZrSY4-qYwuA8jcYbe1o7E9BVrEpTVMDWfhL-1KuisVwlM4ukpIiWXHDbxFmCFn0mgYLQcNcI7_eyzcF_6hnYvqzwZgkLEcp0nTYpX2i7hc51T9ROpr_RKjp42T-4')"></div>
+<div class="absolute top-sm right-sm z-20">
+<span class="px-sm py-xs bg-primary-container/10 text-primary-fixed-dim border border-primary/30 rounded-xs font-label-sm text-label-sm backdrop-blur-sm">LIVE_DEMO</span>
+</div>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs">Quant Dashboard</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md line-clamp-3">
+                                Financial data visualizer built with React and TypeScript, leveraging high-performance WebGL rendering for complex market charts.
+                            </p>
+<div class="flex flex-wrap gap-xs mb-lg">
+<span class="px-xs py-[2px] bg-primary/5 text-primary-fixed-dim border border-primary/20 rounded-sm font-label-sm text-[10px]">REACT</span>
+<span class="px-xs py-[2px] bg-primary/5 text-primary-fixed-dim border border-primary/20 rounded-sm font-label-sm text-[10px]">TYPESCRIPT</span>
+<span class="px-xs py-[2px] bg-primary/5 text-primary-fixed-dim border border-primary/20 rounded-sm font-label-sm text-[10px]">REDUX</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-auto">
+<a class="font-label-sm text-label-sm text-primary flex items-center gap-xs hover:underline decoration-2 underline-offset-4 transition-all" href="#">
+                                VIEW DETAILS <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">code</span>
+</a>
+</div>
+</div>
+<!-- Project Card 4: Microservices -->
+<div class="glass-card group p-md flex flex-col rounded-lg transition-all duration-300 hover:border-primary/40 hover:-translate-y-1">
+<div class="relative w-full aspect-video rounded overflow-hidden mb-md border border-outline-variant/30">
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10"></div>
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="A macro photograph of an advanced circuit board with glowing golden and blue pathways. The lighting is dramatic, coming from within the components, casting a futuristic tech glow. The image represents the intricate complexity of microservices architecture and backend systems in a modern dark-themed aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5LxYvh_zX3bPika33YBD9wHSxoErQYIJIgldu5f3j_XAC2Snv5a4lROlGWcEBrGSOl7M1Ys_CMXUSTLMYjCXvg_UsJko2KOtCyXRRZpdcnRujcCvHMmmWDPRDVvDi7uN8Hagcwe7AECKWg3G35L0-CV0WqHHEyQcDFgqYyuqKOwalSONgnDIIf9idfvEsf6asOahSDu_hBzOSVCem4pQ6zdHb_ZtZB_afo6Otg-ug66JZuDBcZZDb')"></div>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs">Async-Pipe API</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md line-clamp-3">
+                                Event-driven microservices architecture using Go and RabbitMQ, handling over 10k messages per second with minimal latency.
+                            </p>
+<div class="flex flex-wrap gap-xs mb-lg">
+<span class="px-xs py-[2px] bg-primary/5 text-primary-fixed-dim border border-primary/20 rounded-sm font-label-sm text-[10px]">GOLANG</span>
+<span class="px-xs py-[2px] bg-primary/5 text-primary-fixed-dim border border-primary/20 rounded-sm font-label-sm text-[10px]">RABBITMQ</span>
+<span class="px-xs py-[2px] bg-primary/5 text-primary-fixed-dim border border-primary/20 rounded-sm font-label-sm text-[10px]">GRPC</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-auto">
+<a class="font-label-sm text-label-sm text-primary flex items-center gap-xs hover:underline decoration-2 underline-offset-4 transition-all" href="#">
+                                VIEW DETAILS <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">code</span>
+</a>
+</div>
+</div>
+<!-- Project Card 5: AI Integration -->
+<div class="glass-card group p-md flex flex-col rounded-lg transition-all duration-300 hover:border-primary/40 hover:-translate-y-1">
+<div class="relative w-full aspect-video rounded overflow-hidden mb-md border border-outline-variant/30">
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10"></div>
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="A stylized digital representation of a neural network with nodes connected by vibrant electric lines. The scene is set in a dark, infinite space with soft blue and purple gradients. This represents the cutting edge of artificial intelligence and machine learning integration, designed for a professional technical audience." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA-DdS3yM-m4ObCCp0nlifIyb-kPC9cYsX-4nmJdTFNuJg3h2RXJeSvq26EOsazASIr2VKATpdPZzaccFO32qLsXZNFCJ03eSImgNmh8_eB70eFEob7LlK-MVwi7DCBn_3mOVs57LtULp2yWxGWGkEuepUyBmHqkF5RIZ-6SbZ87HQhhZzCpX83LxUzf_tmOSG4Avu7S10DqweCC6LalHSkcYQZvSbHaiZhmue2NA8uBIRWQlKRlFf_')"></div>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs">Semantic Search Engine</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md line-clamp-3">
+                                Implementation of Vector Database search using OpenAI embeddings and Pinecone for lightning-fast semantic retrieval.
+                            </p>
+<div class="flex flex-wrap gap-xs mb-lg">
+<span class="px-xs py-[2px] bg-primary/5 text-primary-fixed-dim border border-primary/20 rounded-sm font-label-sm text-[10px]">OPENAI</span>
+<span class="px-xs py-[2px] bg-primary/5 text-primary-fixed-dim border border-primary/20 rounded-sm font-label-sm text-[10px]">PINECONE</span>
+<span class="px-xs py-[2px] bg-primary/5 text-primary-fixed-dim border border-primary/20 rounded-sm font-label-sm text-[10px]">NODEJS</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-auto">
+<a class="font-label-sm text-label-sm text-primary flex items-center gap-xs hover:underline decoration-2 underline-offset-4 transition-all" href="#">
+                                VIEW DETAILS <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">code</span>
+</a>
+</div>
+</div>
+<!-- CTA Bento Item -->
+<div class="bg-primary-container/5 border border-primary/20 p-md flex flex-col justify-center items-center text-center rounded-lg">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-primary text-[32px]">add_circle</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs">Next Evolution?</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md px-md">
+                            Ready to build a secure, scalable architectural solution for your enterprise?
+                        </p>
+<button class="px-md py-sm bg-primary text-on-primary font-label-sm text-label-sm rounded-lg hover:brightness-110 transition-all">
+                            START COLLABORATION
+                        </button>
+</div>
+</div>
+</section>
+<!-- Tech Stack Marquee (Pseudo) -->
+<section class="py-xl bg-surface-container-low border-y border-outline-variant/10 overflow-hidden">
+<div class="flex gap-xl animate-marquee whitespace-nowrap px-gutter items-center">
+<span class="font-headline-md text-on-surface-variant/40 opacity-50">AWS_SERVICES</span>
+<span class="font-headline-md text-on-surface-variant/40 opacity-50">REACT_FRONTEND</span>
+<span class="font-headline-md text-on-surface-variant/40 opacity-50">PYTHON_CORE</span>
+<span class="font-headline-md text-on-surface-variant/40 opacity-50">TERRAFORM_IAC</span>
+<span class="font-headline-md text-on-surface-variant/40 opacity-50">KUBERNETES_OPS</span>
+<span class="font-headline-md text-on-surface-variant/40 opacity-50">GO_BACKEND</span>
+<span class="font-headline-md text-on-surface-variant/40 opacity-50">DOCKER_CONTAINERS</span>
+</div>
+</section>
+</main>
+</div>
+<!-- Footer -->
+<footer class="w-full py-xl bg-surface-container-low border-t border-outline-variant/20">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md px-gutter max-w-container-max mx-auto">
+<div>
+<div class="text-primary font-headline-md mb-sm">TECH_CONSULTANT</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs">
+                    Engineering secure and scalable digital futures through high-performance software architecture.
+                </p>
+</div>
+<div class="flex flex-col gap-xs">
+<div class="text-on-surface font-label-sm text-label-sm mb-xs uppercase tracking-widest">Connect</div>
+<a class="text-on-surface-variant hover:text-primary-fixed transition-opacity opacity-80 hover:opacity-100" href="#">GitHub</a>
+<a class="text-on-surface-variant hover:text-primary-fixed transition-opacity opacity-80 hover:opacity-100" href="#">LinkedIn</a>
+</div>
+<div class="flex flex-col gap-xs">
+<div class="text-on-surface font-label-sm text-label-sm mb-xs uppercase tracking-widest">Legal</div>
+<a class="text-on-surface-variant hover:text-primary-fixed transition-opacity opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary-fixed transition-opacity opacity-80 hover:opacity-100" href="#">Terms</a>
+<div class="mt-md font-body-md text-body-md text-primary-fixed-dim">
+                    © 2024 TECH_CONSULTANT // SECURE_BUILD_DEPLOY
+                </div>
+</div>
+</div>
+</footer>
+<script>
+        // Simple Micro-interaction: Update active state on scroll (pseudo-logic)
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('bg-surface/90');
+                header.classList.remove('bg-surface/60');
+            } else {
+                header.classList.add('bg-surface/60');
+                header.classList.remove('bg-surface/90');
+            }
+        });
+
+        // Marquee Animation via JS for continuous flow
+        const marquee = document.querySelector('.animate-marquee');
+        if (marquee) {
+            marquee.style.animation = 'marquee 40s linear infinite';
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes marquee {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Duplicate content for seamless loop
+            marquee.innerHTML += marquee.innerHTML;
+        }
+    </script>
+</body></html>

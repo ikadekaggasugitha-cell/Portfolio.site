@@ -1,0 +1,76 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+  --color-surface: #051424;
+  --color-surface-dim: #051424;
+  --color-surface-bright: #2c3a4c;
+  --color-surface-container-lowest: #010f1f;
+  --color-surface-container-low: #0d1c2d;
+  --color-surface-container: #122131;
+  --color-surface-container-high: #1c2b3c;
+  --color-surface-container-highest: #273647;
+  --color-on-surface: #d4e4fa;
+  --color-on-surface-variant: #bac9cc;
+  --color-inverse-surface: #d4e4fa;
+  --color-inverse-on-surface: #233143;
+  --color-outline: #849396;
+  --color-outline-variant: #3b494c;
+  --color-surface-tint: #00daf3;
+  --color-primary: #c3f5ff;
+  --color-on-primary: #00363d;
+  --color-primary-container: #00e5ff;
+  --color-on-primary-container: #00626e;
+  --color-inverse-primary: #006875;
+  --color-secondary: #b0c6ff;
+  --color-on-secondary: #002d6e;
+  --color-secondary-container: #0068ed;
+  --color-on-secondary-container: #f2f3ff;
+  --color-tertiary: #e8ecff;
+  --color-on-tertiary: #283044;
+  --color-tertiary-container: #c8d0ea;
+  --color-on-tertiary-container: #51596f;
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+  --color-primary-fixed: #9cf0ff;
+  --color-primary-fixed-dim: #00daf3;
+  --color-on-primary-fixed: #001f24;
+  --color-on-primary-fixed-variant: #004f58;
+  --color-secondary-fixed: #d9e2ff;
+  --color-secondary-fixed-dim: #b0c6ff;
+  --color-on-secondary-fixed: #001945;
+  --color-on-secondary-fixed-variant: #00429b;
+  --color-tertiary-fixed: #dae2fd;
+  --color-tertiary-fixed-dim: #bec6e0;
+  --color-on-tertiary-fixed: #131b2e;
+  --color-on-tertiary-fixed-variant: #3f465c;
+  --color-background: #051424;
+  --color-on-background: #d4e4fa;
+  --color-surface-variant: #273647;
+  
+  --font-headline-xl: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-headline-lg: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-headline-lg-mobile: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-headline-md: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-body-lg: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-body-md: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-label-sm: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --spacing-base: 8px;
+  --spacing-xs: 4px;
+  --spacing-sm: 12px;
+  --spacing-md: 24px;
+  --spacing-lg: 48px;
+  --spacing-xl: 80px;
+  --spacing-gutter: 24px;
+  --spacing-container-max: 1280px;
+
+  --radius-sm: 0.125rem;
+  --radius-full: 9999px;
+}

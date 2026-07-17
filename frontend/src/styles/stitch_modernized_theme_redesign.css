@@ -1,0 +1,248 @@
+/* stitch_modernized_theme_redesign theme overrides for admin panel
+   This CSS scopes theme variables under .admin-theme and overrides a small set
+   of existing utility classes used across the admin UI so components can keep
+   using Tailwind utilities while adopting the new visual design.
+*/
+
+.admin-theme {
+  --stitch-bg: #0f1724; /* deep navy */
+  --stitch-surface: #0b1220; /* slightly lighter */
+  --stitch-card: #0e1626;
+  --stitch-canvas: #071025;
+  --stitch-primary: #6ee7b7; /* mint */
+  --stitch-accent: #60a5fa; /* blue */
+  --stitch-border: rgba(255,255,255,0.06);
+  --stitch-text: #dbeafe; /* light */
+  --stitch-muted: rgba(219,234,254,0.6);
+  --stitch-danger: #fb7185;
+  --stitch-radius: 12px;
+}
+
+/* Backgrounds */
+.admin-theme .bg-surface { background-color: var(--stitch-surface) !important; }
+.admin-theme .bg-canvas { background-color: var(--stitch-canvas) !important; }
+.admin-theme .bg-canvas-parchment { background-color: rgba(255,255,255,0.03) !important; }
+.admin-theme .bg-primary { background-color: var(--stitch-primary) !important; }
+.admin-theme .bg-white { background-color: rgba(255,255,255,0.04) !important; }
+
+/* Text colors */
+.admin-theme .text-ink { color: var(--stitch-text) !important; }
+.admin-theme .text-muted { color: var(--stitch-muted) !important; }
+.admin-theme .text-danger { color: var(--stitch-danger) !important; }
+.admin-theme .text-primary { color: var(--stitch-primary) !important; }
+.admin-theme .text-body-on-dark { color: var(--stitch-text) !important; }
+.admin-theme .text-ink-muted-48 { color: var(--stitch-muted) !important; }
+
+/* Borders */
+.admin-theme .border-hairline { border-color: var(--stitch-border) !important; }
+
+/* Buttons */
+.admin-theme .btn-stitch {
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--stitch-text);
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+.admin-theme .btn-primary {
+  background-color: var(--stitch-primary) !important;
+  color: #04201a !important;
+  border: none !important;
+}
+.admin-theme .btn-stitch:hover {
+  background-color: rgba(255,255,255,0.08);
+}
+.admin-theme .btn-primary:hover {
+  background-color: #5ad5a8 !important;
+}
+
+/* Cards and panels */
+.admin-theme .card-stitch {
+  background-color: var(--stitch-card) !important;
+  border: 1px solid var(--stitch-border) !important;
+  border-radius: var(--stitch-radius) !important;
+}
+.admin-theme .card-hover:hover {
+  background-color: rgba(255,255,255,0.03) !important;
+}
+
+.admin-theme .stitch-input {
+  background-color: rgba(255,255,255,0.02) !important;
+  border: 1px solid rgba(255,255,255,0.04) !important;
+  color: var(--stitch-text) !important;
+  border-radius: 10px !important;
+}
+
+.admin-theme .card-stitch {
+  background-color: var(--stitch-card) !important;
+  border: 1px solid var(--stitch-border) !important;
+  border-radius: var(--stitch-radius) !important;
+}
+
+/* Inputs */
+.admin-theme .stitch-input {
+  background-color: rgba(255,255,255,0.02) !important;
+  border: 1px solid rgba(255,255,255,0.04) !important;
+  color: var(--stitch-text) !important;
+  border-radius: 10px !important;
+}
+
+/* Sidebar & Navbar */
+.admin-theme .sidebar-stitch {
+  background-color: #08121e !important;
+  border-right: 1px solid rgba(255,255,255,0.03) !important;
+}
+.admin-theme .navbar-stitch {
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.03) !important;
+}
+
+/* Media Picker overrides */
+.admin-theme .media-thumb {
+  border: 1px solid rgba(255,255,255,0.04);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+}
+
+/* utility to slightly emphasize headings */
+.admin-theme .stitch-heading { color: var(--stitch-text); font-weight: 600; }
+
+/* Small responsive tweaks */
+@media (max-width: 640px) {
+  .admin-theme .btn-stitch { padding: 6px 10px; }
+}
+
+/* Footer-specific tweaks to match reference design more closely */
+.public-footer {
+  --footer-muted: rgba(255,255,255,0.55);
+  padding-top: 48px;
+  padding-bottom: 40px;
+  color: var(--footer-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Noto Mono", monospace;
+}
+
+/* Brand/title */
+.public-footer .brand-row { display:flex; align-items:center; gap:12px; }
+.public-footer .brand-mark { width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; background:rgba(110,231,183,0.06); border:1px solid rgba(110,231,183,0.09); color:var(--stitch-primary); font-weight:700; }
+.public-footer .brand-title { font-size:20px; font-weight:700; color: #dbeafe; }
+.public-footer .brand-sub { font-size:14px; color: var(--footer-muted); max-width:360px; line-height:1.6; letter-spacing:0.02em; }
+
+.public-footer .footer-left p {
+  max-width: 360px;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  font-size: 14px;
+  margin-top:6px;
+}
+
+.public-footer h4 {
+  color: #dbeafe;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.public-footer .footer-grid > div {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.public-footer .footer-grid > div + div {
+  border-left: 1px solid rgba(255,255,255,0.06);
+}
+
+.public-footer .footer-top-legal {
+  font-size: 12px;
+  color: rgba(255,255,255,0.48);
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.public-footer .feature-band {
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.03);
+  padding: 14px 18px;
+  margin-top: 18px;
+  border-radius: 10px;
+}
+
+/* Feature items */
+.public-footer .feature-band .item { display:flex; align-items:flex-start; gap:12px; }
+.public-footer .feature-band .icon { font-size:18px; margin-top:4px; color:var(--stitch-primary); }
+.public-footer .feature-band .title { font-weight:700; color:#dbeafe; font-size:13px; }
+.public-footer .feature-band .desc { font-size:13px; color:var(--footer-muted); }
+
+/* Links */
+.public-footer a { color: var(--footer-muted); text-decoration:none; }
+.public-footer a:hover { color: var(--stitch-primary); }
+
+/* Column legal block */
+.public-footer .legal small { display:block; color: rgba(255,255,255,0.48); font-size:12px; }
+
+/* Responsive tweaks to get spacing pixel-perfect-ish */
+@media (min-width: 1024px) {
+  .public-footer { padding-top:56px; padding-bottom:48px; }
+  .public-footer .brand-title { font-size:21px; letter-spacing:0.01em; font-weight:700; }
+  .public-footer .brand-sub { font-size:13px; }
+  .public-footer .footer-grid { gap:16px; }
+  .public-footer .footer-grid > div { padding-left: 12px; padding-right: 12px; }
+}
+
+/* Additional micro-tweaks */
+.public-footer {
+  --footer-heading: #dbeafe;
+  --footer-muted-2: rgba(255,255,255,0.48);
+}
+
+.public-footer h4 { color: var(--footer-heading); font-size:11px; letter-spacing:0.18em; position:relative; padding-bottom:8px; margin-bottom:12px; }
+.public-footer h4::after { content: ''; display:inline-block; width:34px; height:3px; background: linear-gradient(90deg, var(--stitch-primary), rgba(96,165,250,0.9)); vertical-align:middle; margin-left:6px; margin-top:6px; border-radius:2px; }
+.public-footer h4::before { content: ''; position:absolute; left:0; bottom:0; height:24px; width:1px; background: transparent; }
+.public-footer .brand-sub { color: var(--footer-muted-2); }
+.public-footer .feature-band { padding: 14px 16px; border-radius:14px; }
+.public-footer .feature-band .title { font-size:13px; }
+.public-footer .feature-band .desc { font-size:13px; }
+
+/* make column dividers thinner and more subtle and extend full height */
+.public-footer .footer-grid > div + div { border-left: 1px solid rgba(255,255,255,0.06); }
+.public-footer .footer-grid > div { padding-top: 6px; padding-bottom: 6px; }
+.public-footer .footer-grid { align-items:start; }
+
+/* tighten list spacing and link alignment and add chevron bullets */
+.public-footer ul { margin:0; padding:0; list-style:none; }
+.public-footer li { margin:0; padding:6px 0; }
+.public-footer li a { display:inline-block; padding:2px 0; }
+.public-footer ul li::before { content: '›'; display:inline-block; width:20px; margin-left: -8px; margin-right:8px; color: rgba(255,255,255,0.32); }
+.public-footer ul li a:hover::before { color: var(--stitch-primary); }
+
+/* footer top copyright monospace and letter spacing */
+.public-footer .footer-top-legal { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Noto Mono", monospace; letter-spacing:0.12em; opacity:0.85; margin-bottom:8px; }
+
+/* footer bottom legal */
+.public-footer .footer-bottom { padding-top:10px; color: rgba(255,255,255,0.38); font-size:12px; }
+
+/* Brand / mark micro adjustments */
+.public-footer .brand-mark { width:36px; height:36px; border-radius:7px; font-size:13px; display:flex; align-items:center; justify-content:center; }
+.public-footer .brand-title { /* inherit monospace from .public-footer */ font-family: inherit; font-weight:700; }
+
+/* Feature band: add subtle vertical dividers between items */
+.public-footer .feature-band .item + .item { border-left: 1px solid rgba(255,255,255,0.03); padding-left:20px; }
+.public-footer .feature-band .item { padding-left: 6px; }
+.public-footer .feature-band .desc { color: rgba(255,255,255,0.6); }
+.public-footer .feature-band .icon { font-size:18px; color: var(--stitch-primary); }
+
+/* social icon box tweaks */
+.public-footer a[aria-label] { background: rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:10px; width:44px; height:44px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; }
+.public-footer a[aria-label]:hover { background: rgba(255,255,255,0.02); border-color: rgba(110,231,183,0.18); transform:translateY(-1px); }
+
+/* ensure headings align and small blue bar placed left */
+.public-footer h4 { text-align:left; }
+
+/* Feature icon tweaks */
+.public-footer .feature-band .icon { font-size:16px; margin-top:2px; }
+
+/* Column widths for more deterministic layout */
+@media (min-width: 1024px) {
+  .public-footer .footer-grid { grid-template-columns: repeat(5, 1fr); }
+  /* left column spans two columns, so it becomes visually wider */
+}

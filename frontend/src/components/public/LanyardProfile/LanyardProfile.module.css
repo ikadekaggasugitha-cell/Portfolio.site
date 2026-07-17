@@ -1,0 +1,41 @@
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  margin: 0 auto;
+
+  /* Pendulum pivot: rotate from the top clip point */
+  transform-origin: top center;
+
+  will-change: transform;
+  transform-style: preserve-3d;
+
+  /* Motion driven entirely by JS physics – no CSS transition interference */
+  transition: none;
+}
+
+.loadingSpinner {
+  width: 48px;
+  height: 48px;
+  margin-top: 200px;
+  border: 3px solid rgba(0, 218, 243, 0.08);
+  border-top-color: #00daf3;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    transform: scale(0.85);
+    transform-origin: top center;
+  }
+}

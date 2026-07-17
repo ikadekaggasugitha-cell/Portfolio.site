@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contact // TECH_CONSULTANT</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#2c3a4c",
+                    "on-primary": "#00363d",
+                    "on-secondary": "#002d6e",
+                    "on-background": "#d4e4fa",
+                    "surface-variant": "#273647",
+                    "error-container": "#93000a",
+                    "inverse-primary": "#006875",
+                    "on-secondary-fixed": "#001945",
+                    "surface-container-highest": "#273647",
+                    "primary-container": "#00e5ff",
+                    "on-tertiary-container": "#51596f",
+                    "secondary-fixed-dim": "#b0c6ff",
+                    "inverse-on-surface": "#233143",
+                    "outline": "#849396",
+                    "primary": "#c3f5ff",
+                    "primary-fixed-dim": "#00daf3",
+                    "on-primary-container": "#00626e",
+                    "outline-variant": "#3b494c",
+                    "on-surface": "#d4e4fa",
+                    "tertiary-fixed": "#dae2fd",
+                    "on-tertiary": "#283044",
+                    "on-primary-fixed": "#001f24",
+                    "surface-container": "#122131",
+                    "primary-fixed": "#9cf0ff",
+                    "on-error-container": "#ffdad6",
+                    "secondary": "#b0c6ff",
+                    "tertiary": "#e8ecff",
+                    "inverse-surface": "#d4e4fa",
+                    "background": "#051424",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "on-tertiary-fixed": "#131b2e",
+                    "secondary-fixed": "#d9e2ff",
+                    "on-primary-fixed-variant": "#004f58",
+                    "on-surface-variant": "#bac9cc",
+                    "on-secondary-fixed-variant": "#00429b",
+                    "surface": "#051424",
+                    "tertiary-container": "#c8d0ea",
+                    "surface-container-high": "#1c2b3c",
+                    "surface-container-lowest": "#010f1f",
+                    "error": "#ffb4ab",
+                    "on-secondary-container": "#f2f3ff",
+                    "surface-tint": "#00daf3",
+                    "on-error": "#690005",
+                    "secondary-container": "#0068ed",
+                    "surface-container-low": "#0d1c2d",
+                    "surface-dim": "#051424",
+                    "on-tertiary-fixed-variant": "#3f465c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "lg": "48px",
+                    "gutter": "24px",
+                    "xs": "4px",
+                    "container-max": "1280px",
+                    "sm": "12px",
+                    "xl": "80px",
+                    "md": "24px"
+            },
+            "fontFamily": {
+                    "headline-md": ["JetBrains Mono"],
+                    "headline-lg": ["JetBrains Mono"],
+                    "body-md": ["Inter"],
+                    "headline-xl": ["JetBrains Mono"],
+                    "headline-lg-mobile": ["JetBrains Mono"],
+                    "body-lg": ["Inter"],
+                    "label-sm": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #051424;
+            color: #d4e4fa;
+            font-family: 'Inter', sans-serif;
+        }
+        .inner-glow-top {
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 178, 172, 0.1);
+        }
+        .technical-border {
+            border: 1px solid rgba(132, 147, 150, 0.2);
+        }
+        .focus-glow:focus {
+            outline: none;
+            border-color: #00daf3;
+            box-shadow: 0 0 0 2px rgba(0, 218, 243, 0.2);
+        }
+        .pulse-accent {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .4; }
+        }
+    </style>
+</head>
+<body class="bg-background selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full bg-surface/60 backdrop-blur-md border-b border-outline-variant/20 z-50 inner-glow-top shadow-sm">
+<div class="flex justify-between items-center h-20 px-gutter max-w-container-max mx-auto">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-fixed-dim" style="font-variation-settings: 'FILL' 1;">terminal</span>
+<span class="font-headline-lg text-headline-lg font-bold text-primary tracking-tighter">TECH_CONSULTANT</span>
+</div>
+<nav class="hidden md:flex items-center gap-xl">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-bright/50 px-2 py-1" href="#">Home</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-bright/50 px-2 py-1" href="#">Projects</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-bright/50 px-2 py-1" href="#">Services</a>
+<a class="font-body-md text-body-md text-primary-fixed-dim border-b-2 border-primary-fixed-dim pb-1" href="#">Contact</a>
+</nav>
+<button class="bg-secondary-container text-on-secondary-container px-6 py-2 font-headline-md text-headline-md rounded hover:opacity-90 transition-all active:scale-95 duration-150 ease-in-out">
+                Hire Me
+            </button>
+</div>
+</header>
+<main class="pt-32 pb-xl min-h-screen relative overflow-hidden">
+<!-- Background Animation Shell -->
+<div class="absolute inset-0 -z-10 opacity-20 pointer-events-none">
+
+</div>
+<div class="max-w-container-max mx-auto px-gutter grid grid-cols-1 lg:grid-cols-12 gap-lg relative z-10">
+<!-- Left Column: Intent & Quick Contact -->
+<div class="lg:col-span-5 space-y-xl">
+<div class="space-y-md">
+<div class="flex items-center gap-base">
+<span class="w-3 h-3 bg-primary-fixed-dim rounded-full pulse-accent"></span>
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-[0.2em]">Available for projects</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface leading-tight">
+                        Let's secure your <span class="text-primary-fixed-dim">infrastructure</span>.
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">
+                        Ready to scale or secure your cloud environment? Reach out for a consultation or check my professional history below.
+                    </p>
+</div>
+<!-- Info Blocks -->
+<div class="space-y-md">
+<div class="glass-card p-md rounded-xl inner-glow-top">
+<div class="flex items-start gap-md">
+<div class="p-sm bg-primary-container/10 rounded-lg text-primary-fixed-dim">
+<span class="material-symbols-outlined">mail</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">EMAIL_ENDPOINT</p>
+<a class="font-headline-md text-headline-md text-on-surface hover:text-primary transition-colors" href="mailto:architect@techconsultant.io">architect@techconsultant.io</a>
+</div>
+</div>
+</div>
+<div class="glass-card p-md rounded-xl inner-glow-top">
+<div class="flex items-start gap-md">
+<div class="p-sm bg-primary-container/10 rounded-lg text-primary-fixed-dim">
+<span class="material-symbols-outlined">calendar_today</span>
+</div>
+<div class="flex-1">
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">AVAILABILITY</p>
+<p class="font-headline-md text-headline-md text-on-surface">Mon — Fri, 09:00 - 18:00 UTC</p>
+<button class="mt-4 flex items-center gap-2 text-primary-fixed-dim font-headline-md text-headline-md group">
+                                    Book a Consultation
+                                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Social/Professional Links -->
+<div class="flex gap-md">
+<a class="flex items-center gap-2 px-md py-sm glass-card rounded-full text-on-surface-variant hover:text-primary hover:border-primary/30 transition-all" href="#">
+<span class="material-symbols-outlined text-md">code</span>
+<span class="font-label-sm text-label-sm">GitHub</span>
+</a>
+<a class="flex items-center gap-2 px-md py-sm glass-card rounded-full text-on-surface-variant hover:text-primary hover:border-primary/30 transition-all" href="#">
+<span class="material-symbols-outlined text-md">rebase_edit</span>
+<span class="font-label-sm text-label-sm">LinkedIn</span>
+</a>
+</div>
+</div>
+<!-- Right Column: Contact Form (The Command Terminal) -->
+<div class="lg:col-span-7">
+<div class="glass-card rounded-xl overflow-hidden border border-outline-variant/30">
+<div class="bg-surface-container-high px-md py-sm flex items-center justify-between border-b border-outline-variant/30">
+<div class="flex gap-2">
+<div class="w-3 h-3 rounded-full bg-error/40"></div>
+<div class="w-3 h-3 rounded-full bg-secondary/40"></div>
+<div class="w-3 h-3 rounded-full bg-primary/40"></div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">secure_comms_v4.0.sh</span>
+</div>
+<form class="p-lg space-y-md">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="space-y-base">
+<label class="font-label-sm text-label-sm text-primary uppercase tracking-wider" for="name">01_IDENTIFIER</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 p-md rounded text-on-surface font-body-md focus-glow transition-all" id="name" placeholder="John Doe" type="text"/>
+</div>
+<div class="space-y-base">
+<label class="font-label-sm text-label-sm text-primary uppercase tracking-wider" for="email">02_RESPONSE_TARGET</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 p-md rounded text-on-surface font-body-md focus-glow transition-all" id="email" placeholder="client@company.com" type="email"/>
+</div>
+</div>
+<div class="space-y-base">
+<label class="font-label-sm text-label-sm text-primary uppercase tracking-wider" for="service">03_PROTOCOL_SELECTION</label>
+<select class="w-full bg-surface-container-lowest border border-outline-variant/30 p-md rounded text-on-surface font-body-md focus-glow transition-all" id="service">
+<option>Cloud Architecture Audit</option>
+<option>Penetration Testing</option>
+<option>Custom DevSecOps Pipeline</option>
+<option>Long-term Partnership</option>
+<option>General Inquiry</option>
+</select>
+</div>
+<div class="space-y-base">
+<label class="font-label-sm text-label-sm text-primary uppercase tracking-wider" for="message">04_ENCRYPTED_PAYLOAD</label>
+<textarea class="w-full bg-surface-container-lowest border border-outline-variant/30 p-md rounded text-on-surface font-body-md focus-glow transition-all" id="message" placeholder="Describe your technical requirements..." rows="5"></textarea>
+</div>
+<div class="pt-md">
+<button class="w-full py-md bg-primary-fixed-dim text-on-primary flex items-center justify-center gap-2 font-headline-md text-headline-md rounded hover:brightness-110 active:scale-[0.98] transition-all" type="submit">
+<span class="material-symbols-outlined">send</span>
+                                EXECUTE_SEND
+                            </button>
+</div>
+<div class="text-center">
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-60">
+<span class="material-symbols-outlined text-[10px] align-middle">lock</span>
+                                End-to-end encrypted connection active
+                            </p>
+</div>
+</form>
+</div>
+</div>
+</div>
+<!-- Location Section (Asymmetric) -->
+<div class="mt-xl max-w-container-max mx-auto px-gutter">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<div class="md:col-span-2 relative h-[300px] rounded-xl overflow-hidden glass-card">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A highly detailed 3D technical map of a metropolitan city at night, rendered in a futuristic aesthetic with glowing cyan and blue grid lines representing data flow and connectivity. The image has a cinematic dark-mode feel with soft bokeh lights and crisp vector-like street layouts." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCwblEGV40MKiXOr8fnK3LlsDoZHX2bi48BuRPxxzTnn22eOycXo_shavFvZdeA_93EJbKCKLE9EUxoBFHjRU5nuSYal06F_ELDKuXoFuTw8QUhivGrfCo1476DedHzuWR89A1w5A5e0SNcalFbvDWPlFL-E-7SgF1APypxFPZyjLMi_ze9hwcodxpgWqlCUATmQJ6lk5mQWijmzk2AH_98TztNcnsENn4DvoEB8C-P5MV5fthw_lWp')"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-background via-background/40 to-transparent"></div>
+<div class="relative z-10 h-full flex flex-col justify-center p-lg">
+<p class="font-label-sm text-label-sm text-primary mb-2 uppercase">Physical Node</p>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">Remote First.</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs">Operating globally from centralized cloud nodes. Zero latency communication guaranteed.</p>
+</div>
+<div class="hidden" data-location="San Francisco" style=""></div>
+</div>
+<div class="glass-card rounded-xl p-lg flex flex-col justify-center">
+<span class="material-symbols-outlined text-primary-fixed-dim text-4xl mb-md">shield</span>
+<h4 class="font-headline-md text-headline-md text-on-surface mb-sm">Secure by Design</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Every interaction and proposal adheres to ISO 27001 standards and NIST cybersecurity frameworks.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low border-t border-outline-variant/20 py-xl mt-xl">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md px-gutter max-w-container-max mx-auto">
+<div class="space-y-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">terminal</span>
+<span class="text-primary font-headline-md font-bold">TECH_CONSULTANT</span>
+</div>
+<p class="text-on-surface-variant font-body-md text-body-md">Advanced cloud security &amp; architecture solutions for modern enterprises.</p>
+</div>
+<div class="flex flex-col gap-sm md:items-center">
+<h5 class="font-headline-md text-headline-md text-primary-fixed-dim">Quick Links</h5>
+<nav class="flex flex-col gap-xs">
+<a class="text-on-surface-variant hover:text-primary font-body-md text-body-md transition-colors" href="#">GitHub</a>
+<a class="text-on-surface-variant hover:text-primary font-body-md text-body-md transition-colors" href="#">LinkedIn</a>
+<a class="text-on-surface-variant hover:text-primary font-body-md text-body-md transition-colors" href="#">Case Studies</a>
+</nav>
+</div>
+<div class="flex flex-col gap-sm md:items-end">
+<h5 class="font-headline-md text-headline-md text-primary-fixed-dim">Legal</h5>
+<nav class="flex flex-col gap-xs md:items-end">
+<a class="text-on-surface-variant hover:text-primary font-body-md text-body-md transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary font-body-md text-body-md transition-colors" href="#">Terms of Service</a>
+<p class="text-on-surface-variant opacity-60 font-label-sm text-label-sm mt-md">© 2024 TECH_CONSULTANT // SECURE_BUILD_DEPLOY</p>
+</nav>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interaction: Form input focus effects
+        const inputs = document.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.querySelector('label').classList.add('text-primary-fixed-dim');
+            });
+            input.addEventListener('blur', () => {
+                if (!input.value) {
+                    input.parentElement.querySelector('label').classList.remove('text-primary-fixed-dim');
+                }
+            });
+        });
+
+        // Simple form submission feedback
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> PROCESSING...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.classList.replace('bg-primary-fixed-dim', 'bg-secondary-container');
+                btn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> TRANSMISSION_SUCCESS';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.replace('bg-secondary-container', 'bg-primary-fixed-dim');
+                    btn.disabled = false;
+                    e.target.reset();
+                }, 3000);
+            }, 1500);
+        });
+    </script>
+</body></html>

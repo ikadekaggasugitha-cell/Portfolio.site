@@ -1,0 +1,25 @@
+.DS_Store
+*.log
+.env
+.env.local
+.env.*.local
+
+# Docker
+docker/mysql/data/
+
+# Backend
+/backend/vendor/
+/backend/node_modules/
+/backend/storage/app/public/
+/backend/storage/framework/cache/data/
+/backend/storage/framework/sessions/
+/backend/storage/framework/views/
+/backend/storage/logs/*
+!/backend/storage/logs/.gitkeep
+/backend/.phpunit.result.cache
+/backend/.env
+
+# Frontend
+/frontend/node_modules/
+/frontend/.next/
+/frontend/out/
