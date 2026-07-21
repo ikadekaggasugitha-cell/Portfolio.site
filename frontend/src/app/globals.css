@@ -75,16 +75,6 @@
   --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
-  --spacing-section: 80px;
-  --spacing-base: 8px;
-  --spacing-xs: 4px;
-  --spacing-sm: 12px;
-  --spacing-md: 24px;
-  --spacing-lg: 48px;
-  --spacing-xl: 80px;
-  --spacing-gutter: 24px;
-  --spacing-container-max: 1280px;
-
   --radius-sm: 0.125rem;
   --radius-full: 9999px;
 
@@ -208,4 +198,206 @@ button, a {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ============================================================================
+   MARKETING V2 DESIGN SYSTEM  —  additive & fully scoped.
+   Everything below is namespaced (`mk-*`) and only takes effect inside the
+   `.theme-v2` wrapper. No existing @theme token or rule above is modified,
+   so About / Projects / Contact / admin keep their current styling exactly.
+   Color tokens are exposed to Tailwind as `mk-*` utilities (bg-mk-surface,
+   text-mk-ink, border-mk-hairline, shadow-mk-brand, rounded-mk, …) and their
+   VALUES flip per-theme via the scoped custom properties further down.
+   ============================================================================ */
+@theme inline {
+  --color-mk-canvas: var(--mk-canvas);
+  --color-mk-surface: var(--mk-surface);
+  --color-mk-subtle: var(--mk-subtle);
+  --color-mk-subtle-2: var(--mk-subtle-2);
+  --color-mk-hairline: var(--mk-hairline);
+  --color-mk-ink: var(--mk-ink);
+  --color-mk-muted: var(--mk-muted);
+  --color-mk-faint: var(--mk-faint);
+  --color-mk-brand: var(--mk-brand);
+  --color-mk-brand-strong: var(--mk-brand-strong);
+  --color-mk-brand-soft: var(--mk-brand-soft);
+  --color-mk-cyan: var(--mk-cyan);
+  --color-mk-amber: var(--mk-amber);
+  --color-mk-accent: var(--mk-accent);
+  --color-mk-on-brand: var(--mk-on-brand);
+
+  --font-mk-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mk-mono: var(--font-jetbrains), ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+  --shadow-mk-sm: var(--mk-shadow-sm);
+  --shadow-mk-md: var(--mk-shadow-md);
+  --shadow-mk-lg: var(--mk-shadow-lg);
+  --shadow-mk-brand: var(--mk-shadow-brand);
+
+  --radius-mk: 20px;
+  --radius-mk-sm: 14px;
+}
+
+/* ---- Token VALUES — light is the default ---- */
+.theme-v2 {
+  --mk-canvas: #FBFBFE;
+  --mk-surface: #FFFFFF;
+  --mk-subtle: #F4F5FB;
+  --mk-subtle-2: #EEF0F8;
+  --mk-hairline: #E6E8F0;
+  --mk-ink: #0B0F1A;
+  --mk-muted: #4A5268;
+  --mk-faint: #6B7488;
+  --mk-brand: #4F46E5;
+  --mk-brand-strong: #4338CA;
+  --mk-brand-soft: #6366F1;
+  --mk-cyan: #06B6D4;
+  --mk-amber: #F59E0B;
+  --mk-accent: #4F46E5;      /* AA-safe indigo for text on light */
+  --mk-on-brand: #FFFFFF;
+
+  --mk-grad: linear-gradient(120deg, #4F46E5 0%, #6366F1 46%, #06B6D4 100%);
+  --mk-glass: rgba(255, 255, 255, 0.72);
+  --mk-hero-glow: radial-gradient(60% 60% at 70% 30%, rgba(79, 70, 229, 0.12), transparent 70%);
+  --mk-dot: rgba(11, 15, 26, 0.10);
+  --mk-dot-lit: 79, 70, 229;
+
+  --mk-shadow-sm: 0 1px 2px rgba(11,15,26,.05), 0 2px 8px rgba(11,15,26,.04);
+  --mk-shadow-md: 0 6px 20px rgba(11,15,26,.08), 0 2px 6px rgba(11,15,26,.05);
+  --mk-shadow-lg: 0 24px 60px rgba(11,15,26,.14), 0 8px 24px rgba(11,15,26,.08);
+  --mk-shadow-brand: 0 18px 44px rgba(79,70,229,.28);
+
+  color-scheme: light;
+  font-family: var(--font-mk-sans);
+  background: var(--mk-canvas);
+  color: var(--mk-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---- Dark: explicit toggle wins over OS preference ---- */
+:root[data-theme="dark"] .theme-v2 {
+  --mk-canvas: #070A14;
+  --mk-surface: #0E1220;
+  --mk-subtle: #141A2B;
+  --mk-subtle-2: #182034;
+  --mk-hairline: #232B40;
+  --mk-ink: #E8EAF3;
+  --mk-muted: #A6AEC6;
+  --mk-faint: #7C859E;
+  --mk-brand: #6366F1;
+  --mk-brand-strong: #818CF8;
+  --mk-brand-soft: #818CF8;
+  --mk-cyan: #22D3EE;
+  --mk-amber: #F59E0B;
+  --mk-accent: #A5B4FC;
+  --mk-on-brand: #FFFFFF;
+
+  --mk-grad: linear-gradient(120deg, #818CF8 0%, #6366F1 46%, #22D3EE 100%);
+  --mk-glass: rgba(14, 18, 32, 0.66);
+  --mk-hero-glow: radial-gradient(60% 60% at 70% 30%, rgba(99, 102, 241, 0.20), transparent 70%);
+  --mk-dot: rgba(214, 222, 245, 0.10);
+  --mk-dot-lit: 165, 180, 252;
+
+  --mk-shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+  --mk-shadow-md: 0 8px 24px rgba(0,0,0,.5);
+  --mk-shadow-lg: 0 28px 64px rgba(0,0,0,.6);
+  --mk-shadow-brand: 0 20px 50px rgba(56,52,150,.5);
+
+  color-scheme: dark;
+}
+
+/* ---- Dark: OS preference when the user hasn't explicitly chosen light ---- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-v2 {
+    --mk-canvas: #070A14;
+    --mk-surface: #0E1220;
+    --mk-subtle: #141A2B;
+    --mk-subtle-2: #182034;
+    --mk-hairline: #232B40;
+    --mk-ink: #E8EAF3;
+    --mk-muted: #A6AEC6;
+    --mk-faint: #7C859E;
+    --mk-brand: #6366F1;
+    --mk-brand-strong: #818CF8;
+    --mk-brand-soft: #818CF8;
+    --mk-cyan: #22D3EE;
+    --mk-amber: #F59E0B;
+    --mk-accent: #A5B4FC;
+    --mk-on-brand: #FFFFFF;
+
+    --mk-grad: linear-gradient(120deg, #818CF8 0%, #6366F1 46%, #22D3EE 100%);
+    --mk-glass: rgba(14, 18, 32, 0.66);
+    --mk-hero-glow: radial-gradient(60% 60% at 70% 30%, rgba(99, 102, 241, 0.20), transparent 70%);
+    --mk-dot: rgba(214, 222, 245, 0.10);
+    --mk-dot-lit: 165, 180, 252;
+
+    --mk-shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+    --mk-shadow-md: 0 8px 24px rgba(0,0,0,.5);
+    --mk-shadow-lg: 0 28px 64px rgba(0,0,0,.6);
+    --mk-shadow-brand: 0 20px 50px rgba(56,52,150,.5);
+
+    color-scheme: dark;
+  }
+}
+
+/* ---- Scoped helper classes for brand effects awkward as pure utilities.
+        The signature gradient is now spent in ONE place — gradient TEXT —
+        and nowhere else, per the design review. ---- */
+.theme-v2 .mk-grad-text {
+  background: var(--mk-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.theme-v2 .mk-glass {
+  background: var(--mk-glass);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  backdrop-filter: saturate(180%) blur(18px);
+}
+.theme-v2 .mk-hero-glow { background: var(--mk-hero-glow); }
+
+/* Amber "Featured" tag — the accent is rare, and text stays AA-legible in both themes. */
+.theme-v2 .mk-tag-featured {
+  background: color-mix(in srgb, var(--mk-amber) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mk-amber) 42%, transparent);
+  color: #B45309;
+}
+:root[data-theme="dark"] .theme-v2 .mk-tag-featured { color: #FCD34D; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-v2 .mk-tag-featured { color: #FCD34D; }
+}
+.theme-v2 :focus-visible {
+  outline: 2px solid var(--mk-brand-soft);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+.theme-v2 ::selection { background: color-mix(in srgb, var(--mk-brand) 26%, transparent); }
+
+/* Theme-toggle icon swap — driven purely by CSS so there is no
+   React/DOM hydration mismatch or flash on first paint. */
+.theme-v2 .mk-moon { display: none; }
+.theme-v2 .mk-sun { display: block; }
+:root[data-theme="dark"] .theme-v2 .mk-sun { display: none; }
+:root[data-theme="dark"] .theme-v2 .mk-moon { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-v2 .mk-sun { display: none; }
+  :root:not([data-theme="light"]) .theme-v2 .mk-moon { display: block; }
+}
+
+.theme-v2 .mk-marquee { animation: mk-marquee 34s linear infinite; }
+.theme-v2 .mk-marquee-track:hover .mk-marquee { animation-play-state: paused; }
+@keyframes mk-marquee { to { transform: translateX(-50%); } }
+
+.theme-v2 .mk-shimmer { position: relative; overflow: hidden; }
+.theme-v2 .mk-shimmer::after {
+  content: ""; position: absolute; inset: 0; transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--mk-ink) 8%, transparent), transparent);
+  animation: mk-shimmer 1.4s infinite;
+}
+@keyframes mk-shimmer { to { transform: translateX(100%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-v2 .mk-marquee { animation: none; }
+  .theme-v2 .mk-shimmer::after { animation: none; }
 }
