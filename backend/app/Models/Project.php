@@ -18,7 +18,17 @@ class Project extends Model
         'github_url',
         'demo_url',
         'technology',
+        'is_featured',
+        'sort_order',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_featured' => 'boolean',
+            'sort_order' => 'integer',
+        ];
+    }
 
     protected static function booted(): void
     {

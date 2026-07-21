@@ -12,6 +12,7 @@ class SkillResource extends BaseResource
         return [
             'id' => $this->id,
             'skill_name' => $this->skill_name,
+            'category' => $this->category,
             'level' => $this->level,
         ];
     }

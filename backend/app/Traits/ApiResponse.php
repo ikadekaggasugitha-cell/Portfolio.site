@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 
 trait ApiResponse
@@ -13,6 +14,28 @@ trait ApiResponse
             'message' => $message,
             'data' => $data,
         ], $code);
+    }
+
+    /**
+     * Paginated success envelope: `data` holds the (optionally transformed)
+     * items and `meta` exposes the paginator state. Backward compatible — the
+     * `data` key stays an array, consumers that ignore `meta` are unaffected.
+     */
+    protected function paginated(LengthAwarePaginator $paginator, mixed $data = null, string $message = 'Success'): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'data' => $data ?? $paginator->items(),
+            'meta' => [
+                'current_page' => $paginator->currentPage(),
+                'last_page' => $paginator->lastPage(),
+                'per_page' => $paginator->perPage(),
+                'total' => $paginator->total(),
+                'from' => $paginator->firstItem(),
+                'to' => $paginator->lastItem(),
+            ],
+        ]);
     }
 
     protected function created(mixed $data = null, string $message = 'Created successfully'): JsonResponse

@@ -18,10 +18,20 @@ class Profile extends Model
         'title',
         'description',
         'phone',
+        'email',
+        'location',
+        'is_available',
         'github',
         'linkedin',
         'cv',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_available' => 'boolean',
+        ];
+    }
 
     public function user(): BelongsTo
     {

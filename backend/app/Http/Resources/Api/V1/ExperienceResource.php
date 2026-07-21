@@ -13,6 +13,7 @@ class ExperienceResource extends BaseResource
             'id' => $this->id,
             'company' => $this->company,
             'position' => $this->position,
+            'location' => $this->location,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
             'description' => $this->description,

@@ -12,6 +12,7 @@ class Experience extends Model
     protected $fillable = [
         'company',
         'position',
+        'location',
         'start_date',
         'end_date',
         'description',

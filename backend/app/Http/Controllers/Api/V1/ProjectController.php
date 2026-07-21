@@ -16,9 +16,17 @@ class ProjectController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $perPage = $request->integer('per_page', 9);
-        $projects = $this->projectService->paginate($perPage);
-        return $this->success(ProjectResource::collection($projects));
+        $perPage = min(max($request->integer('per_page', 9), 1), 50);
+
+        $search = trim((string) $request->query('search', ''));
+        $technology = trim((string) $request->query('technology', ''));
+
+        $projects = $this->projectService->paginateFiltered([
+            'search' => $search !== '' ? $search : null,
+            'technology' => $technology !== '' ? $technology : null,
+        ], $perPage);
+
+        return $this->paginated($projects, ProjectResource::collection($projects));
     }
 
     public function show(int $id): JsonResponse
@@ -39,6 +47,8 @@ class ProjectController extends Controller
             'github_url' => 'nullable|url|max:255',
             'demo_url' => 'nullable|url|max:255',
             'technology' => 'nullable|string|max:255',
+            'is_featured' => 'sometimes|boolean',
+            'sort_order' => 'sometimes|integer|min:0',
         ]);
 
         $project = $this->projectService->create($validated);
@@ -53,6 +63,8 @@ class ProjectController extends Controller
             'github_url' => 'nullable|url|max:255',
             'demo_url' => 'nullable|url|max:255',
             'technology' => 'nullable|string|max:255',
+            'is_featured' => 'sometimes|boolean',
+            'sort_order' => 'sometimes|integer|min:0',
         ]);
 
         $project = $this->projectService->update($id, $validated);

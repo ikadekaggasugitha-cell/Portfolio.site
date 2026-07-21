@@ -26,6 +26,9 @@ export interface Profile {
   title: string | null
   description: string | null
   phone: string | null
+  email: string | null
+  location: string | null
+  is_available: boolean
   github: string | null
   linkedin: string | null
   cv: string | null
@@ -36,6 +39,7 @@ export interface Profile {
 export interface Skill {
   id: number
   skill_name: string
+  category: string | null
   level: number
 }
 
@@ -43,6 +47,7 @@ export interface Experience {
   id: number
   company: string
   position: string
+  location: string | null
   start_date: string
   end_date: string | null
   description: string | null
@@ -66,6 +71,8 @@ export interface Project {
   github_url: string | null
   demo_url: string | null
   technology: string | null
+  is_featured?: boolean
+  sort_order?: number
   images?: ProjectImage[]
   created_at: string
   updated_at: string

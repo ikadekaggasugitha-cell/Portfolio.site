@@ -17,6 +17,8 @@ class ProjectResource extends BaseResource
             'github_url' => $this->github_url,
             'demo_url' => $this->demo_url,
             'technology' => $this->technology,
+            'is_featured' => (bool) $this->is_featured,
+            'sort_order' => (int) $this->sort_order,
             'images' => ProjectImageResource::collection($this->whenLoaded('images')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
