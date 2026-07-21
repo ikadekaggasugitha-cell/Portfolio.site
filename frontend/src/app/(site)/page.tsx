@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import type { Profile } from '@/types'
+import { serializeJsonLd } from '@/lib/json-ld'
 import { getProfile } from '@/lib/marketing/api.server'
 import { mapAbout, mapContact, mapHero } from '@/lib/marketing/mappers'
 import { site, skillGroups } from '@/lib/marketing/content'
@@ -48,7 +49,7 @@ function PersonJsonLd({ profile }: { profile: Profile | null }) {
     sameAs: [profile?.github, profile?.linkedin].filter((url): url is string => Boolean(url) && url !== '#'),
     knowsAbout: skillGroups.flatMap((group) => group.skills),
   }
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }} />
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(json) }} />
 }
 
 export default async function HomePage() {

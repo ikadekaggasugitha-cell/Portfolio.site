@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { serializeJsonLd } from '@/lib/json-ld'
 import { getProfile } from '@/lib/marketing/api.server'
 import { mapContact } from '@/lib/marketing/mappers'
 import { site } from '@/lib/marketing/content'
@@ -34,7 +35,7 @@ function ContactJsonLd() {
     name: `Contact · ${site.name}`,
     description: DESCRIPTION,
   }
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }} />
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(json) }} />
 }
 
 export default async function ContactPage() {
