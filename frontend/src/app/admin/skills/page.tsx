@@ -5,12 +5,21 @@ import api from '@/lib/api'
 import type { Skill } from '@/types'
 import toast from 'react-hot-toast'
 
+const CATEGORY_LABELS: Record<string, string> = {
+  frontend: 'Frontend',
+  backend: 'Backend',
+  devops: 'DevOps & Cloud',
+  design: 'Design & Craft',
+}
+const categoryLabel = (value: string | null | undefined) =>
+  value ? (CATEGORY_LABELS[value.toLowerCase()] ?? value) : '—'
+
 export default function SkillsPage() {
   const [skills, setSkills] = useState<Skill[]>([])
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState<Skill | null>(null)
   const [showForm, setShowForm] = useState(false)
-  const [form, setForm] = useState({ skill_name: '', level: 3 })
+  const [form, setForm] = useState({ skill_name: '', category: '', level: 3 })
 
   function load() {
     api.get('/skills').then((res) => setSkills(res.data.data ?? []))
@@ -22,7 +31,7 @@ export default function SkillsPage() {
   }, [])
 
   function resetForm() {
-    setForm({ skill_name: '', level: 3 })
+    setForm({ skill_name: '', category: '', level: 3 })
     setEditing(null)
     setShowForm(false)
   }
@@ -46,7 +55,7 @@ export default function SkillsPage() {
 
   function handleEdit(skill: Skill) {
     setEditing(skill)
-    setForm({ skill_name: skill.skill_name, level: skill.level })
+    setForm({ skill_name: skill.skill_name, category: skill.category ?? '', level: skill.level })
     setShowForm(true)
   }
 
@@ -101,6 +110,23 @@ export default function SkillsPage() {
             />
           </div>
           <div>
+            <label htmlFor="skill-category" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">
+              Category
+            </label>
+            <select
+              id="skill-category"
+              value={form.category}
+              onChange={(e) => setForm({ ...form, category: e.target.value })}
+              className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] focus:outline-none focus:border-primary transition-colors"
+            >
+              <option value="">Uncategorized</option>
+              <option value="frontend">Frontend</option>
+              <option value="backend">Backend</option>
+              <option value="devops">DevOps &amp; Cloud</option>
+              <option value="design">Design &amp; Craft</option>
+            </select>
+          </div>
+          <div>
             <label className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">
               Level (1-5)
             </label>
@@ -139,6 +165,7 @@ export default function SkillsPage() {
           <thead className="bg-canvas-parchment border-b border-hairline">
             <tr>
               <th className="text-left px-4 py-3 text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink-muted-48">Name</th>
+              <th className="text-left px-4 py-3 text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink-muted-48">Category</th>
               <th className="text-left px-4 py-3 text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink-muted-48">Level</th>
               <th className="text-right px-4 py-3 text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink-muted-48">Actions</th>
             </tr>
@@ -147,6 +174,7 @@ export default function SkillsPage() {
             {skills.map((skill) => (
               <tr key={skill.id}>
                 <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-ink">{skill.skill_name}</td>
+                <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-muted">{categoryLabel(skill.category)}</td>
                 <td className="px-4 py-3">
                   <div className="flex gap-0.5">
                     {Array.from({ length: 5 }, (_, i) => (

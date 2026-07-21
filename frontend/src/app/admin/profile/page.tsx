@@ -16,9 +16,12 @@ export default function ProfilePage() {
     title: '',
     description: '',
     phone: '',
+    email: '',
+    location: '',
     github: '',
     linkedin: '',
   })
+  const [isAvailable, setIsAvailable] = useState(true)
   const [photoUrl, setPhotoUrl] = useState<string | null>(null)
   const [photoMediaId, setPhotoMediaId] = useState<number | null>(null)
   const [showMediaPicker, setShowMediaPicker] = useState(false)
@@ -36,9 +39,12 @@ export default function ProfilePage() {
             title: p.title || '',
             description: p.description || '',
             phone: p.phone || '',
+            email: p.email || '',
+            location: p.location || '',
             github: p.github || '',
             linkedin: p.linkedin || '',
           })
+          setIsAvailable(p.is_available ?? true)
           setPhotoUrl(p.photo || null)
           setPhotoMediaId(p.photo_media_id ?? null)
         }
@@ -56,7 +62,7 @@ export default function ProfilePage() {
     e.preventDefault()
     if (!profile) return
     try {
-      const payload: Record<string, unknown> = { ...form }
+      const payload: Record<string, unknown> = { ...form, is_available: isAvailable }
       // prefer storing media reference when available
       if (photoMediaId) {
         ;(payload as Record<string, unknown>)['photo_media_id'] = photoMediaId
@@ -161,6 +167,33 @@ export default function ProfilePage() {
             />
           </div>
           <div>
+            <label htmlFor="profile-email" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">
+              Email
+            </label>
+            <input
+              id="profile-email"
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="hello@example.com"
+              className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
+            />
+          </div>
+          <div>
+            <label htmlFor="profile-location" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">
+              Location
+            </label>
+            <input
+              id="profile-location"
+              name="location"
+              value={form.location}
+              onChange={handleChange}
+              placeholder="e.g. Bali, Indonesia"
+              className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
+            />
+          </div>
+          <div>
             <label className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">
               GitHub URL
             </label>
@@ -195,6 +228,23 @@ export default function ProfilePage() {
             className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
           />
         </div>
+        <label className="flex items-center gap-3 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={isAvailable}
+            onChange={(e) => setIsAvailable(e.target.checked)}
+            className="peer sr-only"
+          />
+          <span
+            aria-hidden
+            className="relative h-6 w-11 shrink-0 rounded-full border border-hairline bg-canvas-parchment transition-colors peer-checked:border-primary peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:after:translate-x-5"
+          />
+          <span>
+            <span className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink">Available for work</span>
+            <span className="block text-[12px] leading-[1.3] text-muted">Shows the availability status across the public site.</span>
+          </span>
+        </label>
+
         <button
           type="submit"
           className="btn-stitch btn-primary text-[17px] font-normal leading-[1] tracking-[-0.374px] px-[22px] py-[11px] rounded-full hover:opacity-90 transition-opacity"
