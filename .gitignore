@@ -25,3 +25,5 @@ docker/mysql/data/
 /frontend/out/
 .vercel
 .env*
+!.env.example
+!**/.env.example

@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { motion, useReducedMotion } from 'framer-motion'
-import { ArrowRight, Download, Mail, Zap } from 'lucide-react'
+import { ArrowRight, Download, Mail } from 'lucide-react'
 import { heroDefaults, type HeroData } from '@/lib/marketing/content'
 import { Container } from '../primitives/container'
 import { Button } from '../primitives/button'
@@ -145,16 +145,6 @@ export function Hero(props: HeroData = heroDefaults) {
                   </code>
                 </pre>
               </div>
-            </div>
-
-            <div className="absolute -bottom-4 -right-3 flex items-center gap-2.5 rounded-2xl border border-mk-hairline bg-mk-surface px-4 py-3 shadow-mk-md">
-              <span className="grid size-[34px] place-items-center rounded-[10px] bg-mk-brand text-mk-on-brand">
-                <Zap className="size-[18px]" aria-hidden />
-              </span>
-              <span className="text-[0.86rem] font-semibold">
-                99 / 100
-                <span className="block text-[0.72rem] font-normal text-mk-faint">Lighthouse performance</span>
-              </span>
             </div>
           </motion.div>
         </div>
