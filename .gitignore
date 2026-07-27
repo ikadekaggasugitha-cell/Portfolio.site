@@ -23,3 +23,5 @@ docker/mysql/data/
 /frontend/node_modules/
 /frontend/.next/
 /frontend/out/
+.vercel
+.env*
