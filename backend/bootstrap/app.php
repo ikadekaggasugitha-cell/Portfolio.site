@@ -27,6 +27,25 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // TEMPORARY: surface the primary exception before Laravel's own
+        // renderer gets a chance to fail while trying to display it.
+        // Remove once the production 500 root cause is fixed.
+        $exceptions->report(function (Throwable $e) {
+            if (env('APP_DEBUG')) {
+                http_response_code(500);
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'diagnostic' => 'primary_exception',
+                    'exception' => get_class($e),
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => explode("\n", $e->getTraceAsString()),
+                ]);
+                exit;
+            }
+        });
+
         $exceptions->render(function (Throwable $e, Request $request) {
             if ($request->expectsJson() || $request->is('api/*')) {
                 $handler = new ApiExceptionHandler();
