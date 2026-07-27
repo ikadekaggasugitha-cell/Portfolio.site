@@ -25,10 +25,27 @@ class ApiExceptionHandler
         }
 
         if ($e instanceof ModelNotFoundException || $e instanceof NotFoundHttpException) {
-            return response()->json([
+            $payload = [
                 'success' => false,
                 'message' => 'Resource not found',
-            ], 404);
+            ];
+
+            // TEMPORARY: surface request-path diagnostics while debugging
+            // routes that exist in Route::getRoutes() but don't match. Remove after.
+            if (config('app.debug')) {
+                $payload['diagnostic'] = [
+                    'path' => $request->path(),
+                    'decodedPath' => $request->decodedPath(),
+                    'pathInfo' => $request->getPathInfo(),
+                    'requestUri' => $request->getRequestUri(),
+                    'serverRequestUri' => $request->server('REQUEST_URI'),
+                    'serverPathInfo' => $request->server('PATH_INFO'),
+                    'method' => $request->method(),
+                    'scriptName' => $request->server('SCRIPT_NAME'),
+                ];
+            }
+
+            return response()->json($payload, 404);
         }
 
         if ($e instanceof AuthenticationException) {
