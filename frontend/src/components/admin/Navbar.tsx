@@ -1,6 +1,7 @@
 'use client'
 
 import { useAuth } from '@/contexts/AuthContext'
+import ThemeToggle from './ThemeToggle'
 
 export default function Navbar() {
   const { user, logout } = useAuth()
@@ -11,6 +12,7 @@ export default function Navbar() {
         Admin Panel
       </h2>
       <div className="flex items-center gap-4">
+        <ThemeToggle />
         <span className="text-xs tracking-[-0.12px] text-ink">
           {user?.name}
         </span>

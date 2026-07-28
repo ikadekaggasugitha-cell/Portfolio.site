@@ -40,7 +40,7 @@ export default function LoginPage() {
               <h1 className="font-display text-5xl font-semibold leading-tight text-ink stitch-heading">Admin Login</h1>
               <p className="text-base leading-8 text-muted">Sign in to manage your portfolio content, media, and pages from the admin dashboard.</p>
             </div>
-            <div className="rounded-[24px] bg-surface/95 p-6 border border-hairline shadow-[0_8px_24px_rgba(0,0,0,0.15)]">
+            <div className="rounded-[24px] bg-surface p-6 border border-hairline shadow-[0_8px_24px_rgba(0,0,0,0.15)]">
               <p className="text-sm text-muted uppercase tracking-[0.2em] mb-3">Need help?</p>
               <p className="text-sm leading-6 text-body-on-dark">Use your admin email and password. If you don&apos;t have access, contact your site administrator.</p>
             </div>

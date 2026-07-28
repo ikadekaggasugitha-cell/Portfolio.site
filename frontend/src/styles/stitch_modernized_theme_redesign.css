@@ -4,26 +4,75 @@
    using Tailwind utilities while adopting the new visual design.
 */
 
+/* Light theme (default) */
 .admin-theme {
-  --stitch-bg: #0f1724; /* deep navy */
-  --stitch-surface: #0b1220; /* slightly lighter */
+  --stitch-bg: #f8fafc;
+  --stitch-surface: #eef2f6; /* shell / sidebar bg */
+  --stitch-card: #ffffff;
+  --stitch-canvas: #ffffff; /* input / inner surface bg */
+  --stitch-primary: #059669; /* emerald-600, accessible on white */
+  --stitch-primary-on: #ffffff; /* text/icon color on top of --stitch-primary */
+  --stitch-primary-hover: #047857;
+  --stitch-accent: #2563eb;
+  --stitch-border: rgba(15,23,42,0.10);
+  --stitch-text: #0f172a;
+  --stitch-muted: #475569;
+  --stitch-danger: #dc2626;
+  --stitch-radius: 12px;
+  --stitch-overlay-soft: rgba(15,23,42,0.03);
+  --stitch-overlay-softer: rgba(15,23,42,0.01);
+  --stitch-overlay-border: rgba(15,23,42,0.10);
+  --stitch-overlay-hover: rgba(15,23,42,0.05);
+}
+
+/* Dark theme override — explicit choice, or system preference when unset */
+:root[data-theme="dark"] .admin-theme {
+  --stitch-bg: #0f1724;
+  --stitch-surface: #0b1220;
   --stitch-card: #0e1626;
   --stitch-canvas: #071025;
   --stitch-primary: #6ee7b7; /* mint */
-  --stitch-accent: #60a5fa; /* blue */
+  --stitch-primary-on: #04201a;
+  --stitch-primary-hover: #5ad5a8;
+  --stitch-accent: #60a5fa;
   --stitch-border: rgba(255,255,255,0.06);
-  --stitch-text: #dbeafe; /* light */
+  --stitch-text: #dbeafe;
   --stitch-muted: rgba(219,234,254,0.6);
   --stitch-danger: #fb7185;
-  --stitch-radius: 12px;
+  --stitch-overlay-soft: rgba(255,255,255,0.06);
+  --stitch-overlay-softer: rgba(255,255,255,0.02);
+  --stitch-overlay-border: rgba(255,255,255,0.08);
+  --stitch-overlay-hover: rgba(255,255,255,0.08);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .admin-theme {
+    --stitch-bg: #0f1724;
+    --stitch-surface: #0b1220;
+    --stitch-card: #0e1626;
+    --stitch-canvas: #071025;
+    --stitch-primary: #6ee7b7;
+    --stitch-primary-on: #04201a;
+    --stitch-primary-hover: #5ad5a8;
+    --stitch-accent: #60a5fa;
+    --stitch-border: rgba(255,255,255,0.06);
+    --stitch-text: #dbeafe;
+    --stitch-muted: rgba(219,234,254,0.6);
+    --stitch-danger: #fb7185;
+    --stitch-overlay-soft: rgba(255,255,255,0.06);
+    --stitch-overlay-softer: rgba(255,255,255,0.02);
+    --stitch-overlay-border: rgba(255,255,255,0.08);
+    --stitch-overlay-hover: rgba(255,255,255,0.08);
+  }
 }
 
 /* Backgrounds */
-.admin-theme .bg-surface { background-color: var(--stitch-surface) !important; }
+/* .admin-theme itself also carries .bg-surface (see admin/layout.tsx), so this
+   needs both the descendant and same-element (compound) form to match. */
+.admin-theme .bg-surface, .admin-theme.bg-surface { background-color: var(--stitch-surface) !important; }
 .admin-theme .bg-canvas { background-color: var(--stitch-canvas) !important; }
-.admin-theme .bg-canvas-parchment { background-color: rgba(255,255,255,0.03) !important; }
+.admin-theme .bg-canvas-parchment { background-color: var(--stitch-overlay-soft) !important; }
 .admin-theme .bg-primary { background-color: var(--stitch-primary) !important; }
-.admin-theme .bg-white { background-color: rgba(255,255,255,0.04) !important; }
+.admin-theme .bg-white { background-color: var(--stitch-card) !important; }
 
 /* Text colors */
 .admin-theme .text-ink { color: var(--stitch-text) !important; }
@@ -38,22 +87,22 @@
 
 /* Buttons */
 .admin-theme .btn-stitch {
-  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-  border: 1px solid rgba(255,255,255,0.08);
+  background: linear-gradient(180deg, var(--stitch-overlay-soft), var(--stitch-overlay-softer));
+  border: 1px solid var(--stitch-overlay-border);
   color: var(--stitch-text);
   padding: 8px 12px;
   border-radius: 10px;
 }
 .admin-theme .btn-primary {
   background-color: var(--stitch-primary) !important;
-  color: #04201a !important;
+  color: var(--stitch-primary-on) !important;
   border: none !important;
 }
 .admin-theme .btn-stitch:hover {
-  background-color: rgba(255,255,255,0.08);
+  background-color: var(--stitch-overlay-hover);
 }
 .admin-theme .btn-primary:hover {
-  background-color: #5ad5a8 !important;
+  background-color: var(--stitch-primary-hover) !important;
 }
 
 /* Cards and panels */
@@ -63,44 +112,30 @@
   border-radius: var(--stitch-radius) !important;
 }
 .admin-theme .card-hover:hover {
-  background-color: rgba(255,255,255,0.03) !important;
+  background-color: var(--stitch-overlay-soft) !important;
 }
 
 .admin-theme .stitch-input {
-  background-color: rgba(255,255,255,0.02) !important;
-  border: 1px solid rgba(255,255,255,0.04) !important;
-  color: var(--stitch-text) !important;
-  border-radius: 10px !important;
-}
-
-.admin-theme .card-stitch {
-  background-color: var(--stitch-card) !important;
+  background-color: var(--stitch-canvas) !important;
   border: 1px solid var(--stitch-border) !important;
-  border-radius: var(--stitch-radius) !important;
-}
-
-/* Inputs */
-.admin-theme .stitch-input {
-  background-color: rgba(255,255,255,0.02) !important;
-  border: 1px solid rgba(255,255,255,0.04) !important;
   color: var(--stitch-text) !important;
   border-radius: 10px !important;
 }
 
 /* Sidebar & Navbar */
 .admin-theme .sidebar-stitch {
-  background-color: #08121e !important;
-  border-right: 1px solid rgba(255,255,255,0.03) !important;
+  background-color: var(--stitch-card) !important;
+  border-right: 1px solid var(--stitch-border) !important;
 }
 .admin-theme .navbar-stitch {
-  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)) !important;
-  border-bottom: 1px solid rgba(255,255,255,0.03) !important;
+  background: linear-gradient(90deg, var(--stitch-overlay-soft), var(--stitch-overlay-softer)) !important;
+  border-bottom: 1px solid var(--stitch-border) !important;
 }
 
 /* Media Picker overrides */
 .admin-theme .media-thumb {
-  border: 1px solid rgba(255,255,255,0.04);
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid var(--stitch-overlay-border);
+  background: linear-gradient(180deg, var(--stitch-overlay-soft), var(--stitch-overlay-softer));
 }
 
 /* utility to slightly emphasize headings */

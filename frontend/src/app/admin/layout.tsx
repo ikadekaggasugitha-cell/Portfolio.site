@@ -9,6 +9,7 @@ import { useEffect } from 'react'
 import '@/styles/stitch_modernized_theme_redesign.css'
 import { GlobalLoadingProvider } from '@/components/admin/ui/GlobalLoadingOverlay'
 import Spinner from '@/components/admin/ui/Spinner'
+import { ThemeProvider, ThemeScript } from '@/components/marketing/theme/theme-provider'
 
 function AdminGuard({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
@@ -45,37 +46,40 @@ export default function AdminLayout({
   const isLoginPage = pathname === '/admin/login'
 
   return (
-    <AuthProvider>
-      <GlobalLoadingProvider>
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: 'var(--stitch-card, #0e1626)',
-              color: 'var(--stitch-text, #dbeafe)',
-              border: '1px solid var(--stitch-border, rgba(255,255,255,0.06))',
-            },
-            success: { iconTheme: { primary: 'var(--stitch-primary, #6ee7b7)', secondary: '#04201a' }, duration: 3000 },
-            error: { iconTheme: { primary: 'var(--stitch-danger, #fb7185)', secondary: '#2a0a0f' }, duration: 5000 },
-          }}
-        />
-        <AdminGuard>
-          {isLoginPage ? (
-            <div className="admin-theme min-h-screen bg-surface flex items-center justify-center px-6 py-12">
-              <div className="w-full max-w-6xl">{children}</div>
-            </div>
-          ) : (
-            <div className="admin-theme flex min-h-screen bg-surface">
-              <Sidebar />
-              <div className="flex-1 flex flex-col">
-                <Navbar />
-                <main className="flex-1 p-6">{children}</main>
+    <ThemeProvider>
+      <ThemeScript />
+      <AuthProvider>
+        <GlobalLoadingProvider>
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: 'var(--stitch-card, #0e1626)',
+                color: 'var(--stitch-text, #dbeafe)',
+                border: '1px solid var(--stitch-border, rgba(255,255,255,0.06))',
+              },
+              success: { iconTheme: { primary: 'var(--stitch-primary, #6ee7b7)', secondary: '#04201a' }, duration: 3000 },
+              error: { iconTheme: { primary: 'var(--stitch-danger, #fb7185)', secondary: '#2a0a0f' }, duration: 5000 },
+            }}
+          />
+          <AdminGuard>
+            {isLoginPage ? (
+              <div className="admin-theme min-h-screen bg-surface flex items-center justify-center px-6 py-12">
+                <div className="w-full max-w-6xl">{children}</div>
               </div>
-            </div>
-          )}
-        </AdminGuard>
-      </GlobalLoadingProvider>
-    </AuthProvider>
+            ) : (
+              <div className="admin-theme flex min-h-screen bg-surface">
+                <Sidebar />
+                <div className="flex-1 flex flex-col">
+                  <Navbar />
+                  <main className="flex-1 p-6">{children}</main>
+                </div>
+              </div>
+            )}
+          </AdminGuard>
+        </GlobalLoadingProvider>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
