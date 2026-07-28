@@ -7,6 +7,7 @@ use App\Http\Resources\Api\V1\MediaResource;
 use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MediaController extends Controller
 {
@@ -31,8 +32,9 @@ class MediaController extends Controller
         ]);
 
         $file = $request->file('file');
-        $path = $file->store('media', 'public');
-        $url = asset('storage/' . $path);
+        $disk = config('filesystems.media_disk', 'public');
+        $path = $file->store('media', $disk);
+        $url = Storage::disk($disk)->url($path);
 
         $meta = [
             'original_name' => $file->getClientOriginalName(),

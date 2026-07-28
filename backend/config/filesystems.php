@@ -17,6 +17,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Media Upload Disk
+    |--------------------------------------------------------------------------
+    |
+    | Disk used for user-uploaded media (profile photo, project images).
+    | Vercel Functions run on a read-only filesystem, so production must
+    | point this at an object storage disk (e.g. "s3", backed by Cloudflare
+    | R2). Local/Docker dev keeps using "public" since that container's
+    | filesystem is writable.
+    |
+    */
+
+    'media_disk' => env('MEDIA_DISK', 'public'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Filesystem Disks
     |--------------------------------------------------------------------------
     |

@@ -28,7 +28,7 @@ class ProjectImageController extends Controller
             'sort_order' => 'nullable|integer|min:0',
         ]);
 
-        $validated['image'] = $request->file('image')->store('projects', 'public');
+        $validated['image'] = $request->file('image')->store('projects', config('filesystems.media_disk', 'public'));
         $validated['project_id'] = $projectId;
         $image = $this->projectImageService->create($validated);
         return $this->created(new ProjectImageResource($image), 'Image added');
