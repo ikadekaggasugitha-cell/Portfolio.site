@@ -1,9 +1,11 @@
 'use client'
 
-import { useEffect, useState, type FormEvent } from 'react'
+import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import api from '@/lib/api'
 import type { Experience } from '@/types'
-import toast from 'react-hot-toast'
+import { useAsyncAction } from '@/hooks/useAsyncAction'
+import Button from '@/components/admin/ui/Button'
+import { SkeletonList } from '@/components/admin/ui/Skeleton'
 
 export default function ExperiencesPage() {
   const [items, setItems] = useState<Experience[]>([])
@@ -19,14 +21,13 @@ export default function ExperiencesPage() {
     description: '',
   })
 
-  function load() {
-    api.get('/experiences').then((res) => setItems(res.data.data ?? []))
-  }
+  const load = useCallback(() => {
+    return api.get('/experiences').then((res) => setItems(res.data.data ?? []))
+  }, [])
 
   useEffect(() => {
-    load()
-    setLoading(false)
-  }, [])
+    load().finally(() => setLoading(false))
+  }, [load])
 
   function resetForm() {
     setForm({ company: '', position: '', location: '', start_date: '', end_date: '', description: '' })
@@ -34,22 +35,23 @@ export default function ExperiencesPage() {
     setShowForm(false)
   }
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    try {
+  const { run: submit, isPending: isSaving } = useAsyncAction(
+    async () => {
       const payload = { ...form, end_date: form.end_date || null }
       if (editing) {
         await api.put(`/experiences/${editing.id}`, payload)
-        toast.success('Experience updated')
       } else {
         await api.post('/experiences', payload)
-        toast.success('Experience created')
       }
       resetForm()
-      load()
-    } catch {
-      toast.error('Failed to save experience')
-    }
+      await load()
+    },
+    { successMessage: editing ? 'Experience updated' : 'Experience created', errorMessage: 'Failed to save experience' },
+  )
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+    submit()
   }
 
   function handleEdit(item: Experience) {
@@ -65,15 +67,23 @@ export default function ExperiencesPage() {
     setShowForm(true)
   }
 
-  async function handleDelete(id: number) {
+  const [deletingId, setDeletingId] = useState<number | null>(null)
+  const { run: destroy } = useAsyncAction(
+    async (id: number) => {
+      setDeletingId(id)
+      try {
+        await api.delete(`/experiences/${id}`)
+        await load()
+      } finally {
+        setDeletingId(null)
+      }
+    },
+    { successMessage: 'Experience deleted', errorMessage: 'Failed to delete experience' },
+  )
+
+  function handleDelete(id: number) {
     if (!confirm('Delete this experience?')) return
-    try {
-      await api.delete(`/experiences/${id}`)
-      toast.success('Experience deleted')
-      load()
-    } catch {
-      toast.error('Failed to delete experience')
-    }
+    destroy(id)
   }
 
   const fields = [
@@ -86,7 +96,12 @@ export default function ExperiencesPage() {
   ]
 
   if (loading) {
-    return <div className="text-center py-12 text-ink-muted-48">Loading...</div>
+    return (
+      <div>
+        <h1 className="font-display text-[34px] font-semibold leading-[1.47] tracking-[-0.374px] text-ink mb-6">Experiences</h1>
+        <SkeletonList count={3} className="space-y-4" />
+      </div>
+    )
   }
 
   return (
@@ -95,12 +110,13 @@ export default function ExperiencesPage() {
         <h1 className="font-display text-[34px] font-semibold leading-[1.47] tracking-[-0.374px] text-ink stitch-heading">
           Experiences
         </h1>
-        <button
+        <Button
+          variant="primary"
           onClick={() => { resetForm(); setShowForm(true) }}
-          className="btn-stitch btn-primary text-[14px] leading-[1.29] tracking-[-0.224px] px-[14px] py-[8px] rounded-full transition-opacity"
+          className="text-[14px] leading-[1.29] tracking-[-0.224px] px-[14px] py-[8px] rounded-full transition-opacity"
         >
           Add Experience
-        </button>
+        </Button>
       </div>
 
       {showForm && (
@@ -131,12 +147,18 @@ export default function ExperiencesPage() {
             </div>
           ))}
           <div className="flex gap-2">
-            <button type="submit" className="btn-stitch btn-primary text-[14px] leading-[1.29] tracking-[-0.224px] px-[14px] py-[8px] rounded-full transition-opacity">
+            <Button
+              type="submit"
+              variant="primary"
+              loading={isSaving}
+              loadingText={editing ? 'Updating...' : 'Creating...'}
+              className="text-[14px] leading-[1.29] tracking-[-0.224px] px-[14px] py-[8px] rounded-full transition-opacity"
+            >
               {editing ? 'Update' : 'Create'}
-            </button>
-            <button type="button" onClick={resetForm} className="btn-stitch text-ink">
+            </Button>
+            <Button type="button" onClick={resetForm} className="text-ink">
               Cancel
-            </button>
+            </Button>
           </div>
         </form>
       )}
@@ -158,8 +180,15 @@ export default function ExperiencesPage() {
               )}
             </div>
             <div className="flex gap-2 shrink-0">
-              <button onClick={() => handleEdit(item)} className="btn-stitch">Edit</button>
-              <button onClick={() => handleDelete(item.id)} className="btn-stitch text-danger">Delete</button>
+              <Button onClick={() => handleEdit(item)} disabled={deletingId === item.id}>Edit</Button>
+              <Button
+                variant="danger"
+                onClick={() => handleDelete(item.id)}
+                loading={deletingId === item.id}
+                loadingText="Deleting..."
+              >
+                Delete
+              </Button>
             </div>
           </div>
         ))}

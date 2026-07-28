@@ -1,32 +1,45 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import api from '@/lib/api'
 import type { Message } from '@/types'
-import toast from 'react-hot-toast'
+import { useAsyncAction } from '@/hooks/useAsyncAction'
+import Button from '@/components/admin/ui/Button'
+import { SkeletonList } from '@/components/admin/ui/Skeleton'
 
 export default function MessagesPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
   const [selected, setSelected] = useState<Message | null>(null)
 
-  function load() {
-    api.get('/messages').then((res) => setMessages(res.data.data ?? []))
-  }
+  const load = useCallback(() => {
+    return api.get('/messages').then((res) => setMessages(res.data.data ?? []))
+  }, [])
 
-  useEffect(() => { load(); setLoading(false) }, [])
+  useEffect(() => { load().finally(() => setLoading(false)) }, [load])
 
-  async function handleDelete(id: number) {
-    if (!confirm('Delete this message?')) return
-    try {
+  const { run: destroy, isPending: isDeleting } = useAsyncAction(
+    async (id: number) => {
       await api.delete(`/messages/${id}`)
-      toast.success('Message deleted')
       if (selected?.id === id) setSelected(null)
-      load()
-    } catch { toast.error('Failed to delete message') }
+      await load()
+    },
+    { successMessage: 'Message deleted', errorMessage: 'Failed to delete message' },
+  )
+
+  function handleDelete(id: number) {
+    if (!confirm('Delete this message?')) return
+    destroy(id)
   }
 
-  if (loading) return <div className="text-center py-12 text-ink-muted-48">Loading...</div>
+  if (loading) {
+    return (
+      <div>
+        <h1 className="font-display text-[34px] font-semibold leading-[1.47] tracking-[-0.374px] text-ink stitch-heading mb-6">Messages</h1>
+        <SkeletonList count={2} className="grid grid-cols-1 lg:grid-cols-2 gap-6" />
+      </div>
+    )
+  }
 
   const unread = messages.filter((m) => !m.is_read)
 
@@ -76,12 +89,14 @@ export default function MessagesPage() {
                   <p className="text-[14px] leading-[1.43] tracking-[-0.224px] text-muted mt-1">{selected.name} &lt;{selected.email}&gt;</p>
                   <p className="text-[12px] leading-[1] tracking-[-0.12px] text-muted mt-1">{selected.created_at}</p>
                 </div>
-                <button
+                <Button
+                  variant="danger"
                   onClick={() => handleDelete(selected.id)}
-                  className="btn-stitch text-danger"
+                  loading={isDeleting}
+                  loadingText="Deleting..."
                 >
                   Delete
-                </button>
+                </Button>
               </div>
               <div className="border-t border-hairline pt-4">
                 <p className="text-[14px] leading-[1.43] tracking-[-0.224px] text-ink-muted-48 whitespace-pre-wrap">{selected.message}</p>

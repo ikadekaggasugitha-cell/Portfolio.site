@@ -1,9 +1,11 @@
 'use client'
 
-import { useEffect, useState, type FormEvent } from 'react'
+import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import api from '@/lib/api'
 import type { Certificate } from '@/types'
-import toast from 'react-hot-toast'
+import { useAsyncAction } from '@/hooks/useAsyncAction'
+import Button from '@/components/admin/ui/Button'
+import { SkeletonList } from '@/components/admin/ui/Skeleton'
 
 const fields = [
   { name: 'title', label: 'Title', required: true },
@@ -23,27 +25,33 @@ export default function CertificatesPage() {
     title: '', issuer: '', issued_date: '', expiry_date: '', credential_url: '', description: '',
   })
 
-  function load() { api.get('/certificates').then((res) => setItems(res.data.data ?? [])) }
-  useEffect(() => { load(); setLoading(false) }, [])
+  const load = useCallback(() => {
+    return api.get('/certificates').then((res) => setItems(res.data.data ?? []))
+  }, [])
+  useEffect(() => { load().finally(() => setLoading(false)) }, [load])
 
   function resetForm() {
     setForm({ title: '', issuer: '', issued_date: '', expiry_date: '', credential_url: '', description: '' })
     setEditing(null); setShowForm(false)
   }
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    try {
+  const { run: submit, isPending: isSaving } = useAsyncAction(
+    async () => {
       const payload = { ...form, expiry_date: form.expiry_date || null }
       if (editing) {
         await api.put(`/certificates/${editing.id}`, payload)
-        toast.success('Certificate updated')
       } else {
         await api.post('/certificates', payload)
-        toast.success('Certificate created')
       }
-      resetForm(); load()
-    } catch { toast.error('Failed to save certificate') }
+      resetForm()
+      await load()
+    },
+    { successMessage: editing ? 'Certificate updated' : 'Certificate created', errorMessage: 'Failed to save certificate' },
+  )
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+    submit()
   }
 
   function handleEdit(item: Certificate) {
@@ -58,19 +66,39 @@ export default function CertificatesPage() {
     setShowForm(true)
   }
 
-  async function handleDelete(id: number) {
+  const [deletingId, setDeletingId] = useState<number | null>(null)
+  const { run: destroy } = useAsyncAction(
+    async (id: number) => {
+      setDeletingId(id)
+      try {
+        await api.delete(`/certificates/${id}`)
+        await load()
+      } finally {
+        setDeletingId(null)
+      }
+    },
+    { successMessage: 'Certificate deleted', errorMessage: 'Failed to delete certificate' },
+  )
+
+  function handleDelete(id: number) {
     if (!confirm('Delete this certificate?')) return
-    try { await api.delete(`/certificates/${id}`); toast.success('Certificate deleted'); load() }
-    catch { toast.error('Failed to delete certificate') }
+    destroy(id)
   }
 
-  if (loading) return <div className="text-center py-12 text-ink-muted-48">Loading...</div>
+  if (loading) {
+    return (
+      <div>
+        <h1 className="font-display text-[34px] font-semibold leading-[1.47] tracking-[-0.374px] text-ink mb-6">Certificates</h1>
+        <SkeletonList count={4} />
+      </div>
+    )
+  }
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-display text-[34px] font-semibold leading-[1.47] tracking-[-0.374px] text-ink stitch-heading">Certificates</h1>
-        <button onClick={() => { resetForm(); setShowForm(true) }} className="btn-stitch btn-primary text-[14px] leading-[1.29] tracking-[-0.224px] px-[14px] py-[8px] rounded-full transition-opacity">Add Certificate</button>
+        <Button variant="primary" onClick={() => { resetForm(); setShowForm(true) }} className="text-[14px] leading-[1.29] tracking-[-0.224px] px-[14px] py-[8px] rounded-full transition-opacity">Add Certificate</Button>
       </div>
 
       {showForm && (
@@ -86,8 +114,16 @@ export default function CertificatesPage() {
             </div>
           ))}
           <div className="flex gap-2">
-            <button type="submit" className="btn-stitch btn-primary text-[14px] leading-[1.29] tracking-[-0.224px] px-[14px] py-[8px] rounded-full transition-opacity">{editing ? 'Update' : 'Create'}</button>
-            <button type="button" onClick={resetForm} className="btn-stitch text-ink">Cancel</button>
+            <Button
+              type="submit"
+              variant="primary"
+              loading={isSaving}
+              loadingText={editing ? 'Updating...' : 'Creating...'}
+              className="text-[14px] leading-[1.29] tracking-[-0.224px] px-[14px] py-[8px] rounded-full transition-opacity"
+            >
+              {editing ? 'Update' : 'Create'}
+            </Button>
+            <Button type="button" onClick={resetForm} className="text-ink">Cancel</Button>
           </div>
         </form>
       )}
@@ -106,8 +142,15 @@ export default function CertificatesPage() {
                 )}
               </div>
               <div className="flex gap-2 shrink-0">
-                <button onClick={() => handleEdit(item)} className="btn-stitch">Edit</button>
-                <button onClick={() => handleDelete(item.id)} className="btn-stitch text-danger">Delete</button>
+                <Button onClick={() => handleEdit(item)} disabled={deletingId === item.id}>Edit</Button>
+                <Button
+                  variant="danger"
+                  onClick={() => handleDelete(item.id)}
+                  loading={deletingId === item.id}
+                  loadingText="Deleting..."
+                >
+                  Delete
+                </Button>
               </div>
             </div>
           </div>

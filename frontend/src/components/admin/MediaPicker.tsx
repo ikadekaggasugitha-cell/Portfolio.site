@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react'
 import api from '@/lib/api'
 import toast from 'react-hot-toast'
 import type { Media } from '@/types'
+import { useAsyncAction } from '@/hooks/useAsyncAction'
+import Button from '@/components/admin/ui/Button'
+import { SkeletonList } from '@/components/admin/ui/Skeleton'
 
 interface MediaPickerProps {
   onClose: () => void
@@ -50,21 +53,19 @@ export default function MediaPicker({ onClose, onSelect, allowMultiple = false }
     setDraftAlt('')
   }
 
-  async function confirmSelect() {
-    if (!selected) return
-    // persist caption/alt back to media record on server
-    try {
+  const { run: confirmSelect, isPending: isConfirming } = useAsyncAction(
+    async () => {
+      if (!selected) return
+      // persist caption/alt back to media record on server
       const payload = { caption: draftCaption || null, alt: draftAlt || null }
       const res = await api.patch(`/media/${selected.id}`, payload)
       const updated = res.data.data ?? res.data
       const m: Media = { ...(Array.isArray(updated) ? updated[0] : updated) }
       onSelect(m)
       onClose()
-    } catch (err) {
-      console.error(err)
-      toast.error('Failed to save media metadata')
-    }
-  }
+    },
+    { errorMessage: 'Failed to save media metadata' },
+  )
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
@@ -77,7 +78,7 @@ export default function MediaPicker({ onClose, onSelect, allowMultiple = false }
         </div>
 
         {loading ? (
-          <div className="text-center py-8">Loading media...</div>
+          <SkeletonList count={8} className="grid grid-cols-2 md:grid-cols-4 gap-3" />
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {items.map((it) => (
@@ -85,7 +86,7 @@ export default function MediaPicker({ onClose, onSelect, allowMultiple = false }
                 <img src={it.url} alt={it.alt ?? it.filename} className="w-full h-32 object-cover mb-2" />
                 <div className="flex items-center justify-between">
                   <div className="text-sm truncate mr-2 stitch-heading">{it.filename}</div>
-                  <button onClick={() => beginSelect(it)} className="px-2 py-1 btn-stitch">Select</button>
+                  <Button variant="unstyled" onClick={() => beginSelect(it)} className="px-2 py-1 btn-stitch">Select</Button>
                 </div>
               </div>
             ))}
@@ -108,8 +109,8 @@ export default function MediaPicker({ onClose, onSelect, allowMultiple = false }
                   <input value={draftAlt} onChange={(e) => setDraftAlt(e.target.value)} className="w-full px-2 py-1 stitch-input" />
                 </div>
                 <div className="flex gap-2 mt-2">
-                  <button onClick={confirmSelect} className="px-3 py-1 btn-stitch btn-primary">Confirm</button>
-                  <button onClick={cancelSelect} className="px-3 py-1 btn-stitch">Cancel</button>
+                  <Button variant="unstyled" onClick={() => confirmSelect()} loading={isConfirming} className="px-3 py-1 btn-stitch btn-primary">Confirm</Button>
+                  <Button variant="unstyled" onClick={cancelSelect} disabled={isConfirming} className="px-3 py-1 btn-stitch">Cancel</Button>
                 </div>
               </div>
             </div>

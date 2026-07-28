@@ -1,16 +1,21 @@
 'use client'
 
-import { useEffect, useState, useRef, type FormEvent } from 'react'
+import { useCallback, useEffect, useState, useRef, type FormEvent } from 'react'
 import api from '@/lib/api'
 import type { Profile, Media } from '@/types'
 import toast from 'react-hot-toast'
 import dynamic from 'next/dynamic'
+import { useAsyncAction } from '@/hooks/useAsyncAction'
+import Button from '@/components/admin/ui/Button'
+import ProgressBar from '@/components/admin/ui/ProgressBar'
+import { SkeletonForm } from '@/components/admin/ui/Skeleton'
 
 const MediaPicker = dynamic(() => import('@/components/admin/MediaPicker'), { ssr: false })
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(false)
   const [form, setForm] = useState({
     name: '',
     title: '',
@@ -25,10 +30,13 @@ export default function ProfilePage() {
   const [photoUrl, setPhotoUrl] = useState<string | null>(null)
   const [photoMediaId, setPhotoMediaId] = useState<number | null>(null)
   const [showMediaPicker, setShowMediaPicker] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null)
   const fileRef = useRef<HTMLInputElement | null>(null)
 
-  useEffect(() => {
-    api
+  const load = useCallback(() => {
+    setLoading(true)
+    setLoadError(false)
+    return api
       .get('/profile')
       .then((res) => {
         const p = res.data.data?.[0]
@@ -47,10 +55,21 @@ export default function ProfilePage() {
           setIsAvailable(p.is_available ?? true)
           setPhotoUrl(p.photo || null)
           setPhotoMediaId(p.photo_media_id ?? null)
+        } else {
+          setProfile(null)
         }
+      })
+      .catch((err) => {
+        console.error(err)
+        setLoadError(true)
+        toast.error('Failed to load profile')
       })
       .finally(() => setLoading(false))
   }, [])
+
+  useEffect(() => {
+    load()
+  }, [load])
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -58,32 +77,39 @@ export default function ProfilePage() {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    if (!profile) return
-    try {
+  const { run: submit, isPending: isSaving } = useAsyncAction(
+    async () => {
+      if (!profile) throw new Error('Profile has not loaded yet')
       const payload: Record<string, unknown> = { ...form, is_available: isAvailable }
       // prefer storing media reference when available
       if (photoMediaId) {
-        ;(payload as Record<string, unknown>)['photo_media_id'] = photoMediaId
+        payload['photo_media_id'] = photoMediaId
       } else {
-        ;(payload as Record<string, unknown>)['photo'] = photoUrl
+        payload['photo'] = photoUrl
       }
       await api.put(`/profile/${profile.id}`, payload)
-      toast.success('Profile updated')
-    } catch (err) {
-      console.error(err)
-      toast.error('Failed to update profile')
-    }
+    },
+    { successMessage: 'Profile updated', errorMessage: 'Failed to update profile' },
+  )
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+    submit()
   }
 
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.currentTarget.files
     if (!files || files.length === 0) return
     try {
+      setUploadProgress(0)
       const fd = new FormData()
       fd.append('file', files[0])
-      const res = await api.post('/media', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+      const res = await api.post('/media', fd, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        onUploadProgress: (evt) => {
+          if (evt.total) setUploadProgress(Math.round((evt.loaded / evt.total) * 100))
+        },
+      })
       const media = res.data.data ?? res.data
       // If API returns resource object or data wrapper
       const m = Array.isArray(media) ? media[0] : media
@@ -93,6 +119,9 @@ export default function ProfilePage() {
     } catch (err) {
       console.error(err)
       toast.error('Upload failed')
+    } finally {
+      setUploadProgress(null)
+      if (fileRef.current) fileRef.current.value = ''
     }
   }
 
@@ -102,7 +131,30 @@ export default function ProfilePage() {
   }
 
   if (loading) {
-    return <div className="text-center py-12 text-ink-muted-48">Loading...</div>
+    return (
+      <div>
+        <h1 className="font-display text-[34px] font-semibold leading-[1.47] tracking-[-0.374px] text-ink mb-6">
+          Profile
+        </h1>
+        <SkeletonForm />
+      </div>
+    )
+  }
+
+  if (loadError || !profile) {
+    return (
+      <div>
+        <h1 className="font-display text-[34px] font-semibold leading-[1.47] tracking-[-0.374px] text-ink mb-6">
+          Profile
+        </h1>
+        <div className="card-stitch p-6 max-w-2xl text-center space-y-3">
+          <p className="text-ink">
+            {loadError ? 'Could not load the profile.' : 'No profile exists yet.'}
+          </p>
+          <Button variant="primary" onClick={() => load()}>Retry</Button>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -123,12 +175,13 @@ export default function ProfilePage() {
             )}
           </div>
           <div className="flex flex-col gap-2">
-            <input ref={fileRef} onChange={handleFileUpload} type="file" accept="image/*" className="hidden" />
+            <input ref={fileRef} onChange={handleFileUpload} type="file" accept="image/*" className="hidden" disabled={uploadProgress !== null} />
             <div className="flex gap-2">
-              <button type="button" onClick={() => fileRef.current?.click()} className="btn-stitch">Upload Photo</button>
-              <button type="button" onClick={() => setShowMediaPicker(true)} className="btn-stitch">Choose from Media</button>
-              <button type="button" onClick={() => setPhotoUrl(null)} className="btn-stitch text-danger">Clear</button>
+              <Button type="button" loading={uploadProgress !== null} loadingText="Uploading..." onClick={() => fileRef.current?.click()}>Upload Photo</Button>
+              <Button type="button" onClick={() => setShowMediaPicker(true)}>Choose from Media</Button>
+              <Button type="button" variant="danger" onClick={() => setPhotoUrl(null)}>Clear</Button>
             </div>
+            {uploadProgress !== null && <ProgressBar percent={uploadProgress} />}
             <div className="text-sm text-muted">Photo will be displayed on the public homepage.</div>
           </div>
         </div>
@@ -245,12 +298,15 @@ export default function ProfilePage() {
           </span>
         </label>
 
-        <button
+        <Button
           type="submit"
-          className="btn-stitch btn-primary text-[17px] font-normal leading-[1] tracking-[-0.374px] px-[22px] py-[11px] rounded-full hover:opacity-90 transition-opacity"
+          variant="primary"
+          loading={isSaving}
+          loadingText="Saving..."
+          className="text-[17px] font-normal leading-[1] tracking-[-0.374px] px-[22px] py-[11px] rounded-full hover:opacity-90 transition-opacity"
         >
           Save Changes
-        </button>
+        </Button>
       </form>
 
       {showMediaPicker && (

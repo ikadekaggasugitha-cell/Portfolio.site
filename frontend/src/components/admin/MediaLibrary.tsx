@@ -1,9 +1,12 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import api from '@/lib/api'
-import toast from 'react-hot-toast'
 import type { Media } from '@/types'
+import { useAsyncAction } from '@/hooks/useAsyncAction'
+import Button from '@/components/admin/ui/Button'
+import ProgressBar from '@/components/admin/ui/ProgressBar'
+import { SkeletonList } from '@/components/admin/ui/Skeleton'
 
 export default function MediaLibrary() {
   const [items, setItems] = useState<Media[]>([])
@@ -11,49 +14,49 @@ export default function MediaLibrary() {
   const [page, setPage] = useState(1)
   const [perPage] = useState(24)
   const fileRef = useRef<HTMLInputElement | null>(null)
-  const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null)
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editCaption, setEditCaption] = useState('')
   const [editAlt, setEditAlt] = useState('')
 
-  useEffect(() => { load() }, [page])
+  const load = useCallback(async () => {
+    const res = await api.get('/media', { params: { page, per_page: perPage } })
+    // If API returns paginated resource, handle accordingly
+    const data = res.data.data ?? res.data
+    setItems(Array.isArray(data) ? data : data.data ?? [])
+  }, [page, perPage])
 
-  async function load() {
+  useEffect(() => {
     setLoading(true)
-    try {
-      const res = await api.get('/media', { params: { page, per_page: perPage } })
-      // If API returns paginated resource, handle accordingly
-      const data = res.data.data ?? res.data
-      setItems(Array.isArray(data) ? data : data.data ?? [])
-    } catch (err) {
-      console.error(err)
-      toast.error('Failed to load media')
-    } finally {
-      setLoading(false)
-    }
-  }
+    load().catch(console.error).finally(() => setLoading(false))
+  }, [load])
 
-  async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = e.currentTarget.files
-    if (!files || files.length === 0) return
-    setUploading(true)
-    try {
-      for (let i = 0; i < files.length; i++) {
-        const f = files[i]
-        const fd = new FormData()
-        fd.append('file', f)
-        await api.post('/media', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+  const { run: handleUpload } = useAsyncAction(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e.currentTarget.files
+      if (!files || files.length === 0) return
+      try {
+        for (let i = 0; i < files.length; i++) {
+          const f = files[i]
+          const fd = new FormData()
+          fd.append('file', f)
+          await api.post('/media', fd, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+            onUploadProgress: (evt) => {
+              if (!evt.total) return
+              const filePercent = evt.loaded / evt.total
+              setUploadProgress(Math.round(((i + filePercent) / files.length) * 100))
+            },
+          })
+        }
+        if (fileRef.current) fileRef.current.value = ''
+        await load()
+      } finally {
+        setUploadProgress(null)
       }
-      toast.success('Uploaded')
-      fileRef.current && (fileRef.current.value = '')
-      load()
-    } catch (err) {
-      console.error(err)
-      toast.error('Upload failed')
-    } finally {
-      setUploading(false)
-    }
-  }
+    },
+    { successMessage: 'Uploaded', errorMessage: 'Upload failed' },
+  )
 
   function startEdit(item: Media) {
     setEditingId(item.id)
@@ -61,39 +64,51 @@ export default function MediaLibrary() {
     setEditAlt(item.alt || '')
   }
 
-  async function saveEdit(id: number) {
-    try {
+  const { run: saveEdit, isPending: isSavingEdit } = useAsyncAction(
+    async (id: number) => {
       await api.patch(`/media/${id}`, { caption: editCaption, alt: editAlt })
-      toast.success('Updated')
       setEditingId(null)
-      load()
-    } catch (err) {
-      console.error(err)
-      toast.error('Update failed')
-    }
-  }
+      await load()
+    },
+    { successMessage: 'Updated', errorMessage: 'Update failed' },
+  )
 
-  async function del(id: number) {
+  const [deletingId, setDeletingId] = useState<number | null>(null)
+  const { run: destroy } = useAsyncAction(
+    async (id: number) => {
+      setDeletingId(id)
+      try {
+        await api.delete(`/media/${id}`)
+        await load()
+      } finally {
+        setDeletingId(null)
+      }
+    },
+    { successMessage: 'Deleted', errorMessage: 'Delete failed' },
+  )
+
+  function del(id: number) {
     if (!confirm('Delete this media?')) return
-    try {
-      await api.delete(`/media/${id}`)
-      toast.success('Deleted')
-      load()
-    } catch (err) {
-      console.error(err)
-      toast.error('Delete failed')
-    }
+    destroy(id)
   }
 
-  if (loading) return <div className="text-center py-8">Loading media...</div>
+  if (loading) {
+    return (
+      <div>
+        <h2 className="text-[18px] font-semibold stitch-heading mb-4">Media Library</h2>
+        <SkeletonList count={8} className="grid grid-cols-2 md:grid-cols-4 gap-3" />
+      </div>
+    )
+  }
 
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-[18px] font-semibold stitch-heading">Media Library</h2>
-        <div>
-          <input ref={fileRef} onChange={handleUpload} type="file" multiple accept="image/*" className="hidden" />
-          <button onClick={() => fileRef.current?.click()} className="btn-stitch btn-primary disabled:opacity-50" disabled={uploading}>{uploading ? 'Uploading...' : 'Upload Files'}</button>
+        <div className="text-right">
+          <input ref={fileRef} onChange={handleUpload} type="file" multiple accept="image/*" className="hidden" disabled={uploadProgress !== null} />
+          <Button variant="primary" onClick={() => fileRef.current?.click()} loading={uploadProgress !== null} loadingText="Uploading...">Upload Files</Button>
+          {uploadProgress !== null && <div className="mt-2 w-40 ml-auto"><ProgressBar percent={uploadProgress} /></div>}
         </div>
       </div>
 
@@ -106,8 +121,8 @@ export default function MediaLibrary() {
                 <input value={editCaption} onChange={(e) => setEditCaption(e.target.value)} placeholder="Caption" className="w-full mb-1 px-2 py-1 stitch-input" />
                 <input value={editAlt} onChange={(e) => setEditAlt(e.target.value)} placeholder="Alt text" className="w-full mb-2 px-2 py-1 stitch-input" />
                 <div className="flex gap-2">
-                  <button onClick={() => saveEdit(it.id)} className="btn-stitch btn-primary">Save</button>
-                  <button onClick={() => setEditingId(null)} className="btn-stitch">Cancel</button>
+                  <Button variant="primary" onClick={() => saveEdit(it.id)} loading={isSavingEdit}>Save</Button>
+                  <Button onClick={() => setEditingId(null)} disabled={isSavingEdit}>Cancel</Button>
                 </div>
               </div>
             ) : (
@@ -115,8 +130,8 @@ export default function MediaLibrary() {
                 <p className="text-sm truncate mb-1 stitch-heading">{it.filename}</p>
                 <p className="text-xs text-muted mb-2">{it.size} bytes</p>
                 <div className="flex gap-2">
-                  <button onClick={() => startEdit(it)} className="btn-stitch">Edit</button>
-                  <button onClick={() => del(it.id)} className="btn-stitch text-danger">Delete</button>
+                  <Button onClick={() => startEdit(it)} disabled={deletingId === it.id}>Edit</Button>
+                  <Button variant="danger" onClick={() => del(it.id)} loading={deletingId === it.id} loadingText="Deleting...">Delete</Button>
                 </div>
               </div>
             )}

@@ -4,6 +4,10 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import api from '@/lib/api'
 import toast from 'react-hot-toast'
 import type { ProjectImage, Project } from '@/types'
+import { useAsyncAction } from '@/hooks/useAsyncAction'
+import Button from '@/components/admin/ui/Button'
+import ProgressBar from '@/components/admin/ui/ProgressBar'
+import { SkeletonList } from '@/components/admin/ui/Skeleton'
 
 interface ProjectImageUploadProps {
   project: Project
@@ -12,7 +16,7 @@ interface ProjectImageUploadProps {
 
 export default function ProjectImageUpload({ project, onImagesUpdated }: ProjectImageUploadProps) {
   const [images, setImages] = useState<ProjectImage[]>([])
-  const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -44,7 +48,7 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
       return
     }
 
-    setUploading(true)
+    setUploadProgress(0)
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i]
@@ -63,6 +67,11 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
 
         await api.post(`/projects/${project.id}/images`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
+          onUploadProgress: (evt) => {
+            if (!evt.total) return
+            const filePercent = evt.loaded / evt.total
+            setUploadProgress(Math.round(((i + filePercent) / files.length) * 100))
+          },
         })
         toast.success(`Uploaded: ${file.name}`)
       }
@@ -74,21 +83,28 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
       console.error('Upload error:', error)
       toast.error('Failed to upload images')
     } finally {
-      setUploading(false)
+      setUploadProgress(null)
     }
   }
 
-  async function handleDeleteImage(imageId: number) {
-    if (!confirm('Delete this image?')) return
+  const [deletingImageId, setDeletingImageId] = useState<number | null>(null)
+  const { run: handleDeleteImage } = useAsyncAction(
+    async (imageId: number) => {
+      setDeletingImageId(imageId)
+      try {
+        await api.delete(`/projects/images/${imageId}`)
+        loadImages()
+        onImagesUpdated()
+      } finally {
+        setDeletingImageId(null)
+      }
+    },
+    { successMessage: 'Image deleted', errorMessage: 'Failed to delete image' },
+  )
 
-    try {
-      await api.delete(`/projects/images/${imageId}`)
-      toast.success('Image deleted')
-      loadImages()
-      onImagesUpdated()
-    } catch {
-      toast.error('Failed to delete image')
-    }
+  function confirmDeleteImage(imageId: number) {
+    if (!confirm('Delete this image?')) return
+    handleDeleteImage(imageId)
   }
 
   // Media picker
@@ -115,22 +131,23 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
     setSelectedMediaIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
   }
 
-  async function attachSelectedMedia() {
-    if (selectedMediaIds.length === 0) {
-      toast('No media selected')
-      return
-    }
-    try {
+  const { run: runAttachSelectedMedia, isPending: isAttaching } = useAsyncAction(
+    async () => {
       await api.post(`/projects/${project.id}/images/attach`, { media_ids: selectedMediaIds })
-      toast.success('Media attached')
       setSelectedMediaIds([])
       setShowMediaPicker(false)
       loadImages()
       onImagesUpdated()
-    } catch (err) {
-      console.error('Attach media error', err)
-      toast.error('Failed to attach media')
+    },
+    { successMessage: 'Media attached', errorMessage: 'Failed to attach media' },
+  )
+
+  function attachSelectedMedia() {
+    if (selectedMediaIds.length === 0) {
+      toast('No media selected')
+      return
     }
+    runAttachSelectedMedia()
   }
 
   // Drag-and-drop ordering
@@ -158,26 +175,23 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
     setOrderChanged(true)
   }
 
-  async function saveOrder() {
-    try {
+  const { run: saveOrder, isPending: isSavingOrder } = useAsyncAction(
+    async () => {
       const order = images.map((i) => i.id)
       await api.post(`/projects/${project.id}/images/reorder`, { order })
-      toast.success('Order saved')
       setOrderChanged(false)
       loadImages()
       onImagesUpdated()
-    } catch (err) {
-      console.error('Save order error', err)
-      toast.error('Failed to save order')
-    }
-  }
+    },
+    { successMessage: 'Order saved', errorMessage: 'Failed to save order' },
+  )
 
   function cancelOrder() {
     loadImages()
   }
 
   if (loading) {
-    return <div className="text-center py-6 text-ink-muted-48">Loading images...</div>
+    return <SkeletonList count={3} className="grid grid-cols-2 md:grid-cols-3 gap-3" />
   }
 
   return (
@@ -194,17 +208,17 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
             multiple
             accept="image/jpeg,image/png,image/gif,image/webp"
             onChange={handleFileChange}
-            disabled={uploading || images.length >= 10}
+            disabled={uploadProgress !== null || images.length >= 10}
             className="hidden"
           />
           <div className="flex flex-col md:flex-row items-center gap-3">
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              disabled={uploading || images.length >= 10}
+              disabled={uploadProgress !== null || images.length >= 10}
               className="text-primary text-[14px] leading-[1.29] tracking-[-0.224px] hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {uploading ? 'Uploading...' : images.length >= 10 ? 'Maximum images reached' : 'Click to upload or drag and drop'}
+              {uploadProgress !== null ? 'Uploading...' : images.length >= 10 ? 'Maximum images reached' : 'Click to upload or drag and drop'}
             </button>
 
             <button
@@ -215,6 +229,12 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
               Select from Media Library
             </button>
           </div>
+
+          {uploadProgress !== null && (
+            <div className="mt-3 max-w-xs mx-auto">
+              <ProgressBar percent={uploadProgress} />
+            </div>
+          )}
 
           <p className="text-[12px] leading-[1] tracking-[-0.12px] text-ink-muted-48 mt-2">
             PNG, JPG, GIF, WebP (Max 2MB each)
@@ -243,13 +263,16 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
                 />
                 <div className="absolute top-2 left-2 bg-black/40 text-white text-[11px] px-2 py-1 rounded">#{idx + 1}</div>
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity gap-2">
-                  <button
+                  <Button
+                    variant="unstyled"
                     type="button"
-                    onClick={() => handleDeleteImage(img.id)}
+                    onClick={() => confirmDeleteImage(img.id)}
+                    loading={deletingImageId === img.id}
+                    loadingText="Deleting..."
                     className="bg-red-600 text-white px-3 py-1 rounded"
                   >
                     Delete
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))}
@@ -257,8 +280,8 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
 
           {orderChanged && (
             <div className="flex gap-2 mt-3">
-              <button onClick={saveOrder} className="bg-primary text-white px-4 py-2 rounded">Save Order</button>
-              <button onClick={cancelOrder} className="border border-hairline px-4 py-2 rounded">Cancel</button>
+              <Button variant="unstyled" onClick={() => saveOrder()} loading={isSavingOrder} className="bg-primary text-white px-4 py-2 rounded">Save Order</Button>
+              <Button variant="unstyled" onClick={cancelOrder} disabled={isSavingOrder} className="border border-hairline px-4 py-2 rounded">Cancel</Button>
             </div>
           )}
 
@@ -268,12 +291,12 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
               <div className="flex items-center justify-between mb-3">
                 <h4 className="font-semibold">Media Library</h4>
                 <div className="flex gap-2">
-                  <button onClick={() => { setShowMediaPicker(false); setSelectedMediaIds([]) }} className="border px-3 py-1 rounded">Close</button>
-                  <button onClick={attachSelectedMedia} className="bg-primary text-white px-3 py-1 rounded">Attach Selected</button>
+                  <Button variant="unstyled" onClick={() => { setShowMediaPicker(false); setSelectedMediaIds([]) }} disabled={isAttaching} className="border px-3 py-1 rounded">Close</Button>
+                  <Button variant="unstyled" onClick={attachSelectedMedia} loading={isAttaching} className="bg-primary text-white px-3 py-1 rounded">Attach Selected</Button>
                 </div>
               </div>
               {loadingMedia ? (
-                <div className="text-center py-6">Loading media...</div>
+                <SkeletonList count={6} className="grid grid-cols-3 md:grid-cols-6 gap-2" />
               ) : (
                 <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
                   {mediaItems.map((m) => (
@@ -293,7 +316,7 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
       )}
 
       {/* Empty State */}
-      {images.length === 0 && !uploading && (
+      {images.length === 0 && uploadProgress === null && (
         <div className="text-center py-8 text-ink-muted-48">
           <p className="text-[14px] leading-[1.43] tracking-[-0.224px]">No images uploaded yet</p>
         </div>

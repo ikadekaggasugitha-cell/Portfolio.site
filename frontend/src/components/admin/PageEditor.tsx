@@ -1,11 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import api from '@/lib/api'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import type { Page, PageBlock, Media } from '@/types'
 import dynamic from 'next/dynamic'
+import { useAsyncAction } from '@/hooks/useAsyncAction'
+import Button from '@/components/admin/ui/Button'
+import { SkeletonForm } from '@/components/admin/ui/Skeleton'
 
 const MediaPicker = dynamic(() => import('./MediaPicker'), { ssr: false })
 
@@ -17,60 +20,42 @@ export default function PageEditor({ id }: PageEditorProps) {
   const router = useRouter()
   const isNew = id === 'new'
   const [page, setPage] = useState<Partial<Page>>({ title: '', slug: '', content: '', is_published: false, blocks: [] })
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(!isNew)
   const [editingBlockIndex, setEditingBlockIndex] = useState<number | null>(null)
   const [blockDraft, setBlockDraft] = useState<string>('')
   const [blockForm, setBlockForm] = useState<Record<string, unknown>>({})
   const [newBlockType, setNewBlockType] = useState<string>('text')
   const [showMediaPicker, setShowMediaPicker] = useState(false)
 
-  useEffect(() => {
-    if (!isNew) load()
+  const load = useCallback(async () => {
+    const res = await api.get(`/pages/${id}`)
+    setPage(res.data.data ?? res.data)
   }, [id])
 
-  async function load() {
-    setLoading(true)
-    try {
-      const res = await api.get(`/pages/${id}`)
-      setPage(res.data.data ?? res.data)
-    } catch (err) {
-      console.error(err)
-      toast.error('Failed to load page')
-    } finally {
-      setLoading(false)
-    }
-  }
+  useEffect(() => {
+    if (!isNew) load().catch((err) => { console.error(err); toast.error('Failed to load page') }).finally(() => setLoading(false))
+  }, [isNew, load])
 
-  async function save() {
-    setLoading(true)
-    try {
+  const { run: save, isPending: isSaving } = useAsyncAction(
+    async () => {
       if (isNew) {
-        const res = await api.post('/pages', page)
-        toast.success('Page created')
+        await api.post('/pages', page)
         router.push('/admin/pages')
       } else {
         await api.put(`/pages/${id}`, page)
-        toast.success('Page saved')
-        load()
+        await load()
       }
-    } catch (err) {
-      console.error(err)
-      toast.error('Save failed')
-    } finally {
-      setLoading(false)
-    }
-  }
+    },
+    { successMessage: isNew ? 'Page created' : 'Page saved', errorMessage: 'Save failed' },
+  )
 
-  async function publish() {
-    try {
+  const { run: publish, isPending: isPublishing } = useAsyncAction(
+    async () => {
       await api.post(`/pages/${id}/publish`, { is_published: !page.is_published })
-      toast.success('Publish state updated')
-      load()
-    } catch (err) {
-      console.error(err)
-      toast.error('Publish failed')
-    }
-  }
+      await load()
+    },
+    { successMessage: 'Publish state updated', errorMessage: 'Publish failed' },
+  )
 
   function addBlock() {
     const blocks: PageBlock[] = page.blocks ? [...page.blocks] : []
@@ -153,15 +138,19 @@ export default function PageEditor({ id }: PageEditorProps) {
     }
   }
 
-  if (loading) return <div className="py-8 text-center">Loading...</div>
+  if (loading) return <SkeletonForm fields={3} />
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-display text-[28px] font-semibold stitch-heading">{isNew ? 'New Page' : page.title}</h1>
         <div className="flex gap-2">
-          {!isNew && <button onClick={publish} className="btn-stitch">{page.is_published ? 'Unpublish' : 'Publish'}</button>}
-          <button onClick={save} className="btn-stitch btn-primary">Save</button>
+          {!isNew && (
+            <Button onClick={() => publish()} loading={isPublishing} loadingText="Updating...">
+              {page.is_published ? 'Unpublish' : 'Publish'}
+            </Button>
+          )}
+          <Button variant="primary" onClick={() => save()} loading={isSaving} loadingText="Saving...">Save</Button>
         </div>
       </div>
 

@@ -1,44 +1,54 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import api from '@/lib/api'
 import Link from 'next/link'
-import toast from 'react-hot-toast'
 import type { Page } from '@/types'
+import { useAsyncAction } from '@/hooks/useAsyncAction'
+import Button from '@/components/admin/ui/Button'
+import { SkeletonList } from '@/components/admin/ui/Skeleton'
 
 export default function PagesList() {
   const [items, setItems] = useState<Page[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => { load() }, [])
+  const load = useCallback(async () => {
+    const res = await api.get('/pages')
+    const data = res.data.data ?? res.data
+    setItems(Array.isArray(data) ? data : data.data ?? [])
+  }, [])
 
-  async function load() {
-    setLoading(true)
-    try {
-      const res = await api.get('/pages')
-      const data = res.data.data ?? res.data
-      setItems(Array.isArray(data) ? data : data.data ?? [])
-    } catch (err) {
-      console.error(err)
-      toast.error('Failed to load pages')
-    } finally {
-      setLoading(false)
-    }
-  }
+  useEffect(() => {
+    load().catch(console.error).finally(() => setLoading(false))
+  }, [load])
 
-  async function del(id: number) {
+  const [deletingId, setDeletingId] = useState<number | null>(null)
+  const { run: del } = useAsyncAction(
+    async (id: number) => {
+      setDeletingId(id)
+      try {
+        await api.delete(`/pages/${id}`)
+        await load()
+      } finally {
+        setDeletingId(null)
+      }
+    },
+    { successMessage: 'Deleted', errorMessage: 'Delete failed' },
+  )
+
+  function handleDelete(id: number) {
     if (!confirm('Delete page?')) return
-    try {
-      await api.delete(`/pages/${id}`)
-      toast.success('Deleted')
-      load()
-    } catch (err) {
-      console.error(err)
-      toast.error('Delete failed')
-    }
+    del(id)
   }
 
-  if (loading) return <div className="py-8 text-center">Loading pages...</div>
+  if (loading) {
+    return (
+      <div>
+        <h1 className="font-display text-[34px] font-semibold stitch-heading mb-6">Pages</h1>
+        <SkeletonList count={3} className="grid gap-3" />
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -56,7 +66,14 @@ export default function PagesList() {
             </div>
             <div className="flex gap-2">
               <Link href={`/admin/pages/${p.id}`} className="btn-stitch">Edit</Link>
-              <button onClick={() => del(p.id)} className="btn-stitch text-danger">Delete</button>
+              <Button
+                variant="danger"
+                onClick={() => handleDelete(p.id)}
+                loading={deletingId === p.id}
+                loadingText="Deleting..."
+              >
+                Delete
+              </Button>
             </div>
           </div>
         ))}

@@ -1,9 +1,11 @@
 'use client'
 
-import { useEffect, useState, type FormEvent } from 'react'
+import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import api from '@/lib/api'
 import type { Skill } from '@/types'
-import toast from 'react-hot-toast'
+import { useAsyncAction } from '@/hooks/useAsyncAction'
+import Button from '@/components/admin/ui/Button'
+import { SkeletonTable } from '@/components/admin/ui/Skeleton'
 
 const CATEGORY_LABELS: Record<string, string> = {
   frontend: 'Frontend',
@@ -21,14 +23,13 @@ export default function SkillsPage() {
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ skill_name: '', category: '', level: 3 })
 
-  function load() {
-    api.get('/skills').then((res) => setSkills(res.data.data ?? []))
-  }
+  const load = useCallback(() => {
+    return api.get('/skills').then((res) => setSkills(res.data.data ?? []))
+  }, [])
 
   useEffect(() => {
-    load()
-    setLoading(false)
-  }, [])
+    load().finally(() => setLoading(false))
+  }, [load])
 
   function resetForm() {
     setForm({ skill_name: '', category: '', level: 3 })
@@ -36,21 +37,22 @@ export default function SkillsPage() {
     setShowForm(false)
   }
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    try {
+  const { run: submit, isPending: isSaving } = useAsyncAction(
+    async () => {
       if (editing) {
         await api.put(`/skills/${editing.id}`, form)
-        toast.success('Skill updated')
       } else {
         await api.post('/skills', form)
-        toast.success('Skill created')
       }
       resetForm()
-      load()
-    } catch {
-      toast.error('Failed to save skill')
-    }
+      await load()
+    },
+    { successMessage: editing ? 'Skill updated' : 'Skill created', errorMessage: 'Failed to save skill' },
+  )
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+    submit()
   }
 
   function handleEdit(skill: Skill) {
@@ -59,19 +61,34 @@ export default function SkillsPage() {
     setShowForm(true)
   }
 
-  async function handleDelete(id: number) {
+  const [deletingId, setDeletingId] = useState<number | null>(null)
+  const { run: destroy } = useAsyncAction(
+    async (id: number) => {
+      setDeletingId(id)
+      try {
+        await api.delete(`/skills/${id}`)
+        await load()
+      } finally {
+        setDeletingId(null)
+      }
+    },
+    { successMessage: 'Skill deleted', errorMessage: 'Failed to delete skill' },
+  )
+
+  function handleDelete(id: number) {
     if (!confirm('Delete this skill?')) return
-    try {
-      await api.delete(`/skills/${id}`)
-      toast.success('Skill deleted')
-      load()
-    } catch {
-      toast.error('Failed to delete skill')
-    }
+    destroy(id)
   }
 
   if (loading) {
-    return <div className="text-center py-12 text-ink-muted-48">Loading...</div>
+    return (
+      <div>
+        <h1 className="font-display text-[34px] font-semibold leading-[1.47] tracking-[-0.374px] text-ink mb-6">
+          Skills
+        </h1>
+        <SkeletonTable columns={3} />
+      </div>
+    )
   }
 
   return (
@@ -143,12 +160,15 @@ export default function SkillsPage() {
             />
           </div>
           <div className="flex gap-2">
-            <button
+            <Button
               type="submit"
+              variant="unstyled"
+              loading={isSaving}
+              loadingText={editing ? 'Updating...' : 'Creating...'}
               className="bg-primary text-body-on-dark text-[14px] leading-[1.29] tracking-[-0.224px] px-[14px] py-[8px] rounded-full hover:opacity-90 transition-opacity"
             >
               {editing ? 'Update' : 'Create'}
-            </button>
+            </Button>
             <button
               type="button"
               onClick={resetForm}
@@ -188,18 +208,23 @@ export default function SkillsPage() {
                   </div>
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <button
+                  <Button
+                    variant="unstyled"
                     onClick={() => handleEdit(skill)}
+                    disabled={deletingId === skill.id}
                     className="text-primary text-[14px] leading-[1.29] tracking-[-0.224px] hover:underline mr-3"
                   >
                     Edit
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="unstyled"
                     onClick={() => handleDelete(skill.id)}
+                    loading={deletingId === skill.id}
+                    loadingText="Deleting..."
                     className="text-ink-muted-48 text-[14px] leading-[1.29] tracking-[-0.224px] hover:text-ink transition-colors"
                   >
                     Delete
-                  </button>
+                  </Button>
                 </td>
               </tr>
             ))}

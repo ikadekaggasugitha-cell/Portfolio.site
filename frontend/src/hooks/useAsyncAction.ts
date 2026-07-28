@@ -1,0 +1,47 @@
+import { useCallback, useState } from 'react'
+import axios from 'axios'
+import toast from 'react-hot-toast'
+
+function extractErrorMessage(err: unknown): string | undefined {
+  if (axios.isAxiosError(err)) {
+    return (err.response?.data as { message?: string } | undefined)?.message
+  }
+  return undefined
+}
+
+interface UseAsyncActionOptions {
+  successMessage?: string
+  /** Static message, or a function to derive one from the caught error. */
+  errorMessage?: string | ((err: unknown) => string | undefined)
+}
+
+/**
+ * Standardizes the try/await/toast.success/catch/toast.error shape repeated
+ * across every admin CRUD page, plus tracks a single `isPending` flag to
+ * drive <Button loading> and prevent double-submits.
+ */
+export function useAsyncAction<Args extends unknown[]>(
+  action: (...args: Args) => Promise<void>,
+  { successMessage, errorMessage }: UseAsyncActionOptions = {},
+) {
+  const [isPending, setIsPending] = useState(false)
+
+  const run = useCallback(
+    async (...args: Args) => {
+      setIsPending(true)
+      try {
+        await action(...args)
+        if (successMessage) toast.success(successMessage)
+      } catch (err) {
+        console.error(err)
+        const custom = typeof errorMessage === 'function' ? errorMessage(err) : errorMessage
+        toast.error(custom || extractErrorMessage(err) || 'Something went wrong')
+      } finally {
+        setIsPending(false)
+      }
+    },
+    [action, successMessage, errorMessage],
+  )
+
+  return { run, isPending }
+}
