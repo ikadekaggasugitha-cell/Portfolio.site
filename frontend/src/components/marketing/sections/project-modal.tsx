@@ -124,20 +124,24 @@ export function ProjectModal({
               </div>
 
               <div className="mt-6 flex flex-wrap gap-3">
-                <a
-                  href={project.demoUrl}
-                  className="inline-flex items-center gap-2 rounded-[14px] bg-mk-brand px-6 py-3 text-[0.95rem] font-semibold text-mk-on-brand shadow-mk-brand transition-colors hover:bg-mk-brand-strong"
-                >
-                  Live demo
-                  <ExternalLink className="size-[17px]" aria-hidden />
-                </a>
-                <a
-                  href={project.repoUrl}
-                  className="inline-flex items-center gap-2 rounded-[14px] border border-mk-hairline bg-mk-surface px-6 py-3 text-[0.95rem] font-semibold text-mk-ink shadow-mk-sm transition-colors hover:border-mk-brand-soft"
-                >
-                  <GithubIcon className="size-[17px]" />
-                  Source
-                </a>
+                {project.demoUrl && project.demoUrl !== '#' && (
+                  <a
+                    href={project.demoUrl}
+                    className="inline-flex items-center gap-2 rounded-[14px] bg-mk-brand px-6 py-3 text-[0.95rem] font-semibold text-mk-on-brand shadow-mk-brand transition-colors hover:bg-mk-brand-strong"
+                  >
+                    Live demo
+                    <ExternalLink className="size-[17px]" aria-hidden />
+                  </a>
+                )}
+                {project.repoUrl && project.repoUrl !== '#' && (
+                  <a
+                    href={project.repoUrl}
+                    className="inline-flex items-center gap-2 rounded-[14px] border border-mk-hairline bg-mk-surface px-6 py-3 text-[0.95rem] font-semibold text-mk-ink shadow-mk-sm transition-colors hover:border-mk-brand-soft"
+                  >
+                    <GithubIcon className="size-[17px]" />
+                    Source
+                  </a>
+                )}
               </div>
             </div>
           </motion.div>

@@ -64,12 +64,16 @@ export function AboutHero(props: AboutHeroData = aboutHeroDefaults) {
                   <Mail className="size-[17px]" aria-hidden />
                 </Button>
                 <div className="flex gap-2.5">
-                  <a href={githubUrl} aria-label="GitHub" className={socialClass}>
-                    <GithubIcon className="size-[19px]" />
-                  </a>
-                  <a href={linkedinUrl} aria-label="LinkedIn" className={socialClass}>
-                    <LinkedinIcon className="size-[19px]" />
-                  </a>
+                  {githubUrl && githubUrl !== '#' && (
+                    <a href={githubUrl} aria-label="GitHub" className={socialClass}>
+                      <GithubIcon className="size-[19px]" />
+                    </a>
+                  )}
+                  {linkedinUrl && linkedinUrl !== '#' && (
+                    <a href={linkedinUrl} aria-label="LinkedIn" className={socialClass}>
+                      <LinkedinIcon className="size-[19px]" />
+                    </a>
+                  )}
                   <a href={`mailto:${email}`} aria-label="Email" className={socialClass}>
                     <Mail className="size-[19px]" aria-hidden />
                   </a>

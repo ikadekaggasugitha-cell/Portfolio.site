@@ -32,6 +32,9 @@ export default function ProfilePage() {
   const [showMediaPicker, setShowMediaPicker] = useState(false)
   const [uploadProgress, setUploadProgress] = useState<number | null>(null)
   const fileRef = useRef<HTMLInputElement | null>(null)
+  const [cvUrl, setCvUrl] = useState<string | null>(null)
+  const [cvUploadProgress, setCvUploadProgress] = useState<number | null>(null)
+  const cvFileRef = useRef<HTMLInputElement | null>(null)
 
   const load = useCallback(() => {
     setLoading(true)
@@ -55,6 +58,7 @@ export default function ProfilePage() {
           setIsAvailable(p.is_available ?? true)
           setPhotoUrl(p.photo || null)
           setPhotoMediaId(p.photo_media_id ?? null)
+          setCvUrl(p.cv || null)
         } else {
           setProfile(null)
         }
@@ -80,7 +84,7 @@ export default function ProfilePage() {
   const { run: submit, isPending: isSaving } = useAsyncAction(
     async () => {
       if (!profile) throw new Error('Profile has not loaded yet')
-      const payload: Record<string, unknown> = { ...form, is_available: isAvailable }
+      const payload: Record<string, unknown> = { ...form, is_available: isAvailable, cv: cvUrl }
       // prefer storing media reference when available
       if (photoMediaId) {
         payload['photo_media_id'] = photoMediaId
@@ -128,6 +132,32 @@ export default function ProfilePage() {
   function handleSelectMedia(m: Media) {
     setPhotoUrl(m.url)
     setPhotoMediaId(m.id ?? null)
+  }
+
+  async function handleCvUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.currentTarget.files
+    if (!files || files.length === 0) return
+    try {
+      setCvUploadProgress(0)
+      const fd = new FormData()
+      fd.append('file', files[0])
+      const res = await api.post('/media', fd, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        onUploadProgress: (evt) => {
+          if (evt.total) setCvUploadProgress(Math.round((evt.loaded / evt.total) * 100))
+        },
+      })
+      const media = res.data.data ?? res.data
+      const m = Array.isArray(media) ? media[0] : media
+      setCvUrl(m.url)
+      toast.success('CV uploaded — click Save Changes to publish it')
+    } catch (err) {
+      console.error(err)
+      toast.error('CV upload failed')
+    } finally {
+      setCvUploadProgress(null)
+      if (cvFileRef.current) cvFileRef.current.value = ''
+    }
   }
 
   if (loading) {
@@ -185,6 +215,36 @@ export default function ProfilePage() {
             <div className="text-sm text-muted">Photo will be displayed on the public homepage.</div>
           </div>
         </div>
+
+        <div>
+          <label className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">
+            CV / Résumé
+          </label>
+          <input
+            ref={cvFileRef}
+            onChange={handleCvUpload}
+            type="file"
+            accept=".pdf,.doc,.docx"
+            className="hidden"
+            disabled={cvUploadProgress !== null}
+          />
+          <div className="flex flex-wrap items-center gap-2">
+            <Button type="button" loading={cvUploadProgress !== null} loadingText="Uploading..." onClick={() => cvFileRef.current?.click()}>
+              {cvUrl ? 'Replace CV' : 'Upload CV'}
+            </Button>
+            {cvUrl && (
+              <>
+                <a href={cvUrl} target="_blank" rel="noopener noreferrer" className="text-primary text-[14px] hover:underline">
+                  View current CV
+                </a>
+                <Button type="button" variant="danger" onClick={() => setCvUrl(null)}>Clear</Button>
+              </>
+            )}
+          </div>
+          {cvUploadProgress !== null && <div className="mt-2 max-w-xs"><ProgressBar percent={cvUploadProgress} /></div>}
+          <div className="text-sm text-muted mt-1">PDF, DOC or DOCX. Powers the &quot;Download CV&quot; button on the public site.</div>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">

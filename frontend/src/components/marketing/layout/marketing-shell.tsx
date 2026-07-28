@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { fontVariables } from '@/lib/marketing/fonts'
 import { ThemeProvider, ThemeScript } from '../theme/theme-provider'
 import { Navbar } from './navbar'
-import { Footer } from './footer'
+import { Footer, type FooterLinks } from './footer'
 import { ScrollToTop } from './scroll-to-top'
 import { PageTransition } from './page-transition'
 
@@ -14,7 +14,7 @@ import { PageTransition } from './page-transition'
  * while the admin area keeps its own. Rendered once by the app/(site) layout,
  * so the navbar/footer persist across navigations and only content transitions.
  */
-export function MarketingShell({ children }: { children: ReactNode }) {
+export function MarketingShell({ children, footerLinks }: { children: ReactNode; footerLinks?: FooterLinks }) {
   return (
     <div
       id="top"
@@ -26,7 +26,7 @@ export function MarketingShell({ children }: { children: ReactNode }) {
         <main className="flex-1">
           <PageTransition>{children}</PageTransition>
         </main>
-        <Footer />
+        <Footer {...footerLinks} />
         <ScrollToTop />
       </ThemeProvider>
     </div>

@@ -5,8 +5,25 @@ import { GithubIcon, LinkedinIcon } from '../icons/brand-icons'
 
 const social = 'grid size-[42px] place-items-center rounded-xl border border-mk-hairline bg-mk-surface text-mk-muted shadow-mk-sm transition-[color,border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-mk-brand-soft hover:text-mk-ink'
 
-export function Footer() {
+const isLive = (href: string | undefined) => Boolean(href && href !== '#')
+
+export interface FooterLinks {
+  githubUrl?: string
+  linkedinUrl?: string
+  email?: string
+  cvUrl?: string
+}
+
+/** Falls back to the static `site` defaults when no live profile data is passed. */
+export function Footer({ githubUrl = site.githubUrl, linkedinUrl = site.linkedinUrl, email = site.email, cvUrl = site.cvUrl }: FooterLinks = {}) {
   const year = new Date().getFullYear()
+
+  const elsewhereLinks = [
+    isLive(githubUrl) && { label: 'GitHub', href: githubUrl! },
+    isLive(linkedinUrl) && { label: 'LinkedIn', href: linkedinUrl! },
+    { label: 'Email', href: `mailto:${email}` },
+    isLive(cvUrl) && { label: 'Download CV', href: cvUrl! },
+  ].filter((link): link is { label: string; href: string } => Boolean(link))
 
   return (
     <footer className="border-t border-mk-hairline bg-mk-surface pb-8 pt-[clamp(52px,7vw,84px)]">
@@ -20,13 +37,17 @@ export function Footer() {
               IT programmer building reliable software — web, backend and automation — from {site.location}.
             </p>
             <div className="mt-5 flex gap-2.5">
-              <a href={site.githubUrl} aria-label="GitHub" className={social}>
-                <GithubIcon className="size-[19px]" />
-              </a>
-              <a href={site.linkedinUrl} aria-label="LinkedIn" className={social}>
-                <LinkedinIcon className="size-[19px]" />
-              </a>
-              <a href={`mailto:${site.email}`} aria-label="Email" className={social}>
+              {isLive(githubUrl) && (
+                <a href={githubUrl} aria-label="GitHub" className={social}>
+                  <GithubIcon className="size-[19px]" />
+                </a>
+              )}
+              {isLive(linkedinUrl) && (
+                <a href={linkedinUrl} aria-label="LinkedIn" className={social}>
+                  <LinkedinIcon className="size-[19px]" />
+                </a>
+              )}
+              <a href={`mailto:${email}`} aria-label="Email" className={social}>
                 <Mail className="size-[19px]" aria-hidden />
               </a>
             </div>
@@ -36,15 +57,7 @@ export function Footer() {
             title="Navigate"
             links={navItems.map((item) => ({ label: item.label, href: item.href }))}
           />
-          <FooterCol
-            title="Elsewhere"
-            links={[
-              { label: 'GitHub', href: site.githubUrl },
-              { label: 'LinkedIn', href: site.linkedinUrl },
-              { label: 'Email', href: `mailto:${site.email}` },
-              { label: 'Download CV', href: site.cvUrl },
-            ]}
-          />
+          <FooterCol title="Elsewhere" links={elsewhereLinks} />
         </div>
 
         <div className="mt-11 flex flex-wrap items-center justify-between gap-3 border-t border-mk-hairline pt-6 text-[0.85rem] text-mk-faint">

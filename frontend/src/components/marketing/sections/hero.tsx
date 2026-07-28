@@ -70,19 +70,25 @@ export function Hero(props: HeroData = heroDefaults) {
                 View my work
                 <ArrowRight className="size-[17px]" aria-hidden />
               </Button>
-              <Button href={cvUrl} variant="ghost" size="lg">
-                <Download className="size-[17px]" aria-hidden />
-                Download CV
-              </Button>
+              {cvUrl && cvUrl !== '#' && (
+                <Button href={cvUrl} variant="ghost" size="lg">
+                  <Download className="size-[17px]" aria-hidden />
+                  Download CV
+                </Button>
+              )}
             </motion.div>
 
             <motion.div {...item} className="mt-8 flex gap-2.5">
-              <a href={githubUrl} aria-label="GitHub" className={socialClass}>
-                <GithubIcon className="size-[19px]" />
-              </a>
-              <a href={linkedinUrl} aria-label="LinkedIn" className={socialClass}>
-                <LinkedinIcon className="size-[19px]" />
-              </a>
+              {githubUrl && githubUrl !== '#' && (
+                <a href={githubUrl} aria-label="GitHub" className={socialClass}>
+                  <GithubIcon className="size-[19px]" />
+                </a>
+              )}
+              {linkedinUrl && linkedinUrl !== '#' && (
+                <a href={linkedinUrl} aria-label="LinkedIn" className={socialClass}>
+                  <LinkedinIcon className="size-[19px]" />
+                </a>
+              )}
               <a href={`mailto:${email}`} aria-label="Email" className={socialClass}>
                 <Mail className="size-[19px]" aria-hidden />
               </a>
