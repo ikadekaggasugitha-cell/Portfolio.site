@@ -13,38 +13,6 @@ use App\Http\Controllers\Api\V1\PageController;
 use App\Http\Controllers\Api\V1\SkillController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('debug-login', function () {
-    $out = [
-        'app_debug' => config('app.debug'),
-        'jwt_secret_len' => strlen((string) config('jwt.secret')),
-        'jwt_algo' => config('jwt.algo'),
-        'db_connection' => config('database.default'),
-    ];
-
-    try {
-        $user = \App\Models\User::where('email', 'admin@porto.com')->first();
-        $out['user_found'] = (bool) $user;
-        $out['user_id'] = $user?->id;
-
-        if ($user) {
-            $out['password_check'] = \Illuminate\Support\Facades\Hash::check('Salinem156', $user->password);
-        }
-
-        $token = \Tymon\JWTAuth\Facades\JWTAuth::attempt([
-            'email' => 'admin@porto.com',
-            'password' => 'Salinem156',
-        ]);
-        $out['jwt_attempt_result'] = $token ? 'token issued' : 'attempt returned false';
-    } catch (\Throwable $e) {
-        $out['exception_class'] = get_class($e);
-        $out['exception_message'] = $e->getMessage();
-        $out['exception_file'] = $e->getFile();
-        $out['exception_line'] = $e->getLine();
-    }
-
-    return response()->json($out);
-});
-
 Route::get('health', function () {
     return response()->json([
         'status' => 'UP',
