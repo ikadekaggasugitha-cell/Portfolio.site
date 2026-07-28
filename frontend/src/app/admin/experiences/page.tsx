@@ -46,7 +46,7 @@ export default function ExperiencesPage() {
       resetForm()
       await load()
     },
-    { successMessage: editing ? 'Experience updated' : 'Experience created', errorMessage: 'Failed to save experience' },
+    { successMessage: editing ? 'Experience updated' : 'Experience created', errorMessage: 'Failed to save experience', revalidateTags: 'experiences' },
   )
 
   function handleSubmit(e: FormEvent) {
@@ -78,7 +78,7 @@ export default function ExperiencesPage() {
         setDeletingId(null)
       }
     },
-    { successMessage: 'Experience deleted', errorMessage: 'Failed to delete experience' },
+    { successMessage: 'Experience deleted', errorMessage: 'Failed to delete experience', revalidateTags: 'experiences' },
   )
 
   function handleDelete(id: number) {

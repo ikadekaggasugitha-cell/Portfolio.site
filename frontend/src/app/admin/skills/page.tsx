@@ -47,7 +47,7 @@ export default function SkillsPage() {
       resetForm()
       await load()
     },
-    { successMessage: editing ? 'Skill updated' : 'Skill created', errorMessage: 'Failed to save skill' },
+    { successMessage: editing ? 'Skill updated' : 'Skill created', errorMessage: 'Failed to save skill', revalidateTags: 'skills' },
   )
 
   function handleSubmit(e: FormEvent) {
@@ -72,7 +72,7 @@ export default function SkillsPage() {
         setDeletingId(null)
       }
     },
-    { successMessage: 'Skill deleted', errorMessage: 'Failed to delete skill' },
+    { successMessage: 'Skill deleted', errorMessage: 'Failed to delete skill', revalidateTags: 'skills' },
   )
 
   function handleDelete(id: number) {

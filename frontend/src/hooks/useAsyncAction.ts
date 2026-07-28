@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { pingRevalidate } from '@/lib/revalidate'
 
 function extractErrorMessage(err: unknown): string | undefined {
   if (axios.isAxiosError(err)) {
@@ -13,6 +14,8 @@ interface UseAsyncActionOptions {
   successMessage?: string
   /** Static message, or a function to derive one from the caught error. */
   errorMessage?: string | ((err: unknown) => string | undefined)
+  /** Public-site cache tag(s) to bust on success (e.g. 'profile', 'skills'). */
+  revalidateTags?: string | string[]
 }
 
 /**
@@ -22,7 +25,7 @@ interface UseAsyncActionOptions {
  */
 export function useAsyncAction<Args extends unknown[]>(
   action: (...args: Args) => Promise<void>,
-  { successMessage, errorMessage }: UseAsyncActionOptions = {},
+  { successMessage, errorMessage, revalidateTags }: UseAsyncActionOptions = {},
 ) {
   const [isPending, setIsPending] = useState(false)
 
@@ -32,6 +35,7 @@ export function useAsyncAction<Args extends unknown[]>(
       try {
         await action(...args)
         if (successMessage) toast.success(successMessage)
+        if (revalidateTags) pingRevalidate(revalidateTags)
       } catch (err) {
         console.error(err)
         const custom = typeof errorMessage === 'function' ? errorMessage(err) : errorMessage
@@ -40,7 +44,7 @@ export function useAsyncAction<Args extends unknown[]>(
         setIsPending(false)
       }
     },
-    [action, successMessage, errorMessage],
+    [action, successMessage, errorMessage, revalidateTags],
   )
 
   return { run, isPending }

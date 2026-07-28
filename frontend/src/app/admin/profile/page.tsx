@@ -89,7 +89,7 @@ export default function ProfilePage() {
       }
       await api.put(`/profile/${profile.id}`, payload)
     },
-    { successMessage: 'Profile updated', errorMessage: 'Failed to update profile' },
+    { successMessage: 'Profile updated', errorMessage: 'Failed to update profile', revalidateTags: 'profile' },
   )
 
   function handleSubmit(e: FormEvent) {

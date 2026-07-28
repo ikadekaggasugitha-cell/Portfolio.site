@@ -51,7 +51,7 @@ export default function EducationsPage() {
       resetForm()
       await load()
     },
-    { successMessage: editing ? 'Education updated' : 'Education created', errorMessage: 'Failed to save education' },
+    { successMessage: editing ? 'Education updated' : 'Education created', errorMessage: 'Failed to save education', revalidateTags: 'educations' },
   )
 
   function handleSubmit(e: FormEvent) {
@@ -83,7 +83,7 @@ export default function EducationsPage() {
         setDeletingId(null)
       }
     },
-    { successMessage: 'Education deleted', errorMessage: 'Failed to delete education' },
+    { successMessage: 'Education deleted', errorMessage: 'Failed to delete education', revalidateTags: 'educations' },
   )
 
   function handleDelete(id: number) {

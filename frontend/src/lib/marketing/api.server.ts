@@ -38,13 +38,13 @@ export interface PageMeta {
 
 type Envelope<T> = { success?: boolean; message?: string; data?: T; meta?: PageMeta }
 
-async function fetchEnvelope<T>(path: string, revalidate: number): Promise<Envelope<T> | null> {
+async function fetchEnvelope<T>(path: string, revalidate: number, tag?: string): Promise<Envelope<T> | null> {
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
   try {
     const res = await fetch(`${API_BASE}${path}`, {
       headers: { Accept: 'application/json' },
-      next: { revalidate },
+      next: { revalidate, tags: tag ? [tag] : undefined },
       signal: controller.signal,
     })
     if (!res.ok) return null
@@ -56,8 +56,8 @@ async function fetchEnvelope<T>(path: string, revalidate: number): Promise<Envel
   }
 }
 
-async function fetchData<T>(path: string, revalidate: number): Promise<T | null> {
-  const json = await fetchEnvelope<T>(path, revalidate)
+async function fetchData<T>(path: string, revalidate: number, tag?: string): Promise<T | null> {
+  const json = await fetchEnvelope<T>(path, revalidate, tag)
   return json?.data ?? null
 }
 
@@ -69,24 +69,24 @@ function toList<T>(payload: unknown): T[] {
 }
 
 export async function getProfile(): Promise<Profile | null> {
-  const data = await fetchData<Profile[]>('/profile', REVALIDATE.profile)
+  const data = await fetchData<Profile[]>('/profile', REVALIDATE.profile, 'profile')
   return toList<Profile>(data)[0] ?? null
 }
 
 export async function getSkills(): Promise<Skill[]> {
-  return toList<Skill>(await fetchData<Skill[]>('/skills', REVALIDATE.skills))
+  return toList<Skill>(await fetchData<Skill[]>('/skills', REVALIDATE.skills, 'skills'))
 }
 
 export async function getExperiences(): Promise<Experience[]> {
-  return toList<Experience>(await fetchData<Experience[]>('/experiences', REVALIDATE.experiences))
+  return toList<Experience>(await fetchData<Experience[]>('/experiences', REVALIDATE.experiences, 'experiences'))
 }
 
 export async function getProjects(limit = 4): Promise<Project[]> {
-  return toList<Project>(await fetchData<Project[]>(`/projects?per_page=${limit}`, REVALIDATE.projects))
+  return toList<Project>(await fetchData<Project[]>(`/projects?per_page=${limit}`, REVALIDATE.projects, 'projects'))
 }
 
 export async function getProjectById(id: string | number): Promise<Project | null> {
-  return (await fetchData<Project>(`/projects/${id}`, REVALIDATE.projects)) ?? null
+  return (await fetchData<Project>(`/projects/${id}`, REVALIDATE.projects, 'projects')) ?? null
 }
 
 export interface ProjectsPage {
@@ -107,7 +107,7 @@ export async function getProjectsPage(params: {
   if (params.search?.trim()) qs.set('search', params.search.trim())
   if (params.technology?.trim()) qs.set('technology', params.technology.trim())
 
-  const json = await fetchEnvelope<Project[]>(`/projects?${qs.toString()}`, REVALIDATE.projects)
+  const json = await fetchEnvelope<Project[]>(`/projects?${qs.toString()}`, REVALIDATE.projects, 'projects')
   const items = toList<Project>(json?.data)
   const meta: PageMeta = json?.meta ?? {
     current_page: page,
@@ -135,9 +135,9 @@ export async function getProjectTechnologies(): Promise<string[]> {
 }
 
 export async function getEducations(): Promise<Education[]> {
-  return toList<Education>(await fetchData<Education[]>('/educations', REVALIDATE.educations))
+  return toList<Education>(await fetchData<Education[]>('/educations', REVALIDATE.educations, 'educations'))
 }
 
 export async function getCertificates(): Promise<Certificate[]> {
-  return toList<Certificate>(await fetchData<Certificate[]>('/certificates', REVALIDATE.certificates))
+  return toList<Certificate>(await fetchData<Certificate[]>('/certificates', REVALIDATE.certificates, 'certificates'))
 }

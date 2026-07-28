@@ -79,7 +79,7 @@ export default function ProjectsPage() {
       resetForm()
       await load()
     },
-    { successMessage: editing ? 'Project updated' : 'Project created', errorMessage: 'Failed to save project' },
+    { successMessage: editing ? 'Project updated' : 'Project created', errorMessage: 'Failed to save project', revalidateTags: 'projects' },
   )
 
   function handleSubmit(e: FormEvent) {
@@ -112,7 +112,7 @@ export default function ProjectsPage() {
         setDeletingId(null)
       }
     },
-    { successMessage: 'Project deleted', errorMessage: 'Failed to delete project' },
+    { successMessage: 'Project deleted', errorMessage: 'Failed to delete project', revalidateTags: 'projects' },
   )
 
   function handleDelete(id: number) {

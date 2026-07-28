@@ -46,7 +46,7 @@ export default function CertificatesPage() {
       resetForm()
       await load()
     },
-    { successMessage: editing ? 'Certificate updated' : 'Certificate created', errorMessage: 'Failed to save certificate' },
+    { successMessage: editing ? 'Certificate updated' : 'Certificate created', errorMessage: 'Failed to save certificate', revalidateTags: 'certificates' },
   )
 
   function handleSubmit(e: FormEvent) {
@@ -77,7 +77,7 @@ export default function CertificatesPage() {
         setDeletingId(null)
       }
     },
-    { successMessage: 'Certificate deleted', errorMessage: 'Failed to delete certificate' },
+    { successMessage: 'Certificate deleted', errorMessage: 'Failed to delete certificate', revalidateTags: 'certificates' },
   )
 
   function handleDelete(id: number) {

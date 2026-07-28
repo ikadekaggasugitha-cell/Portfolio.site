@@ -5,6 +5,7 @@ import api from '@/lib/api'
 import toast from 'react-hot-toast'
 import type { ProjectImage, Project } from '@/types'
 import { useAsyncAction } from '@/hooks/useAsyncAction'
+import { pingRevalidate } from '@/lib/revalidate'
 import Button from '@/components/admin/ui/Button'
 import ProgressBar from '@/components/admin/ui/ProgressBar'
 import { SkeletonList } from '@/components/admin/ui/Skeleton'
@@ -79,6 +80,7 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
       if (fileInputRef.current) fileInputRef.current.value = ''
       loadImages()
       onImagesUpdated()
+      pingRevalidate('projects')
     } catch (error) {
       console.error('Upload error:', error)
       toast.error('Failed to upload images')
@@ -99,7 +101,7 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
         setDeletingImageId(null)
       }
     },
-    { successMessage: 'Image deleted', errorMessage: 'Failed to delete image' },
+    { successMessage: 'Image deleted', errorMessage: 'Failed to delete image', revalidateTags: 'projects' },
   )
 
   function confirmDeleteImage(imageId: number) {
@@ -139,7 +141,7 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
       loadImages()
       onImagesUpdated()
     },
-    { successMessage: 'Media attached', errorMessage: 'Failed to attach media' },
+    { successMessage: 'Media attached', errorMessage: 'Failed to attach media', revalidateTags: 'projects' },
   )
 
   function attachSelectedMedia() {
@@ -183,7 +185,7 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
       loadImages()
       onImagesUpdated()
     },
-    { successMessage: 'Order saved', errorMessage: 'Failed to save order' },
+    { successMessage: 'Order saved', errorMessage: 'Failed to save order', revalidateTags: 'projects' },
   )
 
   function cancelOrder() {
