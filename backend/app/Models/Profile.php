@@ -17,6 +17,8 @@ class Profile extends Model
         'name',
         'title',
         'description',
+        'about_lead',
+        'about_body',
         'phone',
         'email',
         'location',

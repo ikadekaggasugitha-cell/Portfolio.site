@@ -12,6 +12,12 @@ import { ProjectsControls } from '@/components/marketing/sections/projects-contr
 import { Pagination } from '@/components/marketing/sections/pagination'
 import { HeroBackdrop } from '@/components/marketing/sections/hero-backdrop'
 
+/** Worst-case data fetch is FETCH_TIMEOUT_MS x FETCH_ATTEMPTS (~40s) against a slow PHP
+ *  backend; declare headroom so the platform can't kill the render mid-flight and leave
+ *  nothing cached. */
+export const maxDuration = 60
+
+
 const PER_PAGE = 9
 
 const DESCRIPTION =
@@ -37,16 +43,17 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Sea
   const technology = firstParam(sp.tech).trim()
   const page = Math.max(1, Number.parseInt(firstParam(sp.page), 10) || 1)
 
-  const [{ items, meta }, tags] = await Promise.all([
+  const [{ ok, items, meta }, tags] = await Promise.all([
     getProjectsPage({ page, perPage: PER_PAGE, search, technology }),
     getProjectTechnologies(),
   ])
 
   const hasFilters = search !== '' || technology !== ''
   let cards = mapProjectCards(items)
-  // Graceful fallback: unfiltered first page with no data (e.g. API unreachable)
-  // shows representative projects rather than an empty page.
-  if (cards.length === 0 && !hasFilters && page === 1) cards = projectDefaults
+  // Representative projects stand in only when the API was unreachable. A successful
+  // empty response means there genuinely are no projects yet, and showing seeded demo
+  // cards there would misrepresent the admin's actual content.
+  if (!ok && cards.length === 0 && !hasFilters && page === 1) cards = projectDefaults
 
   const total = meta.total || cards.length
 
@@ -77,14 +84,22 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Sea
               <div className="mx-auto mb-4 grid size-12 place-items-center rounded-full bg-mk-brand/10 text-mk-accent">
                 <Search className="size-5" aria-hidden />
               </div>
-              <p className="font-semibold">No projects match your search</p>
-              <p className="mt-1.5 text-[0.92rem] text-mk-muted">Try a different keyword or clear the filters.</p>
-              <Link
-                href="/projects"
-                className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-mk-hairline bg-mk-surface px-4 py-2 text-[0.88rem] font-semibold transition-colors hover:border-mk-brand-soft"
-              >
-                Clear filters
-              </Link>
+              <p className="font-semibold">
+                {hasFilters ? 'No projects match your search' : 'No projects published yet'}
+              </p>
+              <p className="mt-1.5 text-[0.92rem] text-mk-muted">
+                {hasFilters
+                  ? 'Try a different keyword or clear the filters.'
+                  : 'Case studies are on the way — check back soon.'}
+              </p>
+              {hasFilters && (
+                <Link
+                  href="/projects"
+                  className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-mk-hairline bg-mk-surface px-4 py-2 text-[0.88rem] font-semibold transition-colors hover:border-mk-brand-soft"
+                >
+                  Clear filters
+                </Link>
+              )}
             </div>
           ) : (
             <>

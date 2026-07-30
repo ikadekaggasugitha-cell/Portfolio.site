@@ -20,6 +20,8 @@ export default function ProfilePage() {
     name: '',
     title: '',
     description: '',
+    about_lead: '',
+    about_body: '',
     phone: '',
     email: '',
     location: '',
@@ -49,6 +51,8 @@ export default function ProfilePage() {
             name: p.name || '',
             title: p.title || '',
             description: p.description || '',
+            about_lead: p.about_lead || '',
+            about_body: p.about_body || '',
             phone: p.phone || '',
             email: p.email || '',
             location: p.location || '',
@@ -84,14 +88,16 @@ export default function ProfilePage() {
   const { run: submit, isPending: isSaving } = useAsyncAction(
     async () => {
       if (!profile) throw new Error('Profile has not loaded yet')
-      const payload: Record<string, unknown> = { ...form, is_available: isAvailable, cv: cvUrl }
-      // prefer storing media reference when available
-      if (photoMediaId) {
-        payload['photo_media_id'] = photoMediaId
-      } else {
-        payload['photo'] = photoUrl
-      }
-      await api.put(`/profile/${profile.id}`, payload)
+      // Always send both keys. The old branch omitted `photo` whenever a media id was
+      // set, so clearing the photo sent only the stale `photo_media_id` — and the backend
+      // re-resolved the URL from it, silently restoring the photo the admin just removed.
+      await api.put(`/profile/${profile.id}`, {
+        ...form,
+        is_available: isAvailable,
+        cv: cvUrl,
+        photo: photoUrl,
+        photo_media_id: photoMediaId,
+      })
     },
     { successMessage: 'Profile updated', errorMessage: 'Failed to update profile', revalidateTags: 'profile' },
   )
@@ -100,6 +106,16 @@ export default function ProfilePage() {
     e.preventDefault()
     submit()
   }
+
+  // Without this the admin dead-ended on "No profile exists yet" and the public site
+  // stayed on placeholder copy with no way to fix it from the panel.
+  const { run: createProfile, isPending: isCreating } = useAsyncAction(
+    async () => {
+      await api.post('/profile', { name: '', title: '' })
+      await load()
+    },
+    { successMessage: 'Profile created', errorMessage: 'Failed to create profile', revalidateTags: 'profile' },
+  )
 
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.currentTarget.files
@@ -179,9 +195,22 @@ export default function ProfilePage() {
         </h1>
         <div className="card-stitch p-6 max-w-2xl text-center space-y-3">
           <p className="text-ink">
-            {loadError ? 'Could not load the profile.' : 'No profile exists yet.'}
+            {loadError
+              ? 'Could not load the profile.'
+              : 'No profile exists yet — create one to start filling in the public site.'}
           </p>
-          <Button variant="primary" onClick={() => load()}>Retry</Button>
+          {loadError ? (
+            <Button variant="primary" onClick={() => load()}>Retry</Button>
+          ) : (
+            <Button
+              variant="primary"
+              onClick={() => createProfile()}
+              loading={isCreating}
+              loadingText="Creating..."
+            >
+              Create profile
+            </Button>
+          )}
         </div>
       </div>
     )
@@ -209,7 +238,17 @@ export default function ProfilePage() {
             <div className="flex gap-2">
               <Button type="button" loading={uploadProgress !== null} loadingText="Uploading..." onClick={() => fileRef.current?.click()}>Upload Photo</Button>
               <Button type="button" onClick={() => setShowMediaPicker(true)}>Choose from Media</Button>
-              <Button type="button" variant="danger" onClick={() => setPhotoUrl(null)}>Clear</Button>
+              <Button
+                type="button"
+                variant="danger"
+                onClick={() => {
+                  // Both, or the surviving media id re-resolves the photo on save.
+                  setPhotoUrl(null)
+                  setPhotoMediaId(null)
+                }}
+              >
+                Clear
+              </Button>
             </div>
             {uploadProgress !== null && <ProgressBar percent={uploadProgress} />}
             <div className="text-sm text-muted">Photo will be displayed on the public homepage.</div>
@@ -340,7 +379,43 @@ export default function ProfilePage() {
             rows={5}
             className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
           />
+          <div className="text-sm text-muted mt-1">Shown as the hero intro and the /about bio.</div>
         </div>
+
+        <fieldset className="border-t border-hairline pt-4 space-y-4">
+          <legend className="text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink">
+            About section (homepage)
+          </legend>
+          <div>
+            <label htmlFor="about-lead" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">
+              Lead line
+            </label>
+            <input
+              id="about-lead"
+              name="about_lead"
+              value={form.about_lead}
+              onChange={handleChange}
+              placeholder="One emphasised sentence that opens the About section"
+              className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
+            />
+          </div>
+          <div>
+            <label htmlFor="about-body" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">
+              Body
+            </label>
+            <textarea
+              id="about-body"
+              name="about_body"
+              value={form.about_body}
+              onChange={handleChange}
+              rows={8}
+              className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
+            />
+            <div className="text-sm text-muted mt-1">
+              Separate paragraphs with a blank line.
+            </div>
+          </div>
+        </fieldset>
         <label className="flex items-center gap-3 cursor-pointer select-none">
           <input
             type="checkbox"

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
-import { getProjectById, getProjects } from '@/lib/marketing/api.server'
+import { getProjectById, getProjects, soften } from '@/lib/marketing/api.server'
 import { mapProjectDetail, relatedProjects } from '@/lib/marketing/mappers'
 import { site } from '@/lib/marketing/content'
 import { Section } from '@/components/marketing/primitives/section'
@@ -13,15 +13,27 @@ import { GithubIcon } from '@/components/marketing/icons/brand-icons'
 
 type Params = Promise<{ id: string }>
 
+/**
+ * Bounded regeneration window — see the note in (site)/page.tsx. Also matters here because
+ * generateStaticParams only knows the ids that existed at build time; a project added later
+ * is rendered on demand and must not be cached indefinitely.
+ */
+export const revalidate = 600
+
+/** Worst-case data fetch is FETCH_TIMEOUT_MS x FETCH_ATTEMPTS (~40s) against a slow PHP
+ *  backend; declare headroom so the platform can't kill the render mid-flight and leave
+ *  nothing cached. */
+export const maxDuration = 60
+
 /** Pre-render known projects at build; unknown ids still render on-demand (ISR). */
 export async function generateStaticParams() {
-  const projects = await getProjects(100)
+  const { data: projects } = await getProjects(100)
   return projects.map((p) => ({ id: String(p.id) }))
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { id } = await params
-  const project = await getProjectById(id)
+  const { data: project } = await soften(getProjectById(id), null)
 
   if (!project) {
     return { title: `Project not found · ${site.name}` }
@@ -48,7 +60,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function ProjectDetailPage({ params }: { params: Params }) {
   const { id } = await params
-  const [project, all] = await Promise.all([getProjectById(id), getProjects(100)])
+  const [{ data: project }, { data: all }] = await Promise.all([getProjectById(id), getProjects(100)])
 
   if (!project) {
     return (

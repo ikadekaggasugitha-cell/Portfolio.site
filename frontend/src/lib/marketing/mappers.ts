@@ -1,14 +1,36 @@
 import type { LucideIcon } from 'lucide-react'
-import { Cloud, Code2, Database, PenTool, Sparkles } from 'lucide-react'
-import type { Certificate, Education, Experience, Profile, Project, Skill } from '@/types'
+import {
+  Cloud,
+  Code2,
+  Database,
+  Gauge,
+  Globe,
+  PenTool,
+  Server,
+  Settings2,
+  ShieldCheck,
+  Smartphone,
+  Sparkles,
+  Workflow,
+} from 'lucide-react'
+import type {
+  Certificate,
+  Education,
+  Experience,
+  Profile,
+  Project,
+  Skill,
+  Stat,
+  // Aliased: content.ts exports view-model types with the same names.
+  Capability as CapabilityRecord,
+  Testimonial as TestimonialRecord,
+  Faq,
+} from '@/types'
 import {
   aboutDefaults,
   aboutHeroDefaults,
   contactDefaults,
   heroDefaults,
-  projects as projectDefaults,
-  skillGroups as skillGroupDefaults,
-  timeline as timelineDefaults,
   type AboutData,
   type AboutHeroData,
   type CertificateEntry,
@@ -19,8 +41,28 @@ import {
   type ProjectDetail,
   type ProjectMotif,
   type SkillGroup,
+  type StatTile,
+  type FaqEntry,
+  type Capability as CapabilityCard,
+  type Testimonial as TestimonialCard,
   type TimelineEntry,
 } from './content'
+
+/* --------------------------- Fallback policy ------------------------ */
+
+/**
+ * Decides when the static defaults in `content.ts` may stand in for live data.
+ *
+ * Live content always wins. When the API answered but the admin has no content of that
+ * kind, we render nothing — "I deleted them all" is a legitimate published state, and the
+ * old behaviour of silently re-inserting seeded demo content meant the admin panel could
+ * never actually empty a section. Defaults are only used when the API was unreachable, so
+ * an outage degrades to a plausible page instead of a blank one.
+ */
+export function liveOrFallback<T>(mapped: T[], apiReachable: boolean, fallback: T[]): T[] {
+  if (mapped.length) return mapped
+  return apiReachable ? [] : fallback
+}
 
 /* ----------------------------- Profile ----------------------------- */
 
@@ -45,12 +87,23 @@ export function mapHero(profile: Profile | null): HeroData {
   }
 }
 
+/**
+ * Homepage About section. `about_lead` / `about_body` are dedicated fields (the hero already
+ * uses `description`), so this section is now editable from Admin → Profile instead of being
+ * hardcoded. Blank lines in `about_body` separate paragraphs.
+ */
 export function mapAbout(profile: Profile | null): AboutData {
-  // Profile exposes a single `description`, which the hero already surfaces as the
-  // headline intro. About keeps its richer default copy until a dedicated long-form
-  // bio field exists on the backend.
-  void profile
-  return aboutDefaults
+  if (!profile) return aboutDefaults
+
+  const paragraphs = (profile.about_body ?? '')
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+
+  return {
+    lead: orDefault(profile.about_lead, aboutDefaults.lead),
+    paragraphs: paragraphs.length ? paragraphs : aboutDefaults.paragraphs,
+  }
 }
 
 export function mapContact(profile: Profile | null): ContactData {
@@ -115,10 +168,11 @@ const CATEGORY_BY_SKILL: Record<string, CategoryKey> = {
  * Group API skills. Prefers the real `category` field; for skills without one
  * (older rows), falls back to inferring from the skill name. Unknown category
  * strings become their own group so the backend can add categories freely.
+ *
+ * Returns an empty array for an empty input — see `liveOrFallback`, which owns
+ * the decision of when static defaults are appropriate.
  */
 export function categorizeSkills(skills: Skill[]): SkillGroup[] {
-  if (!skills.length) return skillGroupDefaults
-
   const groups = new Map<string, { title: string; icon: LucideIcon; skills: string[] }>()
   const push = (key: string, title: string, icon: LucideIcon, name: string) => {
     const group = groups.get(key) ?? { title, icon, skills: [] }
@@ -146,11 +200,10 @@ export function categorizeSkills(skills: Skill[]): SkillGroup[] {
   const custom = [...groups.keys()].filter((k) => !(CATEGORY_ORDER as readonly string[]).includes(k))
   const orderedKeys = [...known, ...custom, ...(groups.has('other') ? ['other'] : [])]
 
-  const result = orderedKeys.map((k) => {
+  return orderedKeys.map((k) => {
     const group = groups.get(k)!
     return { title: group.title, icon: group.icon, skills: group.skills }
   })
-  return result.length ? result : skillGroupDefaults
 }
 
 /* ----------------------------- Projects ---------------------------- */
@@ -185,7 +238,6 @@ function toCard(project: Project, featured: boolean): FeaturedProject {
 
 /** Landing "Featured" grid — the API already orders featured-first. */
 export function mapProjects(projects: Project[], limit = 4): FeaturedProject[] {
-  if (!projects.length) return projectDefaults.slice(0, limit)
   return projects.slice(0, limit).map((project) => toCard(project, project.is_featured ?? false))
 }
 
@@ -246,8 +298,6 @@ function formatPeriod(start: string | null, end: string | null): string {
 }
 
 export function mapExperience(experiences: Experience[]): TimelineEntry[] {
-  if (!experiences.length) return timelineDefaults
-
   return [...experiences]
     .sort((a, b) => (b.start_date ?? '').localeCompare(a.start_date ?? ''))
     .map((exp) => ({
@@ -284,4 +334,78 @@ export function mapCertificates(certificates: Certificate[]): CertificateEntry[]
       date: yearOf(cert.issued_date) ?? '',
       credentialUrl: cert.credential_url?.trim() ? cert.credential_url : null,
     }))
+}
+
+/* ------------- Marketing copy owned by the admin panel ------------------ */
+
+/** About-section stat tiles. */
+export function mapStats(stats: Stat[]): StatTile[] {
+  return stats.map((stat) => ({
+    value: stat.value,
+    suffix: stat.suffix ?? '',
+    label: stat.label,
+  }))
+}
+
+/**
+ * Icon keys the "What I do" editor offers. Kept small and descriptive rather than exposing
+ * every Lucide name — the admin picks from a dropdown, and an unrecognised key still renders.
+ */
+export const CAPABILITY_ICONS: Record<string, LucideIcon> = {
+  globe: Globe,
+  server: Server,
+  database: Database,
+  settings: Settings2,
+  code: Code2,
+  cloud: Cloud,
+  design: PenTool,
+  mobile: Smartphone,
+  security: ShieldCheck,
+  performance: Gauge,
+  automation: Workflow,
+  sparkles: Sparkles,
+}
+
+export function mapCapabilities(capabilities: CapabilityRecord[]): CapabilityCard[] {
+  return capabilities.map((capability) => ({
+    title: capability.title,
+    description: capability.description ?? '',
+    icon: CAPABILITY_ICONS[capability.icon?.trim().toLowerCase() ?? ''] ?? Sparkles,
+  }))
+}
+
+/** Falls back to initials derived from the name, so the monogram is never blank. */
+function initialsOf(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('')
+}
+
+export function mapTestimonials(testimonials: TestimonialRecord[]): TestimonialCard[] {
+  return testimonials.map((testimonial) => ({
+    quote: testimonial.quote,
+    name: testimonial.author_name,
+    title: testimonial.author_title ?? '',
+    initials: testimonial.initials?.trim() || initialsOf(testimonial.author_name),
+  }))
+}
+
+export function mapFaqs(faqs: Faq[]): FaqEntry[] {
+  return faqs.map((faq) => ({ q: faq.question, a: faq.answer }))
+}
+
+/**
+ * The decorative technology marquee. Sourced from live skills so it stays in step with
+ * Admin → Skills instead of being a second, hand-maintained list.
+ */
+export function mapMarqueeItems(skills: Skill[]): string[] {
+  const seen = new Set<string>()
+  for (const skill of skills) {
+    const name = skill.skill_name?.trim()
+    if (name) seen.add(name)
+  }
+  return [...seen]
 }

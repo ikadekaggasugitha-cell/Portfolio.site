@@ -35,12 +35,19 @@ export const navItems = [
 
 export type NavItem = (typeof navItems)[number]
 
-export const stats = [
+/** A stat tile in the About section. Editable from Admin -> Stats. */
+export interface StatTile {
+  value: number
+  suffix: string
+  label: string
+}
+
+export const stats: StatTile[] = [
   { value: 5, suffix: '+', label: 'Years shipping' },
   { value: 42, suffix: '+', label: 'Projects delivered' },
   { value: 18, suffix: '+', label: 'Happy clients' },
   { value: 99, suffix: '%', label: 'On-time delivery' },
-] as const
+]
 
 /**
  * "What I do" — the general scope of work, shown right after About so the
@@ -233,7 +240,13 @@ export const testimonials: Testimonial[] = [
   },
 ]
 
-export const faqs = [
+/** A contact-page FAQ entry. Editable from Admin -> FAQ. */
+export interface FaqEntry {
+  q: string
+  a: string
+}
+
+export const faqs: FaqEntry[] = [
   {
     q: 'What kind of projects do you take on?',
     a: "Web applications, dashboards, REST APIs, database design, and internal tooling or automation — not just websites. I'm happy to own a problem end to end or join an existing team on a specific piece of the stack.",

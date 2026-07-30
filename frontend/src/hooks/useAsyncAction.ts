@@ -34,8 +34,11 @@ export function useAsyncAction<Args extends unknown[]>(
       setIsPending(true)
       try {
         await action(...args)
+        // Awaited, not fire-and-forget: the purge is what makes the edit visible on
+        // the public site, and an un-awaited request can be dropped when the save is
+        // followed by a navigation. It only marks caches stale, so it is cheap.
+        if (revalidateTags) await pingRevalidate(revalidateTags)
         if (successMessage) toast.success(successMessage)
-        if (revalidateTags) pingRevalidate(revalidateTags)
       } catch (err) {
         console.error(err)
         const custom = typeof errorMessage === 'function' ? errorMessage(err) : errorMessage

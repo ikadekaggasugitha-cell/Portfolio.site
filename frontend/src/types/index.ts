@@ -25,6 +25,10 @@ export interface Profile {
   name: string | null
   title: string | null
   description: string | null
+  /** Homepage About section: emphasised opening line. */
+  about_lead: string | null
+  /** Homepage About section body; blank lines separate paragraphs. */
+  about_body: string | null
   phone: string | null
   email: string | null
   location: string | null
@@ -145,4 +149,44 @@ export interface Message {
   read_at: string | null
   created_at: string
   updated_at: string
+}
+
+/* ---------------------------------------------------------------------------
+ * Marketing copy owned by the admin panel. These replaced hardcoded values in
+ * lib/marketing/content.ts so the public site is fully editable.
+ * ------------------------------------------------------------------------- */
+
+/** A stat tile in the homepage About section, e.g. 5 "+" "Years shipping". */
+export interface Stat {
+  id: number
+  label: string
+  value: number
+  suffix: string | null
+  sort_order: number
+}
+
+/** A "What I do" card. `icon` is a key resolved to a Lucide icon on render. */
+export interface Capability {
+  id: number
+  title: string
+  description: string | null
+  icon: string | null
+  sort_order: number
+}
+
+export interface Testimonial {
+  id: number
+  quote: string
+  author_name: string
+  author_title: string | null
+  /** Monogram; derived from author_name when blank. */
+  initials: string | null
+  sort_order: number
+}
+
+export interface Faq {
+  id: number
+  question: string
+  answer: string
+  sort_order: number
 }

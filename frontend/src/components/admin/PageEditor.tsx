@@ -38,15 +38,22 @@ export default function PageEditor({ id }: PageEditorProps) {
 
   const { run: save, isPending: isSaving } = useAsyncAction(
     async () => {
+      // Stamp sort_order from the current array order. Reordering only swaps array slots,
+      // and the backend prefers an explicit sort_order over the array index — so without
+      // this the saved order was whatever it had been before.
+      const payload = {
+        ...page,
+        blocks: (page.blocks ?? []).map((block, index) => ({ ...block, sort_order: index })),
+      }
       if (isNew) {
-        await api.post('/pages', page)
+        await api.post('/pages', payload)
         router.push('/admin/pages')
       } else {
-        await api.put(`/pages/${id}`, page)
+        await api.put(`/pages/${id}`, payload)
         await load()
       }
     },
-    { successMessage: isNew ? 'Page created' : 'Page saved', errorMessage: 'Save failed' },
+    { successMessage: isNew ? 'Page created' : 'Page saved', errorMessage: 'Save failed', revalidateTags: 'pages' },
   )
 
   const { run: publish, isPending: isPublishing } = useAsyncAction(
@@ -54,7 +61,7 @@ export default function PageEditor({ id }: PageEditorProps) {
       await api.post(`/pages/${id}/publish`, { is_published: !page.is_published })
       await load()
     },
-    { successMessage: 'Publish state updated', errorMessage: 'Publish failed' },
+    { successMessage: 'Publish state updated', errorMessage: 'Publish failed', revalidateTags: 'pages' },
   )
 
   function addBlock() {

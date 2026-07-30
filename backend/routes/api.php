@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\CapabilityController;
 use App\Http\Controllers\Api\V1\CertificateController;
+use App\Http\Controllers\Api\V1\FaqController;
 use App\Http\Controllers\Api\V1\EducationController;
 use App\Http\Controllers\Api\V1\ExperienceController;
 use App\Http\Controllers\Api\V1\MessageController;
@@ -11,6 +13,8 @@ use App\Http\Controllers\Api\V1\ProjectImageController;
 use App\Http\Controllers\Api\V1\MediaController;
 use App\Http\Controllers\Api\V1\PageController;
 use App\Http\Controllers\Api\V1\SkillController;
+use App\Http\Controllers\Api\V1\StatController;
+use App\Http\Controllers\Api\V1\TestimonialController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('health', function () {
@@ -48,6 +52,13 @@ Route::get('educations', [EducationController::class, 'index']);
 Route::get('certificates', [CertificateController::class, 'index']);
 Route::get('profile', [ProfileController::class, 'index']);
 
+// Marketing copy the admin panel owns: About stat tiles, "What I do" cards,
+// testimonials and the contact FAQ. Public reads; writes are admin-only below.
+Route::get('stats', [StatController::class, 'index']);
+Route::get('capabilities', [CapabilityController::class, 'index']);
+Route::get('testimonials', [TestimonialController::class, 'index']);
+Route::get('faqs', [FaqController::class, 'index']);
+
 // Public pages (published)
 Route::get('pages/slug/{slug}', [PageController::class, 'publicShow']);
 
@@ -55,9 +66,17 @@ Route::post('messages', [MessageController::class, 'store'])
     ->middleware('throttle:contact');
 
 Route::middleware(['auth:api', 'jwt.auth', 'admin'])->group(function () {
+    // Without a create route an empty profiles table was a dead end: the admin showed
+    // "No profile exists yet" with no way out, and the public site fell back to
+    // placeholder copy forever.
+    Route::post('profile', [ProfileController::class, 'store']);
     Route::put('profile/{id}', [ProfileController::class, 'update']);
 
     Route::apiResource('skills', SkillController::class)->except(['index']);
+    Route::apiResource('stats', StatController::class)->except(['index']);
+    Route::apiResource('capabilities', CapabilityController::class)->except(['index']);
+    Route::apiResource('testimonials', TestimonialController::class)->except(['index']);
+    Route::apiResource('faqs', FaqController::class)->except(['index']);
     Route::apiResource('experiences', ExperienceController::class)->except(['index']);
     Route::apiResource('educations', EducationController::class)->except(['index']);
     Route::apiResource('projects', ProjectController::class)->except(['index', 'show']);

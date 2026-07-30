@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { MarketingShell } from '@/components/marketing/layout/marketing-shell'
-import { getProfile } from '@/lib/marketing/api.server'
+import { getProfile, soften } from '@/lib/marketing/api.server'
 import { mapHero } from '@/lib/marketing/mappers'
 
 /**
@@ -16,7 +16,10 @@ import { mapHero } from '@/lib/marketing/mappers'
  * add an extra network round trip.
  */
 export default async function SiteLayout({ children }: { children: ReactNode }) {
-  const profile = await getProfile()
+  // softened: a layout throw escapes (site)/error.tsx (the boundary wraps the layout's
+  // children, not the layout itself), so an outage would blow past it to the global
+  // error page. The page body still throws, so nothing bad gets cached.
+  const { data: profile } = await soften(getProfile(), null)
   const { githubUrl, linkedinUrl, email, cvUrl } = mapHero(profile)
 
   return (

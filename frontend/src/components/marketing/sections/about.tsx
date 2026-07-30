@@ -1,10 +1,14 @@
-import { aboutDefaults, stats, type AboutData } from '@/lib/marketing/content'
+import { aboutDefaults, stats as statDefaults, type AboutData, type StatTile } from '@/lib/marketing/content'
 import { Section } from '../primitives/section'
 import { Eyebrow } from '../primitives/eyebrow'
 import { Reveal } from '../primitives/reveal'
 import { Stat } from '../primitives/stat'
 
-export function About({ lead, paragraphs }: AboutData = aboutDefaults) {
+export function About({
+  lead = aboutDefaults.lead,
+  paragraphs = aboutDefaults.paragraphs,
+  stats = statDefaults,
+}: Partial<AboutData> & { stats?: StatTile[] }) {
   return (
     <Section id="about">
       <div className="grid items-start gap-[clamp(40px,6vw,80px)] lg:grid-cols-[1.4fr_1fr]">
@@ -24,14 +28,16 @@ export function About({ lead, paragraphs }: AboutData = aboutDefaults) {
           ))}
         </div>
 
-        {/* Stats have no API source yet — kept static (see recommendations). */}
-        <div className="grid grid-cols-2 gap-3.5">
-          {stats.map((stat, i) => (
-            <Reveal key={stat.label} delay={i * 0.08}>
-              <Stat value={stat.value} suffix={stat.suffix} label={stat.label} />
-            </Reveal>
-          ))}
-        </div>
+        {/* Editable from Admin -> Stats; the column disappears when there are none. */}
+        {stats.length > 0 && (
+          <div className="grid grid-cols-2 gap-3.5">
+            {stats.map((stat, i) => (
+              <Reveal key={`${stat.label}-${i}`} delay={i * 0.08}>
+                <Stat value={stat.value} suffix={stat.suffix} label={stat.label} />
+              </Reveal>
+            ))}
+          </div>
+        )}
       </div>
     </Section>
   )

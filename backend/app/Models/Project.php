@@ -34,13 +34,24 @@ class Project extends Model
     {
         static::creating(function (Project $project) {
             if (empty($project->slug)) {
-                $project->slug = Str::slug($project->title);
+                // `slug` is unique and not settable from the admin form, so two projects
+                // with titles that slugify alike used to fail with an opaque 500.
+                $base = Str::slug($project->title) ?: 'project';
+                $slug = $base;
+                $suffix = 2;
+                while (static::where('slug', $slug)->exists()) {
+                    $slug = $base . '-' . $suffix++;
+                }
+                $project->slug = $slug;
             }
         });
     }
 
     public function images(): HasMany
     {
-        return $this->hasMany(ProjectImage::class);
+        // Ordered here, not just in the admin UI: the public site takes images[0] as the
+        // cover, so without this the admin's drag-to-reorder had no visible effect.
+        // `id` breaks ties for legacy rows that all share sort_order 0.
+        return $this->hasMany(ProjectImage::class)->orderBy('sort_order')->orderBy('id');
     }
 }

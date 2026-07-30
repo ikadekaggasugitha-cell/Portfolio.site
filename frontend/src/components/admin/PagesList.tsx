@@ -33,7 +33,7 @@ export default function PagesList() {
         setDeletingId(null)
       }
     },
-    { successMessage: 'Deleted', errorMessage: 'Delete failed' },
+    { successMessage: 'Deleted', errorMessage: 'Delete failed', revalidateTags: 'pages' },
   )
 
   function handleDelete(id: number) {

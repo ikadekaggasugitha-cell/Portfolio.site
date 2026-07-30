@@ -1,9 +1,15 @@
-import { testimonials } from '@/lib/marketing/content'
+import { testimonials as testimonialDefaults, type Testimonial } from '@/lib/marketing/content'
 import { Section } from '../primitives/section'
 import { SectionHeading } from '../primitives/section-heading'
 import { Reveal } from '../primitives/reveal'
 
-export function Testimonials() {
+export function Testimonials({
+  testimonials = testimonialDefaults,
+}: {
+  testimonials?: Testimonial[]
+}) {
+  if (!testimonials.length) return null
+
   return (
     <Section id="voices">
       <SectionHeading
@@ -15,7 +21,7 @@ export function Testimonials() {
 
       <div className="grid gap-5 md:grid-cols-3">
         {testimonials.map((t, i) => (
-          <Reveal key={t.name} delay={i * 0.08}>
+          <Reveal key={`${t.name}-${i}`} delay={i * 0.08}>
             <figure className="flex h-full flex-col rounded-mk border border-mk-hairline bg-mk-surface p-7 shadow-mk-sm transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-mk-md">
               <div aria-hidden className="font-mk-mono text-[2.4rem] leading-[0.4] text-mk-accent opacity-60">
                 &ldquo;

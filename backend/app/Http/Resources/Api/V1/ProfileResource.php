@@ -18,6 +18,8 @@ class ProfileResource extends BaseResource
             'name' => $this->name,
             'title' => $this->title,
             'description' => $this->description,
+            'about_lead' => $this->about_lead,
+            'about_body' => $this->about_body,
             'phone' => $this->phone,
             'email' => $this->email,
             'location' => $this->location,

@@ -55,7 +55,7 @@ export default function MediaLibrary() {
         setUploadProgress(null)
       }
     },
-    { successMessage: 'Uploaded', errorMessage: 'Upload failed' },
+    { successMessage: 'Uploaded', errorMessage: 'Upload failed', revalidateTags: 'media' },
   )
 
   function startEdit(item: Media) {
@@ -70,7 +70,7 @@ export default function MediaLibrary() {
       setEditingId(null)
       await load()
     },
-    { successMessage: 'Updated', errorMessage: 'Update failed' },
+    { successMessage: 'Updated', errorMessage: 'Update failed', revalidateTags: 'media' },
   )
 
   const [deletingId, setDeletingId] = useState<number | null>(null)
@@ -84,7 +84,7 @@ export default function MediaLibrary() {
         setDeletingId(null)
       }
     },
-    { successMessage: 'Deleted', errorMessage: 'Delete failed' },
+    { successMessage: 'Deleted', errorMessage: 'Delete failed', revalidateTags: 'media' },
   )
 
   function del(id: number) {

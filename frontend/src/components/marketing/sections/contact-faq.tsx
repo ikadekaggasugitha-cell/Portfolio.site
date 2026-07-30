@@ -3,17 +3,19 @@
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
-import { faqs } from '@/lib/marketing/content'
+import { faqs as faqDefaults, type FaqEntry } from '@/lib/marketing/content'
 
 /** Accordion FAQ. Single-open, smooth height animation, keyboard accessible. */
-export function ContactFaq() {
+export function ContactFaq({ faqs = faqDefaults }: { faqs?: FaqEntry[] }) {
   const [open, setOpen] = useState<number | null>(0)
+
+  if (!faqs.length) return null
 
   return (
     <div className="mx-auto max-w-[760px]">
       {faqs.map((faq, i) => (
         <FaqItem
-          key={faq.q}
+          key={`${faq.q}-${i}`}
           question={faq.q}
           answer={faq.a}
           open={open === i}

@@ -25,6 +25,20 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(prepend: [
             'throttle:api',
         ]);
+
+        /**
+         * Never redirect unauthenticated requests — this app is a JSON API with no `login`
+         * route.
+         *
+         * Laravel installs `redirectGuestsTo(fn () => route('login'))` by default
+         * (Foundation\Configuration\ApplicationBuilder::withMiddleware). For a request
+         * without an `Accept: application/json` header, the auth middleware evaluates that
+         * callback while *constructing* the AuthenticationException, so `route('login')`
+         * threw RouteNotFoundException before any handler ran — and the client got an
+         * opaque HTML 500 instead of 401. Returning null keeps the real
+         * AuthenticationException intact so ApiExceptionHandler can map it to 401.
+         */
+        $middleware->redirectGuestsTo(fn () => null);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (Throwable $e, Request $request) {

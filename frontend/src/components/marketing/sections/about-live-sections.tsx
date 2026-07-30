@@ -6,10 +6,15 @@ import {
 } from '@/lib/marketing/api.server'
 import {
   categorizeSkills,
+  liveOrFallback,
   mapCertificates,
   mapEducation,
   mapExperience,
 } from '@/lib/marketing/mappers'
+import {
+  skillGroups as skillGroupDefaults,
+  timeline as timelineDefaults,
+} from '@/lib/marketing/content'
 import { Skills } from './skills'
 import { Experience } from './experience'
 import { Education } from './education'
@@ -17,15 +22,18 @@ import { Certificates } from './certificates'
 
 /**
  * Async Server Components for the /about page. Same pattern as the landing's
- * live sections, but with page-appropriate headings/tones. Skills & Experience
- * fall back to static content; Education & Certificates self-hide when empty.
+ * live sections, but with page-appropriate headings/tones. Every section hides
+ * itself when the admin has no content of that kind; Skills & Experience keep a
+ * static fallback for when the API is unreachable (see `liveOrFallback`).
  */
 
 export async function AboutSkillsLive() {
-  const skills = await getSkills()
+  const { ok, data } = await getSkills()
+  const groups = liveOrFallback(categorizeSkills(data), ok, skillGroupDefaults)
+  if (!groups.length) return null
   return (
     <Skills
-      groups={categorizeSkills(skills)}
+      groups={groups}
       id="skills"
       tone="subtle"
       eyebrow="Toolkit"
@@ -37,10 +45,12 @@ export async function AboutSkillsLive() {
 }
 
 export async function AboutExperienceLive() {
-  const experiences = await getExperiences()
+  const { ok, data } = await getExperiences()
+  const entries = liveOrFallback(mapExperience(data), ok, timelineDefaults)
+  if (!entries.length) return null
   return (
     <Experience
-      entries={mapExperience(experiences)}
+      entries={entries}
       id="experience"
       tone="canvas"
       eyebrow="Career"
@@ -50,11 +60,11 @@ export async function AboutExperienceLive() {
 }
 
 export async function AboutEducationLive() {
-  const educations = await getEducations()
-  return <Education entries={mapEducation(educations)} tone="subtle" />
+  const { data } = await getEducations()
+  return <Education entries={mapEducation(data)} tone="subtle" />
 }
 
 export async function AboutCertificatesLive() {
-  const certificates = await getCertificates()
-  return <Certificates entries={mapCertificates(certificates)} tone="canvas" />
+  const { data } = await getCertificates()
+  return <Certificates entries={mapCertificates(data)} tone="canvas" />
 }

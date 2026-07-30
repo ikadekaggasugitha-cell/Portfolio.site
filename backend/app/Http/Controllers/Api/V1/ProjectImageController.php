@@ -76,7 +76,9 @@ class ProjectImageController extends Controller
             $maxOrder++;
             $data = [
                 'project_id' => $projectId,
-                'image' => $media->url,
+                // Store the storage-relative path, matching a direct upload, so
+                // ProjectImageResource builds the URL exactly once.
+                'image' => $media->path ?: $media->url,
                 'caption' => $validated['caption'] ?? $media->caption ?? null,
                 'sort_order' => $maxOrder,
             ];

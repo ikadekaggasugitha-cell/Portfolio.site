@@ -55,6 +55,22 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Contracts\MessageRepositoryInterface::class,
             \App\Repositories\MessageRepository::class,
         );
+        $this->app->bind(
+            \App\Repositories\Contracts\StatRepositoryInterface::class,
+            \App\Repositories\StatRepository::class,
+        );
+        $this->app->bind(
+            \App\Repositories\Contracts\CapabilityRepositoryInterface::class,
+            \App\Repositories\CapabilityRepository::class,
+        );
+        $this->app->bind(
+            \App\Repositories\Contracts\TestimonialRepositoryInterface::class,
+            \App\Repositories\TestimonialRepository::class,
+        );
+        $this->app->bind(
+            \App\Repositories\Contracts\FaqRepositoryInterface::class,
+            \App\Repositories\FaqRepository::class,
+        );
     }
 
     public function boot(): void

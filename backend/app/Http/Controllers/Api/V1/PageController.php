@@ -87,8 +87,11 @@ class PageController extends Controller
 
         $page = $this->pageService->update($id, $validated);
 
-        if (!empty($blocks)) {
-            $page = $this->pageService->syncBlocks($page, $blocks);
+        // `has()` not `!empty()`: an explicitly empty array means "the editor removed every
+        // block", which must delete them. Treating it as "not provided" silently restored
+        // the old blocks. `?? []` guards the `nullable` rule allowing an explicit null.
+        if ($request->has('blocks')) {
+            $page = $this->pageService->syncBlocks($page, $request->input('blocks') ?? []);
         } else {
             $page->load('blocks');
         }

@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             ProjectSeeder::class,
             CertificateSeeder::class,
             MessageSeeder::class,
+            MarketingCopySeeder::class,
         ]);
     }
 }

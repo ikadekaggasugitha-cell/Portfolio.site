@@ -1,4 +1,4 @@
-import { capabilities } from '@/lib/marketing/content'
+import { capabilities as capabilityDefaults, type Capability } from '@/lib/marketing/content'
 import { Section } from '../primitives/section'
 import { SectionHeading } from '../primitives/section-heading'
 import { Reveal } from '../primitives/reveal'
@@ -8,7 +8,9 @@ import { Reveal } from '../primitives/reveal'
  * and automation — so the page reads as an IT programmer working across the
  * stack rather than someone who only builds websites.
  */
-export function WhatIDo() {
+export function WhatIDo({ capabilities = capabilityDefaults }: { capabilities?: Capability[] }) {
+  if (!capabilities.length) return null
+
   return (
     <Section id="what-i-do" tone="subtle">
       <SectionHeading
