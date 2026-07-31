@@ -11,9 +11,9 @@ import { Code2, Database, Cloud, PenTool, Globe, Server, Settings2 } from 'lucid
 
 export const site = {
   name: 'I Kadek Agga Sugitha',
-  shortName: 'Agga',
-  role: 'IT Programmer',
-  location: 'Bali, Indonesia',
+  shortName: 'PORTOFOLIO',
+  role: 'Full Stack Developer',
+  location: 'Jakarta, Indonesia',
   available: true,
   email: 'hello@agga.dev',
   githubUrl: '#',
@@ -21,7 +21,7 @@ export const site = {
   cvUrl: '#',
   tagline: 'building reliable software, end to end.',
   intro:
-    "Hi, I'm I Kadek Agga Sugitha — an IT programmer who builds software end to end: web applications, REST APIs and backend services, databases, and the automation that ties them together.",
+    "Hi, I'm I Kadek Agga Sugitha — an Full Stack Developer who builds software end to end: web applications, REST APIs and backend services, databases, and the automation that ties them together.",
 } as const
 
 // Page-level navigation — the V2 site is multi-page (/, /about, and, once
@@ -51,7 +51,7 @@ export const stats: StatTile[] = [
 
 /**
  * "What I do" — the general scope of work, shown right after About so the
- * page reads as an IT programmer working across the stack, not a
+ * page reads as an IT Full Stack Developer working across the stack, not a
  * single-project web builder. Deliberately not framed around any one project.
  */
 export interface Capability {
@@ -186,7 +186,7 @@ export const timeline: TimelineEntry[] = [
     period: '2023 — Present',
     role: 'Fullstack Software Engineer',
     company: 'Sinergi Investasi Properti',
-    location: 'Bali, Indonesia',
+    location: 'Jakarta, Indonesia',
     description:
       "Own the company's web platform end to end — a Next.js frontend backed by a custom CMS and admin dashboard. Built the content pipeline, media library and public site with a focus on speed and maintainability.",
     current: true,
@@ -316,7 +316,7 @@ export const heroDefaults: HeroData = {
 export const aboutDefaults: AboutData = {
   lead: 'I build software that solves real problems — across web, backend, data and automation.',
   paragraphs: [
-    "I'm an IT programmer who works across the stack: web applications, backend services and APIs, database design, and the automation and tooling that keeps it all running smoothly. I care about the details that make software feel reliable — clean architecture, sensible data models, and interfaces people actually enjoy using.",
+    "I'm an IT Full Stack Developer who works across the stack: web applications, backend services and APIs, database design, and the automation and tooling that keeps it all running smoothly. I care about the details that make software feel reliable — clean architecture, sensible data models, and interfaces people actually enjoy using.",
     'From designing PostgreSQL schemas and REST APIs to building responsive frontends and scripting deployment pipelines, I like owning a problem end to end rather than staying in one lane. Currently building internal platforms and public-facing products in the property-tech space.',
   ],
 }

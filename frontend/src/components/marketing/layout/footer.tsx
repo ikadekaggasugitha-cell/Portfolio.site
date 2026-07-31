@@ -34,7 +34,7 @@ export function Footer({ githubUrl = site.githubUrl, linkedinUrl = site.linkedin
               &lt;<span className="text-mk-accent">{site.shortName}</span>/&gt;
             </a>
             <p className="mt-4 max-w-[40ch] text-[0.96rem] text-mk-muted">
-              IT programmer building reliable software — web, backend and automation — from {site.location}.
+              Full Stack Developer building reliable software — web, backend and automation — from {site.location}.
             </p>
             <div className="mt-5 flex gap-2.5">
               {isLive(githubUrl) && (
@@ -62,9 +62,6 @@ export function Footer({ githubUrl = site.githubUrl, linkedinUrl = site.linkedin
 
         <div className="mt-11 flex flex-wrap items-center justify-between gap-3 border-t border-mk-hairline pt-6 text-[0.85rem] text-mk-faint">
           <p>© {year} {site.name}. All rights reserved.</p>
-          <p>
-            Designed &amp; built with <span className="text-mk-brand-soft">♥</span> in Bali
-          </p>
         </div>
       </Container>
     </footer>

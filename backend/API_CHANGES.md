@@ -33,7 +33,7 @@ Paginated collections (currently `GET /projects`) additionally include `meta`:
 | Resource | Field | Type | Notes |
 |---|---|---|---|
 | Profile | `email` | string \| null | Public contact email |
-| Profile | `location` | string \| null | e.g. "Bali, Indonesia" |
+| Profile | `location` | string \| null | e.g. "Jakarta, Indonesia" |
 | Profile | `is_available` | boolean | Defaults `true`; drives the "available for work" status |
 | Skill | `category` | string \| null | Free string (e.g. `Frontend`, `Backend`, `DevOps & Cloud`, `Design & Craft`). Indexed. Not a DB enum, so new categories need no migration; validated as `max:50`. |
 | Project | `is_featured` | boolean | Defaults `false` |

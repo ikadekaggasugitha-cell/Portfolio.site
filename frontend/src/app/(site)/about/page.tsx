@@ -18,7 +18,7 @@ import {
 } from '@/components/marketing/sections/section-skeletons'
 
 const FALLBACK_BIO =
-  'I Kadek Agga Sugitha is an IT programmer building reliable software end to end — web applications, backend APIs, databases and automation — with TypeScript, React, Next.js, Node.js and cloud infrastructure.'
+  'I Kadek Agga Sugitha is an Full Stack Developer building reliable software end to end — web applications, backend APIs, databases and automation — with TypeScript, React, Next.js, Node.js and cloud infrastructure.'
 
 /**
  * Bounded regeneration window. Without an explicit segment value the route inherits its

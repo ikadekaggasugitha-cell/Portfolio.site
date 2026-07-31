@@ -5,7 +5,7 @@ import { Reveal } from '../primitives/reveal'
 
 /**
  * States the general scope of work right after About — web, backend, data
- * and automation — so the page reads as an IT programmer working across the
+ * and automation — so the page reads as an IT Full Stack Developer working across the
  * stack rather than someone who only builds websites.
  */
 export function WhatIDo({ capabilities = capabilityDefaults }: { capabilities?: Capability[] }) {
@@ -17,7 +17,7 @@ export function WhatIDo({ capabilities = capabilityDefaults }: { capabilities?: 
         eyebrow="02 — What I do"
         title="Software, end to end — not just websites"
         titleAccent="not just websites"
-        subtitle="A general-purpose IT programmer's toolkit: the frontend is one part of a bigger picture."
+        subtitle="A general-purpose Full Stack Developer's toolkit: the frontend is one part of a bigger picture."
         align="center"
         className="mb-[clamp(40px,6vw,68px)]"
       />

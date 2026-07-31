@@ -57,7 +57,7 @@ export function Hero(props: HeroData = heroDefaults) {
               {...item}
               className="mt-[22px] text-[clamp(2.7rem,6.4vw,4.7rem)] font-extrabold leading-[1.05] tracking-[-0.035em] text-balance"
             >
-              IT programmer building{' '}
+              Full Stack Developer building{' '}
               <span className="mk-grad-text">reliable software</span> — from web apps to backend systems.
             </motion.h1>
 
@@ -130,7 +130,7 @@ export function Hero(props: HeroData = heroDefaults) {
                     <span className="size-[10px] rounded-full bg-[#FEBC2E]" />
                     <span className="size-[10px] rounded-full bg-[#28C840]" />
                   </span>
-                  <span className="font-mk-mono text-[0.72rem] text-mk-faint">agga.ts</span>
+                  <span className="font-mk-mono text-[0.72rem] text-mk-faint">I Kadek Agga Sugitha.ts</span>
                 </div>
                 <pre className="overflow-x-auto font-mk-mono text-[0.8rem] leading-[1.85] text-mk-muted">
                   <code>

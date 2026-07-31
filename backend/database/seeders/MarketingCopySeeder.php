@@ -155,7 +155,7 @@ class MarketingCopySeeder extends Seeder
         }
         if (blank($profile->about_body)) {
             $updates['about_body'] = implode("\n\n", [
-                "I'm an IT programmer who works across the stack: web applications, backend services and APIs, database design, and the automation and tooling that keeps it all running smoothly. I care about the details that make software feel reliable — clean architecture, sensible data models, and interfaces people actually enjoy using.",
+                "I'm an Full Stack Developer who works across the stack: web applications, backend services and APIs, database design, and the automation and tooling that keeps it all running smoothly. I care about the details that make software feel reliable — clean architecture, sensible data models, and interfaces people actually enjoy using.",
                 'From designing PostgreSQL schemas and REST APIs to building responsive frontends and scripting deployment pipelines, I like owning a problem end to end rather than staying in one lane. Currently building internal platforms and public-facing products in the property-tech space.',
             ]);
         }

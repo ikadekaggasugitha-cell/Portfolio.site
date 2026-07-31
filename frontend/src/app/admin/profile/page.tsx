@@ -341,7 +341,7 @@ export default function ProfilePage() {
               name="location"
               value={form.location}
               onChange={handleChange}
-              placeholder="e.g. Bali, Indonesia"
+              placeholder="e.g. Jakarta, Indonesia"
               className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
             />
           </div>

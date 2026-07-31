@@ -8,7 +8,7 @@ const siteUrl = process.env.FRONTEND_URL ?? 'http://localhost:3000'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: 'I Kadek Agga Sugitha — IT Programmer',
+  title: 'I Kadek Agga Sugitha — Full Stack Developer',
   description: 'Personal portfolio showcasing projects, skills and experience across web, backend, data and automation.',
 }
 

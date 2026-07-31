@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Add a nullable `location` to experiences (e.g. "Bali, Indonesia" / "Remote").
+     * Add a nullable `location` to experiences (e.g. "Jakarta, Indonesia" / "Remote").
      */
     public function up(): void
     {
