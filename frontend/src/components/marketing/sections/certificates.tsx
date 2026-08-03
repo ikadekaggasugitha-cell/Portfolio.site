@@ -1,5 +1,8 @@
+'use client'
+
 import { Award, ExternalLink } from 'lucide-react'
 import type { CertificateEntry } from '@/lib/marketing/content'
+import { useTranslation } from '../theme/language-provider'
 import { Section } from '../primitives/section'
 import { SectionHeading } from '../primitives/section-heading'
 import { Reveal } from '../primitives/reveal'
@@ -14,13 +17,14 @@ export function Certificates({
   id?: string
   tone?: 'canvas' | 'subtle'
 }) {
+  const { t } = useTranslation()
   if (!entries.length) return null
 
   return (
     <Section id={id} tone={tone}>
       <SectionHeading
-        eyebrow="Credentials"
-        title="Certifications"
+        eyebrow={t.certificates.eyebrow}
+        title={t.certificates.title}
         align="center"
         className="mb-[clamp(40px,6vw,68px)]"
       />
@@ -47,7 +51,7 @@ export function Certificates({
                   rel="noopener noreferrer"
                   className="mt-4 inline-flex items-center gap-1.5 text-[0.85rem] font-semibold text-mk-accent transition-opacity hover:opacity-80"
                 >
-                  View credential
+                  {t.certificates.viewCredential}
                   <ExternalLink className="size-3.5" aria-hidden />
                 </a>
               )}

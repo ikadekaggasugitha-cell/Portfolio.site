@@ -4,13 +4,13 @@ import { getFaqs, getProfile, soften } from '@/lib/marketing/api.server'
 import { liveOrFallback, mapContact, mapFaqs } from '@/lib/marketing/mappers'
 import { faqs as faqDefaults, site } from '@/lib/marketing/content'
 import { Section } from '@/components/marketing/primitives/section'
-import { SectionHeading } from '@/components/marketing/primitives/section-heading'
 import { Reveal } from '@/components/marketing/primitives/reveal'
 import { ContactHero } from '@/components/marketing/sections/contact-hero'
 import { ContactChannels } from '@/components/marketing/sections/contact-channels'
 import { ContactForm } from '@/components/marketing/sections/contact-form'
 import { ContactFaq } from '@/components/marketing/sections/contact-faq'
-import { CtaBand } from '@/components/marketing/sections/cta-band'
+import { ContactCtaBand } from '@/components/marketing/sections/cta-band'
+import { ContactFaqHeading } from '@/components/marketing/sections/contact-page-headings'
 
 const DESCRIPTION =
   'Get in touch with I Kadek Agga Sugitha — available for IT programming roles, freelance projects and collaborations across web, backend and automation. Usually replies within a day.'
@@ -79,24 +79,12 @@ export default async function ContactPage() {
 
       {faqs.length > 0 && (
         <Section id="faq">
-          <SectionHeading
-            eyebrow="FAQ"
-            title="Frequently asked"
-            align="center"
-            className="mb-[clamp(32px,5vw,56px)]"
-          />
+          <ContactFaqHeading />
           <ContactFaq faqs={faqs} />
         </Section>
       )}
 
-      <CtaBand
-        tone="subtle"
-        eyebrow="Prefer email?"
-        title="Reach me directly"
-        subtitle="Not a fan of forms? Drop me a line and I'll get straight back to you."
-        buttonLabel="Email me"
-        buttonHref={`mailto:${data.email}`}
-      />
+      <ContactCtaBand email={data.email} />
     </>
   )
 }

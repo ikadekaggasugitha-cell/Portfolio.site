@@ -1,4 +1,7 @@
+'use client'
+
 import type { EducationEntry } from '@/lib/marketing/content'
+import { useTranslation } from '../theme/language-provider'
 import { Section } from '../primitives/section'
 import { SectionHeading } from '../primitives/section-heading'
 import { Reveal } from '../primitives/reveal'
@@ -13,13 +16,14 @@ export function Education({
   id?: string
   tone?: 'canvas' | 'subtle'
 }) {
+  const { t } = useTranslation()
   if (!entries.length) return null
 
   return (
     <Section id={id} tone={tone}>
       <SectionHeading
-        eyebrow="Education"
-        title="Academic background"
+        eyebrow={t.education.eyebrow}
+        title={t.education.title}
         align="center"
         className="mb-[clamp(40px,6vw,68px)]"
       />

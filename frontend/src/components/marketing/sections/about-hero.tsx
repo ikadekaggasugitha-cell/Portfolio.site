@@ -1,6 +1,9 @@
+'use client'
+
 import Image from 'next/image'
 import { Mail } from 'lucide-react'
 import { aboutHeroDefaults, type AboutHeroData } from '@/lib/marketing/content'
+import { useTranslation } from '../theme/language-provider'
 import { Container } from '../primitives/container'
 import { Eyebrow } from '../primitives/eyebrow'
 import { Reveal } from '../primitives/reveal'
@@ -22,6 +25,7 @@ function initials(name: string) {
 
 export function AboutHero(props: AboutHeroData = aboutHeroDefaults) {
   const { name, role, bio, photo, available, location, githubUrl, linkedinUrl, email, cvUrl } = props
+  const { t } = useTranslation()
 
   return (
     <section className="relative overflow-hidden pb-[clamp(48px,7vw,80px)] pt-[clamp(48px,7vw,88px)]">
@@ -31,7 +35,7 @@ export function AboutHero(props: AboutHeroData = aboutHeroDefaults) {
         <div className="grid items-center gap-[clamp(32px,5vw,64px)] lg:grid-cols-[1.35fr_1fr]">
           <div className="max-w-[640px]">
             <Reveal>
-              <Eyebrow>About me</Eyebrow>
+              <Eyebrow>{t.aboutPage.eyebrow}</Eyebrow>
             </Reveal>
             <Reveal delay={0.05}>
               <h1 className="mt-[18px] text-[clamp(2.4rem,5.2vw,3.8rem)] font-extrabold leading-[1.05] tracking-[-0.03em] text-balance">
@@ -50,7 +54,7 @@ export function AboutHero(props: AboutHeroData = aboutHeroDefaults) {
                 {available && (
                   <span className="inline-flex items-center gap-2 rounded-full border border-mk-hairline bg-mk-surface px-3.5 py-1.5 font-mk-mono text-[0.72rem] tracking-[0.06em] text-mk-muted shadow-mk-sm">
                     <span className="size-2 rounded-full bg-mk-amber" />
-                    AVAILABLE FOR WORK
+                    {t.aboutPage.availableForWork}
                   </span>
                 )}
                 <span className="font-mk-mono text-[0.78rem] text-mk-faint">{location}</span>
@@ -60,7 +64,7 @@ export function AboutHero(props: AboutHeroData = aboutHeroDefaults) {
             <Reveal delay={0.25}>
               <div className="mt-7 flex flex-wrap items-center gap-3.5">
                 <Button href="/contact" size="lg">
-                  Get in touch
+                  {t.aboutPage.getInTouch}
                   <Mail className="size-[17px]" aria-hidden />
                 </Button>
                 <div className="flex gap-2.5">
@@ -101,7 +105,7 @@ export function AboutHero(props: AboutHeroData = aboutHeroDefaults) {
                 href={cvUrl}
                 className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-[14px] border border-mk-hairline bg-mk-surface px-5 py-3 text-[0.92rem] font-semibold text-mk-ink shadow-mk-sm transition-colors hover:border-mk-brand-soft"
               >
-                Download résumé
+                {t.aboutPage.downloadResume}
               </a>
             )}
           </Reveal>

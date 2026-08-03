@@ -1,5 +1,8 @@
+'use client'
+
 import { timeline, type TimelineEntry } from '@/lib/marketing/content'
 import { cn } from '@/lib/utils'
+import { useTranslation } from '../theme/language-provider'
 import { Section } from '../primitives/section'
 import { SectionHeading } from '../primitives/section-heading'
 import { Reveal } from '../primitives/reveal'
@@ -8,32 +11,40 @@ interface ExperienceProps {
   entries?: TimelineEntry[]
   id?: string
   tone?: 'canvas' | 'subtle'
-  eyebrow?: string
-  title?: string
-  subtitle?: string
+  /** When true, uses the about-page variant headings from translations. */
+  aboutVariant?: boolean
 }
 
 export function Experience({
   entries = timeline,
   id = 'experience',
   tone = 'subtle',
-  eyebrow = '06 — Experience',
-  title = 'The road so far',
-  subtitle,
+  aboutVariant = false,
 }: ExperienceProps) {
+  const { t } = useTranslation()
+
+  const eyebrow = aboutVariant ? t.experience.aboutEyebrow : t.experience.eyebrow
+  const title = aboutVariant ? t.experience.aboutTitle : t.experience.title
+
+  /** Translate known timeline entries by matching company name. */
+  const translated = entries.map((entry) => {
+    const match = t.experience.entries.find((e) => e.company === entry.company || e.role === entry.role)
+    if (!match) return entry
+    return { ...entry, period: match.period, role: match.role, company: match.company, location: match.location, description: match.description }
+  })
+
   return (
     <Section id={id} tone={tone}>
       <SectionHeading
         eyebrow={eyebrow}
         title={title}
-        subtitle={subtitle}
         align="center"
         className="mb-[clamp(40px,6vw,68px)]"
       />
 
       <div className="relative mx-auto max-w-[760px]">
         <span aria-hidden className="absolute bottom-1.5 left-4 top-1.5 w-px bg-mk-hairline" />
-        {entries.map((entry, i) => (
+        {translated.map((entry, i) => (
           <Reveal key={entry.period} delay={i * 0.08}>
             <div className="relative pb-10 pl-[52px] last:pb-0">
               <span

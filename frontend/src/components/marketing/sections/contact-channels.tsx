@@ -1,16 +1,21 @@
+'use client'
+
 import type { ReactNode } from 'react'
 import { Mail, MapPin } from 'lucide-react'
 import type { ContactData } from '@/lib/marketing/content'
+import { useTranslation } from '../theme/language-provider'
 import { GithubIcon, LinkedinIcon } from '../icons/brand-icons'
 
 /** Email / GitHub / LinkedIn / location cards. Presentational + reusable. */
 export function ContactChannels({ email, githubUrl, linkedinUrl, location }: ContactData) {
+  const { t } = useTranslation()
+
   return (
     <div className="flex flex-col gap-3.5">
-      <Channel icon={<Mail className="size-[19px]" aria-hidden />} label="Email" value={email} href={`mailto:${email}`} />
-      <Channel icon={<GithubIcon className="size-[19px]" />} label="GitHub" value="View my code" href={githubUrl} />
-      <Channel icon={<LinkedinIcon className="size-[19px]" />} label="LinkedIn" value="Connect with me" href={linkedinUrl} />
-      <Channel icon={<MapPin className="size-[19px]" aria-hidden />} label="Based in" value={`${location} · Remote OK`} />
+      <Channel icon={<Mail className="size-[19px]" aria-hidden />} label={t.contactChannels.email} value={email} href={`mailto:${email}`} />
+      <Channel icon={<GithubIcon className="size-[19px]" />} label={t.contactChannels.github} value={t.contactChannels.viewMyCode} href={githubUrl} />
+      <Channel icon={<LinkedinIcon className="size-[19px]" />} label={t.contactChannels.linkedin} value={t.contactChannels.connectWithMe} href={linkedinUrl} />
+      <Channel icon={<MapPin className="size-[19px]" aria-hidden />} label={t.contactChannels.basedIn} value={`${location} · ${t.contactChannels.remoteOk}`} />
     </div>
   )
 }

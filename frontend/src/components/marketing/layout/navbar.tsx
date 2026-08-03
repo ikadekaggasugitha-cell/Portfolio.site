@@ -7,8 +7,18 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { navItems, site } from '@/lib/marketing/content'
+import { useTranslation } from '../theme/language-provider'
 import { ThemeToggle } from '../theme/theme-toggle'
+import { LanguageToggle } from '../theme/language-toggle'
 import { Button } from '../primitives/button'
+
+/** Map each nav href to the key used in translations.nav */
+const navLabelKey: Record<string, keyof typeof import('@/lib/marketing/translations').translations.en.nav> = {
+  '/': 'home',
+  '/about': 'about',
+  '/projects': 'projects',
+  '/contact': 'contact',
+}
 
 /** A nav item is active on its exact route, or on any nested route (e.g. /projects/[id]). */
 function isActive(pathname: string | null, href: string) {
@@ -20,6 +30,7 @@ function isActive(pathname: string | null, href: string) {
 export function Navbar() {
   const pathname = usePathname()
   const reduce = useReducedMotion()
+  const { t } = useTranslation()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -66,6 +77,12 @@ export function Navbar() {
     setMenuOpen(false)
   }, [pathname])
 
+  /** Get the translated label for a nav item. */
+  const label = (href: string, fallback: string) => {
+    const key = navLabelKey[href]
+    return key ? t.nav[key] : fallback
+  }
+
   return (
     <header
       className={cn(
@@ -101,22 +118,23 @@ export function Navbar() {
                 activeHref === item.href ? 'text-mk-ink' : 'text-mk-muted hover:text-mk-ink',
               )}
             >
-              {item.label}
+              {label(item.href, item.label)}
             </Link>
           ))}
         </div>
 
         <div className="flex items-center gap-2.5">
+          <LanguageToggle />
           <ThemeToggle />
           <div className="hidden sm:block">
             <Button href="/contact" size="md" className="px-[18px] py-2.5 text-[0.9rem]">
-              Let&apos;s talk
+              {t.nav.letsTalk}
             </Button>
           </div>
           <button
             type="button"
             onClick={() => setMenuOpen((v) => !v)}
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-label={menuOpen ? t.nav.closeMenu : t.nav.openMenu}
             aria-expanded={menuOpen}
             className="grid size-10 place-items-center rounded-xl border border-mk-hairline bg-mk-surface text-mk-muted transition-colors hover:text-mk-ink md:hidden"
           >
@@ -146,12 +164,12 @@ export function Navbar() {
                     activeHref === item.href ? 'text-mk-accent' : 'text-mk-ink',
                   )}
                 >
-                  {item.label}
+                  {label(item.href, item.label)}
                 </Link>
               ))}
               <div className="pt-4">
                 <Button href="/contact" size="lg" className="w-full">
-                  Let&apos;s talk
+                  {t.nav.letsTalk}
                 </Button>
               </div>
             </div>

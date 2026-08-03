@@ -1,16 +1,14 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { Search } from 'lucide-react'
 import { getProjectTechnologies, getProjectsPage } from '@/lib/marketing/api.server'
 import { mapProjectCards } from '@/lib/marketing/mappers'
 import { projects as projectDefaults, site } from '@/lib/marketing/content'
 import { Container } from '@/components/marketing/primitives/container'
-import { SectionHeading } from '@/components/marketing/primitives/section-heading'
 import { Reveal } from '@/components/marketing/primitives/reveal'
 import { ProjectCard } from '@/components/marketing/sections/project-card'
 import { ProjectsControls } from '@/components/marketing/sections/projects-controls'
 import { Pagination } from '@/components/marketing/sections/pagination'
 import { HeroBackdrop } from '@/components/marketing/sections/hero-backdrop'
+import { ProjectsPageHeading, ProjectsEmptyState } from '@/components/marketing/sections/projects-page-headings'
 
 /** Worst-case data fetch is FETCH_TIMEOUT_MS x FETCH_ATTEMPTS (~40s) against a slow PHP
  *  backend; declare headroom so the platform can't kill the render mid-flight and leave
@@ -63,13 +61,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Sea
         <HeroBackdrop />
         <div aria-hidden className="mk-hero-glow pointer-events-none absolute inset-0" />
         <Container className="relative z-[2]">
-          <SectionHeading
-            eyebrow="Work"
-            title="Projects & case studies"
-            titleAccent="case studies"
-            subtitle="A collection of things I've designed, built and shipped. Search or filter by technology."
-            align="center"
-          />
+          <ProjectsPageHeading />
         </Container>
       </section>
 
@@ -80,27 +72,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Sea
           <ProjectsControls tags={tags} search={search} technology={technology} total={total} />
 
           {cards.length === 0 ? (
-            <div className="mx-auto max-w-[440px] rounded-mk border border-dashed border-mk-hairline bg-mk-surface/60 px-6 py-16 text-center">
-              <div className="mx-auto mb-4 grid size-12 place-items-center rounded-full bg-mk-brand/10 text-mk-accent">
-                <Search className="size-5" aria-hidden />
-              </div>
-              <p className="font-semibold">
-                {hasFilters ? 'No projects match your search' : 'No projects published yet'}
-              </p>
-              <p className="mt-1.5 text-[0.92rem] text-mk-muted">
-                {hasFilters
-                  ? 'Try a different keyword or clear the filters.'
-                  : 'Case studies are on the way — check back soon.'}
-              </p>
-              {hasFilters && (
-                <Link
-                  href="/projects"
-                  className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-mk-hairline bg-mk-surface px-4 py-2 text-[0.88rem] font-semibold transition-colors hover:border-mk-brand-soft"
-                >
-                  Clear filters
-                </Link>
-              )}
-            </div>
+            <ProjectsEmptyState hasFilters={hasFilters} />
           ) : (
             <>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

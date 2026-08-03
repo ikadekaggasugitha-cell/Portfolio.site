@@ -1,3 +1,6 @@
+'use client'
+
+import { useTranslation } from '../theme/language-provider'
 import { Section } from '../primitives/section'
 import { Eyebrow } from '../primitives/eyebrow'
 import { Reveal } from '../primitives/reveal'
@@ -39,5 +42,23 @@ export function CtaBand({
         </div>
       </Reveal>
     </Section>
+  )
+}
+
+/**
+ * Pre-configured contact CTA band that pulls its text from translations.
+ * Used by the /contact page as a drop-in, locale-aware band.
+ */
+export function ContactCtaBand({ email }: { email: string }) {
+  const { t } = useTranslation()
+  return (
+    <CtaBand
+      tone="subtle"
+      eyebrow={t.cta.preferEmail}
+      title={t.cta.reachMeDirectly}
+      subtitle={t.cta.notAFanOfForms}
+      buttonLabel={t.cta.emailMe}
+      buttonHref={`mailto:${email}`}
+    />
   )
 }

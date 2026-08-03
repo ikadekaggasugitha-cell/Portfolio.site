@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2, Search, SlidersHorizontal, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useTranslation } from '../theme/language-provider'
 
 /**
  * URL-driven search + tag filter. Updates the query string (debounced for the
@@ -26,6 +27,7 @@ export function ProjectsControls({
   const [pending, startTransition] = useTransition()
   const [query, setQuery] = useState(search)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const { t } = useTranslation()
 
   // Sync local input if the URL changes externally (back/forward).
   useEffect(() => {
@@ -66,8 +68,8 @@ export function ProjectsControls({
           type="search"
           value={query}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Search projects by name, description or technology…"
-          aria-label="Search projects"
+          placeholder={t.projectsPage.searchPlaceholder}
+          aria-label={t.projectsPage.searchLabel}
           className="w-full rounded-full border border-mk-hairline bg-mk-surface py-3 pl-12 pr-11 text-[0.96rem] text-mk-ink shadow-mk-sm placeholder:text-mk-faint transition-[border-color,box-shadow] focus:border-mk-brand focus:outline-none focus:ring-4 focus:ring-mk-brand/15"
         />
         {pending && (
@@ -79,9 +81,9 @@ export function ProjectsControls({
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <span className="mr-1 inline-flex items-center gap-1.5 font-mk-mono text-[0.7rem] uppercase tracking-[0.1em] text-mk-faint">
             <SlidersHorizontal className="size-3.5" aria-hidden />
-            Filter
+            {t.projectsPage.filter}
           </span>
-          <TagChip label="All" active={technology === ''} onClick={() => selectTag(null)} />
+          <TagChip label={t.projectsPage.all} active={technology === ''} onClick={() => selectTag(null)} />
           {tags.map((tag) => (
             <TagChip
               key={tag}
@@ -95,8 +97,8 @@ export function ProjectsControls({
 
       <div className="mt-4 flex items-center justify-between gap-3 text-[0.85rem] text-mk-faint">
         <span aria-live="polite">
-          {total} {total === 1 ? 'project' : 'projects'}
-          {hasFilters && ' found'}
+          {total} {total === 1 ? t.projectsPage.project : t.projectsPage.projects}
+          {hasFilters && ` ${t.projectsPage.found}`}
         </span>
         {hasFilters && (
           <button
@@ -105,7 +107,7 @@ export function ProjectsControls({
             className="inline-flex items-center gap-1.5 font-medium text-mk-accent transition-opacity hover:opacity-80"
           >
             <X className="size-3.5" aria-hidden />
-            Clear
+            {t.projectsPage.clear}
           </button>
         )}
       </div>

@@ -36,10 +36,7 @@ export async function AboutSkillsLive() {
       groups={groups}
       id="skills"
       tone="subtle"
-      eyebrow="Toolkit"
-      title="Skills & tools"
-      titleAccent="tools"
-      subtitle="The technologies I reach for day to day, grouped by where they live in the stack."
+      aboutVariant
     />
   )
 }
@@ -53,8 +50,7 @@ export async function AboutExperienceLive() {
       entries={entries}
       id="experience"
       tone="canvas"
-      eyebrow="Career"
-      title="Where I've worked"
+      aboutVariant
     />
   )
 }

@@ -1,4 +1,7 @@
+'use client'
+
 import { skillGroups, type SkillGroup } from '@/lib/marketing/content'
+import { useTranslation } from '../theme/language-provider'
 import { Section } from '../primitives/section'
 import { SectionHeading } from '../primitives/section-heading'
 import { Reveal } from '../primitives/reveal'
@@ -7,21 +10,23 @@ interface SkillsProps {
   groups?: SkillGroup[]
   id?: string
   tone?: 'canvas' | 'subtle'
-  eyebrow?: string
-  title?: string
-  titleAccent?: string
-  subtitle?: string
+  /** When true, uses the about-page variant headings from translations. */
+  aboutVariant?: boolean
 }
 
 export function Skills({
   groups = skillGroups,
   id = 'skills',
   tone = 'subtle',
-  eyebrow = '03 — Capabilities',
-  title = 'A stack that covers the whole product',
-  titleAccent = 'whole product',
-  subtitle = 'The tools I reach for daily — grouped by where they live in the stack.',
+  aboutVariant = false,
 }: SkillsProps) {
+  const { t } = useTranslation()
+
+  const eyebrow = aboutVariant ? t.skills.aboutEyebrow : t.skills.eyebrow
+  const title = aboutVariant ? t.skills.aboutTitle : t.skills.title
+  const titleAccent = aboutVariant ? t.skills.aboutTitleAccent : t.skills.titleAccent
+  const subtitle = aboutVariant ? t.skills.aboutSubtitle : t.skills.subtitle
+
   return (
     <Section id={id} tone={tone}>
       <SectionHeading

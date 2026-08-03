@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { fontVariables } from '@/lib/marketing/fonts'
 import { ThemeProvider, ThemeScript } from '../theme/theme-provider'
+import { LanguageProvider } from '../theme/language-provider'
 import { Navbar } from './navbar'
 import { Footer, type FooterLinks } from './footer'
 import { ScrollToTop } from './scroll-to-top'
@@ -22,12 +23,14 @@ export function MarketingShell({ children, footerLinks }: { children: ReactNode;
     >
       <ThemeScript />
       <ThemeProvider>
-        <Navbar />
-        <main className="flex-1">
-          <PageTransition>{children}</PageTransition>
-        </main>
-        <Footer {...footerLinks} />
-        <ScrollToTop />
+        <LanguageProvider>
+          <Navbar />
+          <main className="flex-1">
+            <PageTransition>{children}</PageTransition>
+          </main>
+          <Footer {...footerLinks} />
+          <ScrollToTop />
+        </LanguageProvider>
       </ThemeProvider>
     </div>
   )

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, Download, Mail } from 'lucide-react'
 import { heroDefaults, type HeroData } from '@/lib/marketing/content'
+import { useTranslation } from '../theme/language-provider'
 import { Container } from '../primitives/container'
 import { Button } from '../primitives/button'
 import { HeroBackdrop } from './hero-backdrop'
@@ -24,8 +25,9 @@ function initials(name: string) {
 }
 
 export function Hero(props: HeroData = heroDefaults) {
-  const { name, role, photo, intro, available, location, githubUrl, linkedinUrl, email, cvUrl, codeStack } = props
+  const { name, role, photo, available, location, githubUrl, linkedinUrl, email, cvUrl, codeStack } = props
   const reduce = useReducedMotion()
+  const { t } = useTranslation()
   const container = reduce ? {} : { initial: 'hidden', animate: 'show', variants: staggerParent }
   const item = reduce ? {} : { variants: staggerItem }
 
@@ -49,7 +51,7 @@ export function Hero(props: HeroData = heroDefaults) {
                   )}
                   <span className="relative inline-flex size-2 rounded-full bg-mk-amber" />
                 </span>
-                AVAILABLE FOR NEW WORK
+                {t.hero.available}
               </motion.span>
             )}
 
@@ -57,23 +59,23 @@ export function Hero(props: HeroData = heroDefaults) {
               {...item}
               className="mt-[22px] text-[clamp(2.7rem,6.4vw,4.7rem)] font-extrabold leading-[1.05] tracking-[-0.035em] text-balance"
             >
-              Full Stack Developer building{' '}
-              <span className="mk-grad-text">reliable software</span> — from web apps to backend systems.
+              {t.hero.headingPre}
+              <span className="mk-grad-text">{t.hero.headingAccent}</span>{t.hero.headingPost}
             </motion.h1>
 
             <motion.p {...item} className="mt-5 max-w-[46ch] text-[clamp(1.05rem,1.8vw,1.3rem)] text-mk-muted">
-              {intro}
+              {t.hero.intro}
             </motion.p>
 
             <motion.div {...item} className="mt-8 flex flex-wrap gap-3.5">
               <Button href="#work" size="lg">
-                View my work
+                {t.hero.viewWork}
                 <ArrowRight className="size-[17px]" aria-hidden />
               </Button>
               {cvUrl && cvUrl !== '#' && (
                 <Button href={cvUrl} variant="ghost" size="lg">
                   <Download className="size-[17px]" aria-hidden />
-                  Download CV
+                  {t.hero.downloadCv}
                 </Button>
               )}
             </motion.div>

@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from 'react'
 import { Send } from 'lucide-react'
 import api from '@/lib/api'
+import { useTranslation } from '../theme/language-provider'
 
 type Status = { type: 'success' | 'error'; text: string } | null
 
@@ -21,6 +22,7 @@ export function ContactForm() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
   const [submitting, setSubmitting] = useState(false)
   const [status, setStatus] = useState<Status>(null)
+  const { t } = useTranslation()
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -32,10 +34,10 @@ export function ContactForm() {
     setStatus(null)
     try {
       await api.post('/messages', form)
-      setStatus({ type: 'success', text: "Message sent — I'll reply within a day." })
+      setStatus({ type: 'success', text: t.contactForm.success })
       setForm({ name: '', email: '', subject: '', message: '' })
     } catch {
-      setStatus({ type: 'error', text: 'Something went wrong. Please email me directly instead.' })
+      setStatus({ type: 'error', text: t.contactForm.error })
     } finally {
       setSubmitting(false)
     }
@@ -50,24 +52,24 @@ export function ContactForm() {
     >
       <div className="grid gap-x-4 sm:grid-cols-2">
         <div className="mb-[18px]">
-          <label className={labelClass} htmlFor="c-name">Name</label>
-          <input id="c-name" name="name" type="text" required placeholder="Your name"
+          <label className={labelClass} htmlFor="c-name">{t.contactForm.name}</label>
+          <input id="c-name" name="name" type="text" required placeholder={t.contactForm.namePlaceholder}
             value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputClass} />
         </div>
         <div className="mb-[18px]">
-          <label className={labelClass} htmlFor="c-email">Email</label>
-          <input id="c-email" name="email" type="email" required placeholder="you@email.com"
+          <label className={labelClass} htmlFor="c-email">{t.contactForm.email}</label>
+          <input id="c-email" name="email" type="email" required placeholder={t.contactForm.emailPlaceholder}
             value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputClass} />
         </div>
       </div>
       <div className="mb-[18px]">
-        <label className={labelClass} htmlFor="c-subject">Subject</label>
-        <input id="c-subject" name="subject" type="text" required placeholder="What's this about?"
+        <label className={labelClass} htmlFor="c-subject">{t.contactForm.subject}</label>
+        <input id="c-subject" name="subject" type="text" required placeholder={t.contactForm.subjectPlaceholder}
           value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} className={inputClass} />
       </div>
       <div className="mb-5">
-        <label className={labelClass} htmlFor="c-message">Message</label>
-        <textarea id="c-message" name="message" required rows={5} placeholder="Tell me a bit about your project or role…"
+        <label className={labelClass} htmlFor="c-message">{t.contactForm.message}</label>
+        <textarea id="c-message" name="message" required rows={5} placeholder={t.contactForm.messagePlaceholder}
           value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={`${inputClass} min-h-[130px] resize-y`} />
       </div>
 
@@ -91,7 +93,7 @@ export function ContactForm() {
         disabled={submitting}
         className="inline-flex w-full items-center justify-center gap-2 rounded-[14px] bg-mk-brand px-6 py-3.5 font-semibold text-mk-on-brand shadow-mk-brand transition-[background-color,opacity] hover:bg-mk-brand-strong disabled:opacity-60"
       >
-        {submitting ? 'Sending…' : 'Send message'}
+        {submitting ? t.contactForm.sending : t.contactForm.send}
         {!submitting && <Send className="size-[17px]" aria-hidden />}
       </button>
     </form>
