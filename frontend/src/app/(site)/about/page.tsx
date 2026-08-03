@@ -38,7 +38,6 @@ export async function generateMetadata(): Promise<Metadata> {
   // bypasses error.tsx entirely.
   const { data: profile } = await soften(getProfile(), null)
   const name = profile?.name?.trim() || site.name
-  const role = profile?.title?.trim() || site.role
   const description = profile?.description?.trim() || FALLBACK_BIO
   const title = `About · ${name}`
 
