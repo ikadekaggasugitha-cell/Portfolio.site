@@ -57,7 +57,7 @@ export function Hero(props: HeroData = heroDefaults) {
 
             <motion.h1
               {...item}
-              className="mt-[22px] text-[clamp(2.7rem,6.4vw,4.7rem)] font-extrabold leading-[1.05] tracking-[-0.035em] text-balance"
+              className="mt-[22px] text-[clamp(2.25rem,5.2vw,3.85rem)] font-extrabold leading-[1.08] tracking-[-0.035em] text-balance"
             >
               {t.hero.headingPre}
               <span className="mk-grad-text">{t.hero.headingAccent}</span>{t.hero.headingPost}
@@ -99,7 +99,7 @@ export function Hero(props: HeroData = heroDefaults) {
 
           {/* Photo + code strip card */}
           <motion.div
-            className="relative mx-auto w-full max-w-[420px]"
+            className="relative mx-auto w-full max-w-[420px] lg:-mt-8 lg:-translate-y-2"
             initial={reduce ? undefined : { opacity: 0, y: 24 }}
             animate={reduce ? undefined : { opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
