@@ -103,6 +103,7 @@ export function AboutHero(props: AboutHeroData = aboutHeroDefaults) {
             {cvUrl && cvUrl !== '#' && (
               <a
                 href={cvUrl}
+                download
                 className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-[14px] border border-mk-hairline bg-mk-surface px-5 py-3 text-[0.92rem] font-semibold text-mk-ink shadow-mk-sm transition-colors hover:border-mk-brand-soft"
               >
                 {t.aboutPage.downloadResume}

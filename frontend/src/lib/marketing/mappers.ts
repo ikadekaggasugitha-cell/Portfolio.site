@@ -70,6 +70,13 @@ export function liveOrFallback<T>(mapped: T[], apiReachable: boolean, fallback: 
 const orDefault = (value: string | null | undefined, fallback: string) =>
   value && value.trim() ? value : fallback
 
+const formatUrl = (value: string | null | undefined, fallback: string) => {
+  const v = value?.trim()
+  if (!v) return fallback
+  if (v === '#' || v.startsWith('http://') || v.startsWith('https://') || v.startsWith('mailto:')) return v
+  return `https://${v}`
+}
+
 export function mapHero(profile: Profile | null): HeroData {
   if (!profile) return heroDefaults
   return {
@@ -78,9 +85,9 @@ export function mapHero(profile: Profile | null): HeroData {
     role: orDefault(profile.title, heroDefaults.role),
     photo: profile.photo?.trim() ? profile.photo : null,
     intro: orDefault(profile.description, heroDefaults.intro),
-    githubUrl: orDefault(profile.github, heroDefaults.githubUrl),
-    linkedinUrl: orDefault(profile.linkedin, heroDefaults.linkedinUrl),
-    cvUrl: orDefault(profile.cv, heroDefaults.cvUrl),
+    githubUrl: formatUrl(profile.github, heroDefaults.githubUrl),
+    linkedinUrl: formatUrl(profile.linkedin, heroDefaults.linkedinUrl),
+    cvUrl: formatUrl(profile.cv, heroDefaults.cvUrl),
     email: orDefault(profile.email, heroDefaults.email),
     location: orDefault(profile.location, heroDefaults.location),
     available: profile.is_available ?? heroDefaults.available,
@@ -110,8 +117,8 @@ export function mapContact(profile: Profile | null): ContactData {
   if (!profile) return contactDefaults
   return {
     ...contactDefaults,
-    githubUrl: orDefault(profile.github, contactDefaults.githubUrl),
-    linkedinUrl: orDefault(profile.linkedin, contactDefaults.linkedinUrl),
+    githubUrl: formatUrl(profile.github, contactDefaults.githubUrl),
+    linkedinUrl: formatUrl(profile.linkedin, contactDefaults.linkedinUrl),
     email: orDefault(profile.email, contactDefaults.email),
     location: orDefault(profile.location, contactDefaults.location),
     available: profile.is_available ?? contactDefaults.available,
@@ -126,9 +133,9 @@ export function mapAboutHero(profile: Profile | null): AboutHeroData {
     role: orDefault(profile.title, aboutHeroDefaults.role),
     bio: orDefault(profile.description, aboutHeroDefaults.bio),
     photo: profile.photo?.trim() ? profile.photo : null,
-    githubUrl: orDefault(profile.github, aboutHeroDefaults.githubUrl),
-    linkedinUrl: orDefault(profile.linkedin, aboutHeroDefaults.linkedinUrl),
-    cvUrl: orDefault(profile.cv, aboutHeroDefaults.cvUrl),
+    githubUrl: formatUrl(profile.github, aboutHeroDefaults.githubUrl),
+    linkedinUrl: formatUrl(profile.linkedin, aboutHeroDefaults.linkedinUrl),
+    cvUrl: formatUrl(profile.cv, aboutHeroDefaults.cvUrl),
     email: orDefault(profile.email, aboutHeroDefaults.email),
     location: orDefault(profile.location, aboutHeroDefaults.location),
     available: profile.is_available ?? aboutHeroDefaults.available,

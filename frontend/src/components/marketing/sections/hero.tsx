@@ -73,7 +73,7 @@ export function Hero(props: HeroData = heroDefaults) {
                 <ArrowRight className="size-[17px]" aria-hidden />
               </Button>
               {cvUrl && cvUrl !== '#' && (
-                <Button href={cvUrl} variant="ghost" size="lg">
+                <Button href={cvUrl} variant="ghost" size="lg" download>
                   <Download className="size-[17px]" aria-hidden />
                   {t.hero.downloadCv}
                 </Button>

@@ -11,6 +11,7 @@ type Size = 'md' | 'lg'
 interface ButtonProps {
   children: ReactNode
   href?: string
+  download?: boolean | string
   variant?: Variant
   size?: Size
   className?: string
@@ -43,6 +44,7 @@ function isPlainAnchor(href: string) {
 export function Button({
   children,
   href,
+  download,
   variant = 'primary',
   size = 'md',
   className,
@@ -63,6 +65,7 @@ export function Button({
       return (
         <motion.a
           href={href}
+          download={download}
           aria-label={ariaLabel}
           onClick={onClick}
           className={classes}

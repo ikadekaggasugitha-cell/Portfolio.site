@@ -33,11 +33,21 @@ class MediaController extends Controller
 
         $file = $request->file('file');
         $disk = config('filesystems.media_disk', 'public');
-        $path = $file->store('media', $disk);
+
+        $originalName = $file->getClientOriginalName();
+        $extension = $file->getClientOriginalExtension();
+        $filenameWithoutExt = pathinfo($originalName, PATHINFO_FILENAME);
+        $safeName = \Illuminate\Support\Str::slug($filenameWithoutExt);
+        if (empty($safeName)) {
+            $safeName = 'file';
+        }
+        $filenameToStore = $safeName . '-' . \Illuminate\Support\Str::lower(\Illuminate\Support\Str::random(6)) . ($extension ? '.' . $extension : '');
+
+        $path = $file->storeAs('media', $filenameToStore, $disk);
         $url = Storage::disk($disk)->url($path);
 
         $meta = [
-            'original_name' => $file->getClientOriginalName(),
+            'original_name' => $originalName,
         ];
 
         $media = $this->mediaService->createFromUploadedFile([
