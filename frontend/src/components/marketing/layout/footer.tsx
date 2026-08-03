@@ -5,6 +5,7 @@ import { navItems, site } from '@/lib/marketing/content'
 import { useTranslation } from '../theme/language-provider'
 import { Container } from '../primitives/container'
 import { GithubIcon, LinkedinIcon } from '../icons/brand-icons'
+import { Logo } from './logo'
 
 const social = 'grid size-[42px] place-items-center rounded-xl border border-mk-hairline bg-mk-surface text-mk-muted shadow-mk-sm transition-[color,border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-mk-brand-soft hover:text-mk-ink'
 
@@ -47,9 +48,7 @@ export function Footer({ githubUrl = site.githubUrl, linkedinUrl = site.linkedin
       <Container>
         <div className="grid gap-10 md:grid-cols-[2fr_1fr_1fr]">
           <div>
-            <a href="#top" className="font-mk-mono text-2xl font-bold text-mk-ink">
-              &lt;<span className="text-mk-accent">{site.shortName}</span>/&gt;
-            </a>
+            <Logo href="#top" textClassName="text-2xl md:text-3xl" />
             <p className="mt-4 max-w-[40ch] text-[0.96rem] text-mk-muted">
               {t.footer.description}
             </p>

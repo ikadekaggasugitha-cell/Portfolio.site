@@ -10,6 +10,7 @@ import { navItems, site } from '@/lib/marketing/content'
 import { useTranslation } from '../theme/language-provider'
 import { ThemeToggle } from '../theme/theme-toggle'
 import { LanguageToggle } from '../theme/language-toggle'
+import { Logo } from './logo'
 import { Button } from '../primitives/button'
 
 /** Map each nav href to the key used in translations.nav */
@@ -91,9 +92,7 @@ export function Navbar() {
       )}
     >
       <nav className="mx-auto flex h-[68px] max-w-[1200px] items-center justify-between gap-5 px-[clamp(20px,5vw,40px)]">
-        <Link href="/" className="font-mk-mono text-[1.05rem] font-bold tracking-[-0.01em] text-mk-ink">
-          &lt;<span className="text-mk-accent">{site.shortName}</span>/&gt;
-        </Link>
+        <Logo textClassName="text-[1.15rem] md:text-[1.3rem]" />
 
         {/* Desktop links + sliding indicator */}
         <div className="relative hidden items-center gap-1 md:flex" onMouseLeave={() => moveTo(activeHref)}>
