@@ -140,12 +140,12 @@ export function mapAboutHero(profile: Profile | null): AboutHeroData {
 const CATEGORY_ORDER = ['frontend', 'backend', 'devops', 'design', 'other'] as const
 type CategoryKey = (typeof CATEGORY_ORDER)[number]
 
-const CATEGORY_META: Record<CategoryKey, { title: string; icon: LucideIcon }> = {
-  frontend: { title: 'Frontend', icon: Code2 },
-  backend: { title: 'Backend', icon: Database },
-  devops: { title: 'DevOps & Cloud', icon: Cloud },
-  design: { title: 'Design & Craft', icon: PenTool },
-  other: { title: 'More', icon: Sparkles },
+const CATEGORY_META: Record<CategoryKey, { title: string; icon: string }> = {
+  frontend: { title: 'Frontend', icon: 'code' },
+  backend: { title: 'Backend', icon: 'database' },
+  devops: { title: 'DevOps & Cloud', icon: 'cloud' },
+  design: { title: 'Design & Craft', icon: 'design' },
+  other: { title: 'More', icon: 'sparkles' },
 }
 
 const CATEGORY_BY_SKILL: Record<string, CategoryKey> = {
@@ -173,8 +173,8 @@ const CATEGORY_BY_SKILL: Record<string, CategoryKey> = {
  * the decision of when static defaults are appropriate.
  */
 export function categorizeSkills(skills: Skill[]): SkillGroup[] {
-  const groups = new Map<string, { title: string; icon: LucideIcon; skills: string[] }>()
-  const push = (key: string, title: string, icon: LucideIcon, name: string) => {
+  const groups = new Map<string, { title: string; icon: string; skills: string[] }>()
+  const push = (key: string, title: string, icon: string, name: string) => {
     const group = groups.get(key) ?? { title, icon, skills: [] }
     group.skills.push(name)
     groups.set(key, group)
@@ -187,7 +187,7 @@ export function categorizeSkills(skills: Skill[]): SkillGroup[] {
 
     if (rawCategory) {
       const key = rawCategory.toLowerCase()
-      const known = CATEGORY_META[key as CategoryKey] as { title: string; icon: LucideIcon } | undefined
+      const known = CATEGORY_META[key as CategoryKey] as { title: string; icon: string } | undefined
       push(key, known?.title ?? rawCategory, known?.icon ?? CATEGORY_META.other.icon, name)
     } else {
       const key = CATEGORY_BY_SKILL[name.toLowerCase()] ?? 'other'
@@ -370,7 +370,7 @@ export function mapCapabilities(capabilities: CapabilityRecord[]): CapabilityCar
   return capabilities.map((capability) => ({
     title: capability.title,
     description: capability.description ?? '',
-    icon: CAPABILITY_ICONS[capability.icon?.trim().toLowerCase() ?? ''] ?? Sparkles,
+    icon: capability.icon?.trim().toLowerCase() || 'sparkles',
   }))
 }
 

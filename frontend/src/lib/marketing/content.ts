@@ -7,7 +7,6 @@
  * representative values grounded in the real profile.
  */
 import type { LucideIcon } from 'lucide-react'
-import { Code2, Database, Cloud, PenTool, Globe, Server, Settings2 } from 'lucide-react'
 
 export const site = {
   name: 'I Kadek Agga Sugitha',
@@ -57,43 +56,43 @@ export const stats: StatTile[] = [
 export interface Capability {
   title: string
   description: string
-  icon: LucideIcon
+  icon: string | LucideIcon
 }
 
 export const capabilities: Capability[] = [
   {
     title: 'Web & Applications',
     description: 'Responsive web apps, dashboards and internal tools built with React and Next.js.',
-    icon: Globe,
+    icon: 'globe',
   },
   {
     title: 'Backend & APIs',
     description: 'REST APIs and backend services with Node.js and Express — the systems that power the frontend.',
-    icon: Server,
+    icon: 'server',
   },
   {
     title: 'Data & Databases',
     description: 'Schema design and data modeling with PostgreSQL and MongoDB, built to stay maintainable as they grow.',
-    icon: Database,
+    icon: 'database',
   },
   {
     title: 'Automation & DevOps',
     description: 'CI/CD pipelines, Docker containers and scripts that keep deployment and maintenance painless.',
-    icon: Settings2,
+    icon: 'settings',
   },
 ]
 
 export interface SkillGroup {
   title: string
-  icon: LucideIcon
+  icon: string | LucideIcon
   skills: string[]
 }
 
 export const skillGroups: SkillGroup[] = [
-  { title: 'Frontend', icon: Code2, skills: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
-  { title: 'Backend', icon: Database, skills: ['Node.js', 'Express.js', 'PostgreSQL', 'MongoDB', 'REST APIs'] },
-  { title: 'DevOps & Cloud', icon: Cloud, skills: ['Docker', 'AWS', 'Git', 'CI / CD', 'Nginx'] },
-  { title: 'Design & Craft', icon: PenTool, skills: ['Figma', 'UI / UX', 'Design systems', 'Accessibility'] },
+  { title: 'Frontend', icon: 'frontend', skills: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
+  { title: 'Backend', icon: 'backend', skills: ['Node.js', 'Express.js', 'PostgreSQL', 'MongoDB', 'REST APIs'] },
+  { title: 'DevOps & Cloud', icon: 'devops', skills: ['Docker', 'AWS', 'Git', 'CI / CD', 'Nginx'] },
+  { title: 'Design & Craft', icon: 'design', skills: ['Figma', 'UI / UX', 'Design systems', 'Accessibility'] },
 ]
 
 /**

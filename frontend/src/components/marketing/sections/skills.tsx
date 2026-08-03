@@ -5,6 +5,7 @@ import { useTranslation } from '../theme/language-provider'
 import { Section } from '../primitives/section'
 import { SectionHeading } from '../primitives/section-heading'
 import { Reveal } from '../primitives/reveal'
+import { MarketingIcon } from '../primitives/marketing-icon'
 
 interface SkillsProps {
   groups?: SkillGroup[]
@@ -40,13 +41,12 @@ export function Skills({
 
       <div className="grid gap-[18px] md:grid-cols-2">
         {groups.map((group, i) => {
-          const Icon = group.icon
           return (
             <Reveal key={group.title} delay={i * 0.08}>
               <div className="group h-full rounded-mk border border-mk-hairline bg-mk-surface p-7 shadow-mk-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-mk-brand-soft/60 hover:shadow-mk-md">
                 <div className="mb-5 flex items-center gap-3">
                   <span className="grid size-[42px] place-items-center rounded-xl bg-mk-brand/10 text-mk-accent">
-                    <Icon className="size-5" aria-hidden />
+                    <MarketingIcon icon={group.icon} className="size-5" />
                   </span>
                   <h3 className="text-[1.12rem] font-bold">{group.title}</h3>
                 </div>
