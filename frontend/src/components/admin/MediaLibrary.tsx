@@ -11,7 +11,7 @@ import { SkeletonList } from '@/components/admin/ui/Skeleton'
 export default function MediaLibrary() {
   const [items, setItems] = useState<Media[]>([])
   const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState(1)
+  const [page] = useState(1)
   const [perPage] = useState(24)
   const fileRef = useRef<HTMLInputElement | null>(null)
   const [uploadProgress, setUploadProgress] = useState<number | null>(null)
@@ -115,6 +115,7 @@ export default function MediaLibrary() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {items.map((it) => (
           <div key={it.id} className="media-thumb p-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={it.url} alt={it.alt ?? it.filename} className="w-full h-36 object-cover mb-2 rounded" />
             {editingId === it.id ? (
               <div>

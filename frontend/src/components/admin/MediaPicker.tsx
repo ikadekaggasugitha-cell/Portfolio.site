@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import api from '@/lib/api'
 import toast from 'react-hot-toast'
 import type { Media } from '@/types'
@@ -14,10 +14,10 @@ interface MediaPickerProps {
   allowMultiple?: boolean
 }
 
-export default function MediaPicker({ onClose, onSelect, allowMultiple = false }: MediaPickerProps) {
+export default function MediaPicker({ onClose, onSelect }: MediaPickerProps) {
   const [items, setItems] = useState<Media[]>([])
   const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState(1)
+  const [page] = useState(1)
   const [perPage] = useState(24)
 
   // UI state for editing caption/alt before confirming selection
@@ -25,9 +25,7 @@ export default function MediaPicker({ onClose, onSelect, allowMultiple = false }
   const [draftCaption, setDraftCaption] = useState('')
   const [draftAlt, setDraftAlt] = useState('')
 
-  useEffect(() => { load() }, [page])
-
-  async function load() {
+  const load = useCallback(async () => {
     setLoading(true)
     try {
       const res = await api.get('/media', { params: { page, per_page: perPage } })
@@ -39,7 +37,11 @@ export default function MediaPicker({ onClose, onSelect, allowMultiple = false }
     } finally {
       setLoading(false)
     }
-  }
+  }, [page, perPage])
+
+  useEffect(() => {
+    load()
+  }, [load])
 
   function beginSelect(media: Media) {
     setSelected(media)
@@ -83,6 +85,7 @@ export default function MediaPicker({ onClose, onSelect, allowMultiple = false }
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {items.map((it) => (
               <div key={it.id} className="border rounded overflow-hidden p-2 flex flex-col media-thumb">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={it.url} alt={it.alt ?? it.filename} className="w-full h-32 object-cover mb-2" />
                 <div className="flex items-center justify-between">
                   <div className="text-sm truncate mr-2 stitch-heading">{it.filename}</div>
@@ -98,6 +101,7 @@ export default function MediaPicker({ onClose, onSelect, allowMultiple = false }
           <div className="mt-4 p-3 border rounded bg-canvas">
             <h4 className="stitch-heading mb-2">Confirm selection</h4>
             <div className="flex gap-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={selected.url} alt={selected.alt ?? selected.filename} className="w-36 h-24 object-cover rounded" />
               <div className="flex-1">
                 <div className="mb-2">

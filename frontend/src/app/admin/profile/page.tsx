@@ -228,6 +228,7 @@ export default function ProfilePage() {
         <div className="flex items-center gap-4">
           <div className="w-28 h-28 rounded-full overflow-hidden bg-surface flex items-center justify-center border border-hairline">
             {photoUrl ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
               <img src={photoUrl} alt="Profile photo" className="w-full h-full object-cover" />
             ) : (
               <div className="text-2xl text-ink-muted-48">👤</div>

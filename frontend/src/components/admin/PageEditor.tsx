@@ -233,6 +233,7 @@ export default function PageEditor({ id }: PageEditorProps) {
 
                           {(blockForm['background_url'] as string) ? (
                             <div className="mb-2">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img src={String(blockForm['background_url'])} alt={String(blockForm['background_alt'] || 'bg')} className="w-full h-28 object-cover rounded" />
                             </div>
                           ) : (

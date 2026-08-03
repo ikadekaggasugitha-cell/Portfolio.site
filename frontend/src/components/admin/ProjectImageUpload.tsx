@@ -258,6 +258,7 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
                 onDrop={(e) => handleDrop(e, idx)}
                 className="relative group border border-hairline rounded-[11px] overflow-hidden bg-canvas-parchment aspect-square cursor-move"
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={img.image}
                   alt="Project"
@@ -303,6 +304,7 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
                 <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
                   {mediaItems.map((m) => (
                     <div key={m.id} className={`relative border ${selectedMediaIds.includes(m.id) ? 'border-primary' : 'border-hairline'} rounded overflow-hidden cursor-pointer`} onClick={() => toggleSelectMedia(m.id)}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={m.url} alt={m.alt ?? m.filename} className="w-full h-20 object-cover" />
                       <div className="absolute top-1 left-1 bg-black/40 text-white text-xs px-1 rounded">#{m.id}</div>
                       {selectedMediaIds.includes(m.id) && (
