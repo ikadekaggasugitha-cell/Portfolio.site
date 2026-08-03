@@ -3,6 +3,7 @@
 import { timeline, type TimelineEntry } from '@/lib/marketing/content'
 import { cn } from '@/lib/utils'
 import { useTranslation } from '../theme/language-provider'
+import { translations } from '@/lib/marketing/translations'
 import { Section } from '../primitives/section'
 import { SectionHeading } from '../primitives/section-heading'
 import { Reveal } from '../primitives/reveal'
@@ -26,9 +27,19 @@ export function Experience({
   const eyebrow = aboutVariant ? t.experience.aboutEyebrow : t.experience.eyebrow
   const title = aboutVariant ? t.experience.aboutTitle : t.experience.title
 
-  /** Translate known timeline entries by matching company name. */
+  /**
+   * Translate only entries still identical to the seeded English default.
+   *
+   * The previous match was `company === … || role === …`, so a real job added in the
+   * admin that merely shared a role title with the seeded data had its company, dates
+   * and description silently replaced by the placeholder. Requiring company, role and
+   * description to all still match means anything entered in the admin is shown verbatim.
+   */
   const translated = entries.map((entry) => {
-    const match = t.experience.entries.find((e) => e.company === entry.company || e.role === entry.role)
+    const idx = translations.en.experience.entries.findIndex(
+      (e) => e.company === entry.company && e.role === entry.role && e.description === entry.description,
+    )
+    const match = idx >= 0 ? t.experience.entries[idx] : undefined
     if (!match) return entry
     return { ...entry, period: match.period, role: match.role, company: match.company, location: match.location, description: match.description }
   })

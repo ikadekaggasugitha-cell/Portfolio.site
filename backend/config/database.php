@@ -172,7 +172,14 @@ return [
             'username' => env('REDIS_USERNAME'),
             'password' => env('REDIS_PASSWORD'),
             'port' => env('REDIS_PORT', '6379'),
-            'database' => env('REDIS_CACHE_DB', '1'),
+            // Laravel ships this as database 1, which breaks against a managed Redis that
+            // only exposes a single keyspace. Upstash (Vercel KV) answers `SELECT 1` with
+            // "ERR Only 0th database is supported", so every request that touches the cache
+            // threw a ConnectionException — i.e. every /api/v1/* route, because they all run
+            // `throttle:api`. Web routes never touch the cache, which is why only the API
+            // went down. Keyspace collisions with the default connection are avoided by
+            // REDIS_PREFIX, not by the database index.
+            'database' => env('REDIS_CACHE_DB', '0'),
             'max_retries' => env('REDIS_MAX_RETRIES', 3),
             'backoff_algorithm' => env('REDIS_BACKOFF_ALGORITHM', 'decorrelated_jitter'),
             'backoff_base' => env('REDIS_BACKOFF_BASE', 100),

@@ -27,7 +27,6 @@ import type {
   Faq,
 } from '@/types'
 import {
-  aboutDefaults,
   aboutHeroDefaults,
   contactDefaults,
   heroDefaults,
@@ -99,17 +98,20 @@ export function mapHero(profile: Profile | null): HeroData {
  * uses `description`), so this section is now editable from Admin → Profile instead of being
  * hardcoded. Blank lines in `about_body` separate paragraphs.
  */
+/**
+ * Returns blanks rather than defaults when the admin hasn't written About copy. The
+ * section is a Client Component that falls back to the translated default for the
+ * active language — substituting an English default here would defeat that.
+ */
 export function mapAbout(profile: Profile | null): AboutData {
-  if (!profile) return aboutDefaults
-
-  const paragraphs = (profile.about_body ?? '')
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean)
+  if (!profile) return { lead: '', paragraphs: [] }
 
   return {
-    lead: orDefault(profile.about_lead, aboutDefaults.lead),
-    paragraphs: paragraphs.length ? paragraphs : aboutDefaults.paragraphs,
+    lead: profile.about_lead?.trim() ?? '',
+    paragraphs: (profile.about_body ?? '')
+      .split(/\n\s*\n/)
+      .map((paragraph) => paragraph.trim())
+      .filter(Boolean),
   }
 }
 

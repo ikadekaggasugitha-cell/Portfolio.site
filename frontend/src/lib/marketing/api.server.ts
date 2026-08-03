@@ -36,9 +36,11 @@ import type {
  *     module used to, meant every regeneration re-committed that placeholder as a fresh 200 —
  *     so purging the cache from the admin "worked" and immediately re-published the same wrong
  *     page. Cache tags were never the problem; they are attached even when a fetch fails.
- *   • During `next build` it returns null instead, so a backend outage can never break a
- *     deploy. That render can still bake in the static defaults, but `revalidate` on each
- *     public route bounds how long that survives.
+ *   • During `next build` it throws too, which aborts the deploy. A build that renders
+ *     placeholder copy is worse than no deploy: it replaces a working site with content
+ *     nobody wrote, and it looks green. `scripts/check-api.mjs` catches this earlier and
+ *     more cheaply; this is the backstop for an endpoint that fails mid-build.
+ *     Set ALLOW_DEGRADED_BUILD=true to override in an emergency.
  */
 
 const API_BASE = `${(process.env.API_BACKEND_URL ?? 'http://localhost:8000').replace(/\/+$/, '')}/api/v1`
@@ -75,8 +77,14 @@ const FETCH_TIMEOUT_MS = Number(process.env.API_FETCH_TIMEOUT_MS) || 20000
 /** One retry, to ride out a cold start or a transient 5xx from the PHP function. */
 const FETCH_ATTEMPTS = 2
 
-/** Prerendering during `next build`: degrade instead of failing the deploy. */
 const isBuildPhase = () => process.env.NEXT_PHASE === 'phase-production-build'
+
+/**
+ * Emergency valve: ship a build even though the API is unreachable, accepting that pages
+ * will publish the static placeholder copy from content.ts. Off by default — see the
+ * failure policy above and `scripts/check-api.mjs`.
+ */
+const allowDegradedBuild = () => process.env.ALLOW_DEGRADED_BUILD === 'true'
 
 /**
  * Downgrades a getter's runtime throw back into `{ ok: false }`.
@@ -162,12 +170,11 @@ async function fetchEnvelope<T>(
   // public site ends up serving placeholder content with no visible cause.
   console.error(`[api.server] GET ${path} failed after ${FETCH_ATTEMPTS} attempt(s):`, lastError)
 
-  // See the failure policy at the top of this file: throwing is what preserves the last
-  // good cached page instead of overwriting it with placeholder content.
-  if (!isBuildPhase()) {
-    throw new ApiError(`Portfolio API unreachable: GET ${path} (${String(lastError)})`, lastStatus)
-  }
-  return null
+  // See the failure policy at the top of this file. Throwing is what preserves the last
+  // good cached page at runtime — and at build time it aborts the deploy instead of
+  // prerendering placeholder copy over a site that is currently correct.
+  if (isBuildPhase() && allowDegradedBuild()) return null
+  throw new ApiError(`Portfolio API unreachable: GET ${path} (${String(lastError)})`, lastStatus)
 }
 
 /** Normalizes a payload that may be a plain array or a nested paginator (`{ data: [] }`). */

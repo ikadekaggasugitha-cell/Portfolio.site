@@ -17,11 +17,16 @@ export function ContactFaq({ faqs = faqDefaults }: { faqs?: FaqEntry[] }) {
 
   if (!faqs.length) return null
 
-  /** Translate known FAQ entries by matching the English question text. */
+  /**
+   * Translate only entries still identical to the seeded English default. Matching on
+   * the question alone meant an answer edited in the admin was overwritten by the
+   * hardcoded text, so the edit never reached the page.
+   */
   const translated = faqs.map((faq) => {
     const idx = EN_FAQ_QUESTIONS.indexOf(faq.q)
-    if (idx >= 0 && t.faqs[idx]) return { q: t.faqs[idx].q, a: t.faqs[idx].a }
-    return faq
+    const seeded = translations.en.faqs[idx]
+    if (idx < 0 || !seeded || seeded.a !== faq.a) return faq
+    return t.faqs[idx] ?? faq
   })
 
   return (

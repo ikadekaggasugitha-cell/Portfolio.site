@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/check-api.mjs && next build",
+    "build:degraded": "ALLOW_DEGRADED_BUILD=true next build",
     "start": "next start",
     "lint": "eslint"
   },

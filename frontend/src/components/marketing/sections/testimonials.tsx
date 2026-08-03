@@ -2,6 +2,7 @@
 
 import { testimonials as testimonialDefaults, type Testimonial } from '@/lib/marketing/content'
 import { useTranslation } from '../theme/language-provider'
+import { translations } from '@/lib/marketing/translations'
 import { Section } from '../primitives/section'
 import { SectionHeading } from '../primitives/section-heading'
 import { Reveal } from '../primitives/reveal'
@@ -14,8 +15,15 @@ export function Testimonials({
   const { t } = useTranslation()
   if (!testimonials.length) return null
 
-  /** Translate known testimonials by name match. */
+  /**
+   * Translate only the seeded copy we shipped ourselves. Matching on the name alone
+   * meant a quote edited in the admin was silently replaced by the hardcoded one, so
+   * the edit never appeared on the site. Requiring the stored quote to still equal the
+   * English default guarantees anything the owner writes is shown verbatim.
+   */
   const translated = testimonials.map((item) => {
+    const seeded = translations.en.testimonials.quotes.find((q) => q.name === item.name)
+    if (!seeded || seeded.quote !== item.quote) return item
     const match = t.testimonials.quotes.find((q) => q.name === item.name)
     return match ? { ...item, quote: match.quote, title: match.title } : item
   })

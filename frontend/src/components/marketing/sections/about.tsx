@@ -16,11 +16,21 @@ const STAT_LABEL_KEYS: Record<string, 'yearsShipping' | 'projectsDelivered' | 'h
 }
 
 export function About({
+  lead,
+  paragraphs,
   stats = statDefaults,
 }: {
+  /** From Admin → Profile → About section. Blank means "not written yet". */
+  lead?: string
+  paragraphs?: string[]
   stats?: StatTile[]
 }) {
   const { t } = useTranslation()
+
+  // Copy written in the admin always wins — it is shown verbatim in both languages.
+  // The translated default only fills the gap while the field is still empty.
+  const resolvedLead = lead?.trim() || t.about.lead
+  const resolvedParagraphs = paragraphs?.length ? paragraphs : t.about.paragraphs
 
   const translatedStats = stats.map((stat) => ({
     ...stat,
@@ -36,10 +46,10 @@ export function About({
           </Reveal>
           <Reveal delay={0.05}>
             <p className="mt-[18px] text-[clamp(1.25rem,2.4vw,1.7rem)] font-semibold leading-[1.35] tracking-[-0.02em] text-balance">
-              {t.about.lead}
+              {resolvedLead}
             </p>
           </Reveal>
-          {t.about.paragraphs.map((paragraph, i) => (
+          {resolvedParagraphs.map((paragraph, i) => (
             <Reveal key={i} delay={0.1 + i * 0.05}>
               <p className="mt-4 text-[1.05rem] text-mk-muted first:mt-5">{paragraph}</p>
             </Reveal>
