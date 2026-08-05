@@ -15,5 +15,8 @@
   ],
   "env": {
     "QUEUE_CONNECTION": "sync"
-  }
+  },
+  "regions": [
+    "sin1"
+  ]
 }

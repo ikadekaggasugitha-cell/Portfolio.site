@@ -102,10 +102,19 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
   const { run: handleDeleteImage } = useAsyncAction(
     async (imageId: number) => {
       setDeletingImageId(imageId)
+      // Optimistic: drop the thumbnail now. A round trip to this backend takes several
+      // seconds, and the old code re-fetched the project *after* clearing the spinner —
+      // so the deleted image stayed on screen with no indication anything was happening,
+      // which read as "delete failed" even though the row was already gone.
+      const previous = images
+      setImages((current) => current.filter((img) => img.id !== imageId))
       try {
         await api.delete(`/projects/images/${imageId}`)
-        loadImages()
+        // Local state is already correct; this only refreshes the parent's image count.
         onImagesUpdated()
+      } catch (err) {
+        setImages(previous)
+        throw err
       } finally {
         setDeletingImageId(null)
       }
