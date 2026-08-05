@@ -32,7 +32,6 @@ export const navItems = [
   { label: 'Contact', href: '/contact' },
 ] as const
 
-export type NavItem = (typeof navItems)[number]
 
 /** A stat tile in the About section. Editable from Admin -> Stats. */
 export interface StatTile {
@@ -314,13 +313,6 @@ export const heroDefaults: HeroData = {
   codeStack: ['TypeScript', 'React', 'Next.js', 'Node.js', 'Postgres'],
 }
 
-export const aboutDefaults: AboutData = {
-  lead: 'I build software that solves real problems — across web, backend, data and automation.',
-  paragraphs: [
-    "I'm an IT Full Stack Developer who works across the stack: web applications, backend services and APIs, database design, and the automation and tooling that keeps it all running smoothly. I care about the details that make software feel reliable — clean architecture, sensible data models, and interfaces people actually enjoy using.",
-    'From designing PostgreSQL schemas and REST APIs to building responsive frontends and scripting deployment pipelines, I like owning a problem end to end rather than staying in one lane. Currently building internal platforms and public-facing products in the property-tech space.',
-  ],
-}
 
 export const contactDefaults: ContactData = {
   email: site.email,

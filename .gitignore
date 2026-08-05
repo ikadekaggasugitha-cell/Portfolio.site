@@ -19,6 +19,9 @@ docker/mysql/data/
 /backend/.phpunit.result.cache
 /backend/.env
 
+# Root — a stray `npm install` here once committed 2689 files; keep it shut.
+/node_modules/
+
 # Frontend
 /frontend/node_modules/
 /frontend/.next/
