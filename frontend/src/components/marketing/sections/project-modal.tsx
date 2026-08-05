@@ -1,11 +1,10 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import Image from 'next/image'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ExternalLink, X } from 'lucide-react'
 import type { FeaturedProject } from '@/lib/marketing/content'
-import { ProjectMockup } from './project-mockup'
+import { ProjectSlider } from './project-slider'
 import { GithubIcon } from '../icons/brand-icons'
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -80,18 +79,18 @@ export function ProjectModal({
             exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 8 }}
             transition={{ duration: reduce ? 0 : 0.32, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="relative aspect-[16/9]">
-              {project.imageUrl ? (
-                <Image
-                  src={project.imageUrl}
-                  alt={`${project.title} preview`}
-                  fill
-                  sizes="620px"
-                  className="object-cover"
-                />
-              ) : (
-                <ProjectMockup motif={project.motif} />
-              )}
+            <div className="relative">
+              {/* Slider, not a single cover image: a case study usually needs more than one
+                  screenshot to make sense. Thumbnails are omitted here — the modal is narrow
+                  and the dots already show position. */}
+              <ProjectSlider
+                images={project.images ?? (project.imageUrl ? [project.imageUrl] : [])}
+                title={project.title}
+                motif={project.motif}
+                showThumbnails={false}
+                sizes="620px"
+                className="[&>div:first-child]:rounded-none [&>div:first-child]:border-0 [&>div:first-child]:shadow-none"
+              />
               <button
                 ref={closeRef}
                 type="button"

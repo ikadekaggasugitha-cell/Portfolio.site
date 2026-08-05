@@ -10,9 +10,23 @@ use Illuminate\Http\Request;
 
 class ProjectImageController extends Controller
 {
+    /**
+     * Hard cap on screenshots per project. Enforced here rather than only in the admin UI —
+     * the UI limit is trivially bypassable, and the public gallery is a slider sized for a
+     * handful of images, not an unbounded set.
+     */
+    public const MAX_IMAGES = 5;
+
     public function __construct(
         protected ProjectImageService $projectImageService
     ) {}
+
+    /** Remaining slots before MAX_IMAGES is reached. */
+    private function remainingSlots(int $projectId): int
+    {
+        $used = $this->projectImageService->findByField('project_id', $projectId)->count();
+        return max(0, self::MAX_IMAGES - $used);
+    }
 
     public function index(int $projectId): JsonResponse
     {
@@ -27,6 +41,13 @@ class ProjectImageController extends Controller
             'caption' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer|min:0',
         ]);
+
+        if ($this->remainingSlots($projectId) < 1) {
+            return $this->error(
+                'This project already has the maximum of '.self::MAX_IMAGES.' images. Remove one first.',
+                422,
+            );
+        }
 
         $validated['image'] = $request->file('image')->store('projects', config('filesystems.media_disk', 'public'));
         $validated['project_id'] = $projectId;
@@ -65,6 +86,18 @@ class ProjectImageController extends Controller
         ]);
 
         $mediaIds = $validated['media_ids'] ?? (isset($validated['media_id']) ? [(int)$validated['media_id']] : []);
+
+        // Reject the whole batch rather than silently attaching a subset — a partial
+        // success that reports 201 is harder to reason about in the admin than a clear no.
+        $remaining = $this->remainingSlots($projectId);
+        if (count($mediaIds) > $remaining) {
+            return $this->error(
+                $remaining === 0
+                    ? 'This project already has the maximum of '.self::MAX_IMAGES.' images. Remove one first.'
+                    : "Only {$remaining} more image(s) can be added (maximum ".self::MAX_IMAGES.' per project).',
+                422,
+            );
+        }
 
         $created = [];
         // find current max sort_order for project

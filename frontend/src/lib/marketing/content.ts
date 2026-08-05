@@ -107,8 +107,10 @@ export interface FeaturedProject {
   title: string
   featured: boolean
   motif: ProjectMotif
-  /** Real screenshot URL when available; falls back to the stylized motif mockup. */
+  /** Cover image — the first screenshot. Falls back to the stylized motif mockup. */
   imageUrl?: string
+  /** Every screenshot, for the case-study modal's slider. */
+  images?: string[]
   summary: string
   detail: string
   tags: string[]

@@ -15,6 +15,10 @@ interface ProjectImageUploadProps {
   onImagesUpdated: () => void
 }
 
+/** Mirrors ProjectImageController::MAX_IMAGES. The server rejects anything past this;
+ *  this only keeps the UI honest so the user isn't surprised by a 422. */
+const MAX_IMAGES = 5
+
 export default function ProjectImageUpload({ project, onImagesUpdated }: ProjectImageUploadProps) {
   const [images, setImages] = useState<ProjectImage[]>([])
   const [uploadProgress, setUploadProgress] = useState<number | null>(null)
@@ -44,8 +48,13 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
     const files = e.currentTarget.files
     if (!files) return
 
-    if (images.length + files.length > 10) {
-      toast.error('Maximum 10 images allowed')
+    const remaining = MAX_IMAGES - images.length
+    if (files.length > remaining) {
+      toast.error(
+        remaining === 0
+          ? `Maximum ${MAX_IMAGES} images. Remove one first.`
+          : `Only ${remaining} more image${remaining === 1 ? '' : 's'} can be added (max ${MAX_IMAGES}).`,
+      )
       return
     }
 
@@ -149,6 +158,15 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
       toast('No media selected')
       return
     }
+    const remaining = MAX_IMAGES - images.length
+    if (selectedMediaIds.length > remaining) {
+      toast.error(
+        remaining === 0
+          ? `Maximum ${MAX_IMAGES} images. Remove one first.`
+          : `Only ${remaining} more image${remaining === 1 ? '' : 's'} can be added (max ${MAX_IMAGES}).`,
+      )
+      return
+    }
     runAttachSelectedMedia()
   }
 
@@ -201,7 +219,7 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
       {/* Upload Area */}
       <div>
         <label className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-2">
-          Project Images ({images.length}/10)
+          Project Images ({images.length}/{MAX_IMAGES})
         </label>
         <div className="border-2 border-dashed border-hairline rounded-[11px] p-6 text-center hover:bg-canvas-parchment transition-colors">
           <input
@@ -210,17 +228,21 @@ export default function ProjectImageUpload({ project, onImagesUpdated }: Project
             multiple
             accept="image/jpeg,image/png,image/gif,image/webp"
             onChange={handleFileChange}
-            disabled={uploadProgress !== null || images.length >= 10}
+            disabled={uploadProgress !== null || images.length >= MAX_IMAGES}
             className="hidden"
           />
           <div className="flex flex-col md:flex-row items-center gap-3">
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              disabled={uploadProgress !== null || images.length >= 10}
+              disabled={uploadProgress !== null || images.length >= MAX_IMAGES}
               className="text-primary text-[14px] leading-[1.29] tracking-[-0.224px] hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {uploadProgress !== null ? 'Uploading...' : images.length >= 10 ? 'Maximum images reached' : 'Click to upload or drag and drop'}
+              {uploadProgress !== null
+                ? 'Uploading...'
+                : images.length >= MAX_IMAGES
+                  ? `Maximum ${MAX_IMAGES} images reached`
+                  : 'Click to upload or drag and drop'}
             </button>
 
             <button

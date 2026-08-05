@@ -237,6 +237,7 @@ function toCard(project: Project, featured: boolean): FeaturedProject {
     featured,
     motif: motifForId(project.id),
     imageUrl: project.images?.[0]?.image ?? undefined,
+    images: (project.images ?? []).map((img) => img.image).filter(Boolean),
     summary: project.description ?? '',
     detail: project.description ?? '',
     tags: splitTech(project.technology),
