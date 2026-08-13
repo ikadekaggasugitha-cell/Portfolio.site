@@ -6,6 +6,7 @@ import type { Certificate } from '@/types'
 import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonList } from '@/components/admin/ui/Skeleton'
+import { toAdminString } from '@/lib/admin-localize'
 
 const fields = [
   { name: 'title', label: 'Title', required: true },
@@ -57,11 +58,11 @@ export default function CertificatesPage() {
   function handleEdit(item: Certificate) {
     setEditing(item)
     setForm({
-      title: item.title, issuer: item.issuer,
+      title: toAdminString(item.title), issuer: item.issuer,
       issued_date: item.issued_date?.split('T')[0] || '',
       expiry_date: item.expiry_date?.split('T')[0] || '',
       credential_url: item.credential_url || '',
-      description: item.description || '',
+      description: toAdminString(item.description),
     })
     setShowForm(true)
   }
@@ -133,7 +134,7 @@ export default function CertificatesPage() {
           <div key={item.id} className="card-stitch p-5">
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="text-[17px] font-semibold leading-[1.24] tracking-[-0.374px] text-ink stitch-heading">{item.title}</h3>
+                <h3 className="text-[17px] font-semibold leading-[1.24] tracking-[-0.374px] text-ink stitch-heading">{toAdminString(item.title)}</h3>
                 <p className="text-[14px] leading-[1.43] tracking-[-0.224px] text-muted mt-1">{item.issuer}</p>
                 <p className="text-[12px] leading-[1] tracking-[-0.12px] text-muted mt-2">Issued: {item.issued_date}</p>
                 {item.expiry_date && <p className="text-[12px] leading-[1] tracking-[-0.12px] text-muted">Expires: {item.expiry_date}</p>}

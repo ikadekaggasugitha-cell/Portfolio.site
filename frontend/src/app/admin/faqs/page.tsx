@@ -6,6 +6,7 @@ import type { Faq } from '@/types'
 import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonTable } from '@/components/admin/ui/Skeleton'
+import { toAdminString } from '@/lib/admin-localize'
 
 /**
  * The accordion on the Contact page.
@@ -57,7 +58,7 @@ export default function FAQAdminPage() {
 
   function handleEdit(item: Faq) {
     setEditing(item)
-    setForm({ question: item.question, answer: item.answer, sort_order: item.sort_order })
+    setForm({ question: toAdminString(item.question), answer: toAdminString(item.answer), sort_order: item.sort_order })
     setShowForm(true)
   }
 
@@ -179,7 +180,7 @@ export default function FAQAdminPage() {
             <tbody className="divide-y divide-hairline">
               {items.map((item) => (
                 <tr key={item.id}>
-                <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-ink">{item.question}</td>
+                <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-ink">{toAdminString(item.question)}</td>
                 <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-muted">{item.sort_order}</td>
                   <td className="px-4 py-3 text-right whitespace-nowrap">
                     <Button

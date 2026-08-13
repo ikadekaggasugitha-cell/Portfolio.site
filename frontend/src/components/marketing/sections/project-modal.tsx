@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ExternalLink, X } from 'lucide-react'
 import type { FeaturedProject } from '@/lib/marketing/content'
 import { ProjectSlider } from './project-slider'
+import { useTranslation } from '../theme/language-provider'
 import { GithubIcon } from '../icons/brand-icons'
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -17,6 +18,7 @@ export function ProjectModal({
   onClose: () => void
 }) {
   const reduce = useReducedMotion()
+  const { localize } = useTranslation()
   const panelRef = useRef<HTMLDivElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
   const lastFocused = useRef<HTMLElement | null>(null)
@@ -85,7 +87,7 @@ export function ProjectModal({
                   and the dots already show position. */}
               <ProjectSlider
                 images={project.images ?? (project.imageUrl ? [project.imageUrl] : [])}
-                title={project.title}
+                title={localize(project.title)}
                 motif={project.motif}
                 showThumbnails={false}
                 sizes="620px"
@@ -107,9 +109,9 @@ export function ProjectModal({
                 Case study
               </span>
               <h3 id="pm-title" className="mt-3 text-[1.5rem] font-extrabold tracking-[-0.02em]">
-                {project.title}
+                {localize(project.title)}
               </h3>
-              <p className="mt-3.5 text-mk-muted">{project.detail}</p>
+              <p className="mt-3.5 text-mk-muted">{localize(project.detail)}</p>
 
               <div className="mt-5 flex flex-wrap gap-2">
                 {project.tags.map((tag) => (

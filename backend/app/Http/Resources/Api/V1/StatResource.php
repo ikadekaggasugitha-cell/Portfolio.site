@@ -11,7 +11,7 @@ class StatResource extends BaseResource
     {
         return [
             'id' => $this->id,
-            'label' => $this->label,
+            'label' => $this->getTranslations('label'),
             'value' => (int) $this->value,
             'suffix' => $this->suffix,
             'sort_order' => (int) $this->sort_order,

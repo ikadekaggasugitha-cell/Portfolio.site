@@ -38,8 +38,8 @@ class PageController extends Controller
     {
         $validated = $request->validate([
             'slug' => 'required|string|max:255|unique:pages,slug',
-            'title' => 'required|string|max:255',
-            'content' => 'nullable|string',
+            ...$this->translatableRules('title', required: true),
+            ...$this->translatableRules('content', max: null),
             'template' => 'nullable|string',
             'meta' => 'nullable|array',
             'is_published' => 'nullable|boolean',
@@ -51,6 +51,8 @@ class PageController extends Controller
             'blocks.*.sort_order' => 'nullable|integer',
             'blocks.*.is_active' => 'nullable|boolean',
         ]);
+
+        $validated = $this->autoTranslate($validated, ['title', 'content']);
 
         $blocks = $request->input('blocks', []);
 
@@ -69,8 +71,8 @@ class PageController extends Controller
     {
         $validated = $request->validate([
             'slug' => "required|string|max:255|unique:pages,slug,{$id}",
-            'title' => 'required|string|max:255',
-            'content' => 'nullable|string',
+            ...$this->translatableRules('title', required: true),
+            ...$this->translatableRules('content', max: null),
             'template' => 'nullable|string',
             'meta' => 'nullable|array',
             'is_published' => 'nullable|boolean',
@@ -82,6 +84,8 @@ class PageController extends Controller
             'blocks.*.sort_order' => 'nullable|integer',
             'blocks.*.is_active' => 'nullable|boolean',
         ]);
+
+        $validated = $this->autoTranslate($validated, ['title', 'content']);
 
         $blocks = $request->input('blocks', []);
 

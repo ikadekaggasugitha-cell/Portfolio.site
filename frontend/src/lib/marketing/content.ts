@@ -7,6 +7,7 @@
  * representative values grounded in the real profile.
  */
 import type { LucideIcon } from 'lucide-react'
+import type { LocalizedText } from '@/types'
 
 export const site = {
   name: 'I Kadek Agga Sugitha',
@@ -37,7 +38,7 @@ export const navItems = [
 export interface StatTile {
   value: number
   suffix: string
-  label: string
+  label: LocalizedText
 }
 
 export const stats: StatTile[] = [
@@ -53,8 +54,8 @@ export const stats: StatTile[] = [
  * single-project web builder. Deliberately not framed around any one project.
  */
 export interface Capability {
-  title: string
-  description: string
+  title: LocalizedText
+  description: LocalizedText
   icon: string | LucideIcon
 }
 
@@ -103,15 +104,15 @@ export type ProjectMotif = 'cms' | 'analytics' | 'commerce' | 'devops'
 
 export interface FeaturedProject {
   id: string
-  title: string
+  title: LocalizedText
   featured: boolean
   motif: ProjectMotif
   /** Cover image — the first screenshot. Falls back to the stylized motif mockup. */
   imageUrl?: string
   /** Every screenshot, for the case-study modal's slider. */
   images?: string[]
-  summary: string
-  detail: string
+  summary: LocalizedText
+  detail: LocalizedText
   tags: string[]
   demoUrl: string
   repoUrl: string
@@ -174,10 +175,10 @@ export const projects: FeaturedProject[] = [
 
 export interface TimelineEntry {
   period: string
-  role: string
+  role: LocalizedText
   company: string
   location: string
-  description: string
+  description: LocalizedText
   current?: boolean
 }
 
@@ -210,9 +211,9 @@ export const timeline: TimelineEntry[] = [
 ]
 
 export interface Testimonial {
-  quote: string
+  quote: LocalizedText
   name: string
-  title: string
+  title: LocalizedText
   initials: string
 }
 
@@ -242,8 +243,8 @@ export const testimonials: Testimonial[] = [
 
 /** A contact-page FAQ entry. Editable from Admin -> FAQ. */
 export interface FaqEntry {
-  q: string
-  a: string
+  q: LocalizedText
+  a: LocalizedText
 }
 
 export const faqs: FaqEntry[] = [
@@ -273,10 +274,10 @@ export const marqueeItems = [
 
 export interface HeroData {
   name: string
-  role: string
+  role: LocalizedText
   /** Profile photo URL; null shows an initials monogram instead. */
   photo: string | null
-  intro: string
+  intro: LocalizedText
   available: boolean
   location: string
   githubUrl: string
@@ -287,8 +288,9 @@ export interface HeroData {
 }
 
 export interface AboutData {
-  lead: string
-  paragraphs: string[]
+  lead: LocalizedText
+  /** Raw body; blank lines separate paragraphs. Split after localizing on the client. */
+  body: LocalizedText
 }
 
 export interface ContactData {
@@ -326,8 +328,8 @@ export const contactDefaults: ContactData = {
 
 export interface AboutHeroData {
   name: string
-  role: string
-  bio: string
+  role: LocalizedText
+  bio: LocalizedText
   photo: string | null
   available: boolean
   location: string
@@ -351,15 +353,15 @@ export const aboutHeroDefaults: AboutHeroData = {
 }
 
 export interface EducationEntry {
-  degree: string
+  degree: LocalizedText
   institution: string
-  field: string
+  field: LocalizedText
   period: string
-  description: string
+  description: LocalizedText
 }
 
 export interface CertificateEntry {
-  title: string
+  title: LocalizedText
   issuer: string
   date: string
   credentialUrl: string | null
@@ -369,8 +371,8 @@ export interface CertificateEntry {
 
 export interface ProjectDetail {
   id: string
-  title: string
-  description: string
+  title: LocalizedText
+  description: LocalizedText
   tags: string[]
   images: string[]
   motif: ProjectMotif

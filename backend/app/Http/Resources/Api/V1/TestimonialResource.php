@@ -11,9 +11,9 @@ class TestimonialResource extends BaseResource
     {
         return [
             'id' => $this->id,
-            'quote' => $this->quote,
+            'quote' => $this->getTranslations('quote'),
             'author_name' => $this->author_name,
-            'author_title' => $this->author_title,
+            'author_title' => $this->getTranslations('author_title'),
             'initials' => $this->initials,
             'sort_order' => (int) $this->sort_order,
         ];

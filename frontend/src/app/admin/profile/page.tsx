@@ -10,6 +10,8 @@ import Button from '@/components/admin/ui/Button'
 import ProgressBar from '@/components/admin/ui/ProgressBar'
 import { SkeletonForm } from '@/components/admin/ui/Skeleton'
 
+import { toAdminString } from '@/lib/admin-localize'
+
 const MediaPicker = dynamic(() => import('@/components/admin/MediaPicker'), { ssr: false })
 
 export default function ProfilePage() {
@@ -49,10 +51,10 @@ export default function ProfilePage() {
           setProfile(p)
           setForm({
             name: p.name || '',
-            title: p.title || '',
-            description: p.description || '',
-            about_lead: p.about_lead || '',
-            about_body: p.about_body || '',
+            title: toAdminString(p.title),
+            description: toAdminString(p.description),
+            about_lead: toAdminString(p.about_lead),
+            about_body: toAdminString(p.about_body),
             phone: p.phone || '',
             email: p.email || '',
             location: p.location || '',

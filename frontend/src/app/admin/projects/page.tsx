@@ -8,6 +8,7 @@ import TagInput from '@/components/admin/TagInput'
 import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonList } from '@/components/admin/ui/Skeleton'
+import { toAdminString } from '@/lib/admin-localize'
 
 const fieldsBeforeTech = [
   { name: 'title', label: 'Title', required: true },
@@ -90,8 +91,8 @@ export default function ProjectsPage() {
   function handleEdit(item: Project) {
     setEditing(item)
     setForm({
-      title: item.title,
-      description: item.description || '',
+      title: toAdminString(item.title),
+      description: toAdminString(item.description),
       github_url: item.github_url || '',
       demo_url: item.demo_url || '',
       sort_order: String(item.sort_order ?? 0),
@@ -199,7 +200,7 @@ export default function ProjectsPage() {
           <div key={item.id} className="card-stitch p-5">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h3 className="text-[17px] font-semibold leading-[1.24] tracking-[-0.374px] text-ink stitch-heading">{item.title}</h3>
+                <h3 className="text-[17px] font-semibold leading-[1.24] tracking-[-0.374px] text-ink stitch-heading">{toAdminString(item.title)}</h3>
                 <div className="flex items-center gap-2 mt-1.5">
                   {item.is_featured && (
                     <span className="inline-flex items-center gap-1 rounded-full border border-hairline bg-canvas-parchment px-2 py-0.5 text-[11px] font-semibold text-ink">
@@ -208,7 +209,7 @@ export default function ProjectsPage() {
                   )}
                   <span className="text-[12px] leading-[1] tracking-[-0.12px] text-ink-muted-48">Order: {item.sort_order ?? 0}</span>
                 </div>
-                <p className="text-[14px] leading-[1.43] tracking-[-0.224px] text-muted line-clamp-2 mt-1">{item.description}</p>
+                <p className="text-[14px] leading-[1.43] tracking-[-0.224px] text-muted line-clamp-2 mt-1">{toAdminString(item.description)}</p>
                 {item.technology && (
                   <div className="flex flex-wrap gap-1.5 mt-3">
                     {item.technology.split(',').map((t) => (

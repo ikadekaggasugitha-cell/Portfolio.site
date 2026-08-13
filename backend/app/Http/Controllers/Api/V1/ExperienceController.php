@@ -32,14 +32,17 @@ class ExperienceController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'company' => 'required|string|max:255',
-            'position' => 'required|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'start_date' => 'required|date',
-            'end_date' => 'nullable|date|after:start_date',
-            'description' => 'nullable|string',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                'company' => 'required|string|max:255',
+                ...$this->translatableRules('position', required: true),
+                'location' => 'nullable|string|max:255',
+                'start_date' => 'required|date',
+                'end_date' => 'nullable|date|after:start_date',
+                ...$this->translatableRules('description', max: null),
+            ]),
+            ['position', 'description']
+        );
 
         $experience = $this->experienceService->create($validated);
         return $this->created(new ExperienceResource($experience), 'Experience created');
@@ -47,14 +50,17 @@ class ExperienceController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $validated = $request->validate([
-            'company' => 'sometimes|string|max:255',
-            'position' => 'sometimes|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'start_date' => 'sometimes|date',
-            'end_date' => 'nullable|date|after:start_date',
-            'description' => 'nullable|string',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                'company' => 'sometimes|string|max:255',
+                ...$this->translatableRules('position'),
+                'location' => 'nullable|string|max:255',
+                'start_date' => 'sometimes|date',
+                'end_date' => 'nullable|date|after:start_date',
+                ...$this->translatableRules('description', max: null),
+            ]),
+            ['position', 'description']
+        );
 
         $experience = $this->experienceService->update($id, $validated);
         return $this->success(new ExperienceResource($experience), 'Experience updated');

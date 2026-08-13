@@ -38,10 +38,10 @@ class ProfileController extends Controller
             'photo' => 'nullable|string|max:255',
             'photo_media_id' => 'nullable|integer|exists:media,id',
             'name' => 'nullable|string|max:255',
-            'title' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'about_lead' => 'nullable|string|max:255',
-            'about_body' => 'nullable|string',
+            ...$this->translatableRules('title'),
+            ...$this->translatableRules('description', max: null),
+            ...$this->translatableRules('about_lead'),
+            ...$this->translatableRules('about_body', max: null),
             'phone' => 'nullable|string|max:50',
             'email' => 'nullable|email|max:255',
             'location' => 'nullable|string|max:255',
@@ -74,7 +74,10 @@ class ProfileController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validated = $this->syncPhotoFromMedia($request->validate($this->rules()));
+        $validated = $this->autoTranslate(
+            $this->syncPhotoFromMedia($request->validate($this->rules())),
+            ['title', 'description', 'about_lead', 'about_body']
+        );
 
         $profile = Profile::firstOrCreate(
             ['user_id' => $request->user()->id],
@@ -89,7 +92,10 @@ class ProfileController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $validated = $this->syncPhotoFromMedia($request->validate($this->rules()));
+        $validated = $this->autoTranslate(
+            $this->syncPhotoFromMedia($request->validate($this->rules())),
+            ['title', 'description', 'about_lead', 'about_body']
+        );
 
         $profile = $this->profileService->update($id, $validated);
         // eager load media relation for response

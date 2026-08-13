@@ -11,8 +11,8 @@ class PageResource extends BaseResource
         return [
             'id' => $this->id,
             'slug' => $this->slug,
-            'title' => $this->title,
-            'content' => $this->content,
+            'title' => $this->getTranslations('title'),
+            'content' => $this->getTranslations('content'),
             'template' => $this->template,
             'meta' => $this->meta,
             'is_published' => $this->is_published,

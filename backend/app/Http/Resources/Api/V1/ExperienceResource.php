@@ -12,11 +12,11 @@ class ExperienceResource extends BaseResource
         return [
             'id' => $this->id,
             'company' => $this->company,
-            'position' => $this->position,
+            'position' => $this->getTranslations('position'),
             'location' => $this->location,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
-            'description' => $this->description,
+            'description' => $this->getTranslations('description'),
         ];
     }
 }

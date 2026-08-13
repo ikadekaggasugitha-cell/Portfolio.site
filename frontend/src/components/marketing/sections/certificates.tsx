@@ -17,7 +17,7 @@ export function Certificates({
   id?: string
   tone?: 'canvas' | 'subtle'
 }) {
-  const { t } = useTranslation()
+  const { t, localize } = useTranslation()
   if (!entries.length) return null
 
   return (
@@ -30,7 +30,7 @@ export function Certificates({
       />
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {entries.map((cert, i) => (
-          <Reveal key={`${cert.title}-${i}`} delay={i * 0.06}>
+          <Reveal key={i} delay={i * 0.06}>
             <div className="flex h-full flex-col rounded-mk border border-mk-hairline bg-mk-surface p-7 shadow-mk-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-mk-brand-soft/60 hover:shadow-mk-md">
               <div className="flex items-start justify-between gap-3">
                 <span className="grid size-[42px] place-items-center rounded-xl bg-mk-brand/10 text-mk-accent">
@@ -42,7 +42,7 @@ export function Certificates({
                   </span>
                 )}
               </div>
-              <h3 className="mt-4 text-[1.05rem] font-bold leading-snug">{cert.title}</h3>
+              <h3 className="mt-4 text-[1.05rem] font-bold leading-snug">{localize(cert.title)}</h3>
               <p className="mt-1 text-[0.92rem] text-mk-muted">{cert.issuer}</p>
               {cert.credentialUrl && (
                 <a

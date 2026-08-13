@@ -39,8 +39,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     return { title: `Project not found · ${site.name}` }
   }
 
-  const title = `${project.title} · ${site.name}`
-  const description = project.description?.trim() || `${project.title} — a project by ${site.name}.`
+  const projectTitle = typeof project.title === 'string' ? project.title : project.title?.id || project.title?.en || ''
+  const projectDesc = typeof project.description === 'string' ? project.description : project.description?.id || project.description?.en || ''
+  const title = `${projectTitle} · ${site.name}`
+  const description = projectDesc.trim() || `${projectTitle} — a project by ${site.name}.`
   const image = project.images?.[0]?.image
 
   return {
@@ -80,6 +82,8 @@ export default async function ProjectDetailPage({ params }: { params: Params }) 
   }
 
   const detail = mapProjectDetail(project)
+  const detailTitleStr = typeof detail.title === 'string' ? detail.title : detail.title?.id || detail.title?.en || ''
+  const detailDescStr = typeof detail.description === 'string' ? detail.description : detail.description?.id || detail.description?.en || ''
   const related = relatedProjects(all, project.id, project.technology, 3)
 
   return (
@@ -96,7 +100,7 @@ export default async function ProjectDetailPage({ params }: { params: Params }) 
 
       <Reveal delay={0.05}>
         <h1 className="mt-6 max-w-[20ch] text-[clamp(2rem,4.5vw,3.2rem)] font-extrabold leading-[1.05] tracking-[-0.03em] text-balance">
-          {detail.title}
+          {detailTitleStr}
         </h1>
         {detail.tags.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
@@ -113,13 +117,13 @@ export default async function ProjectDetailPage({ params }: { params: Params }) 
       </Reveal>
 
       <Reveal delay={0.1} className="mt-8">
-        <ProjectGallery images={detail.images} title={detail.title} motif={detail.motif} />
+        <ProjectGallery images={detail.images} title={detailTitleStr} motif={detail.motif} />
       </Reveal>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[1.6fr_1fr] lg:items-start">
         <Reveal>
           <div className="whitespace-pre-line text-[1.05rem] leading-relaxed text-mk-muted">
-            {detail.description || 'No description provided for this project yet.'}
+            {detailDescStr || 'No description provided for this project yet.'}
           </div>
         </Reveal>
 

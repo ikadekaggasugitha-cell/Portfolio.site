@@ -81,9 +81,9 @@ export function mapHero(profile: Profile | null): HeroData {
   return {
     ...heroDefaults,
     name: orDefault(profile.name, heroDefaults.name),
-    role: orDefault(profile.title, heroDefaults.role),
+    role: profile.title ?? heroDefaults.role,
     photo: profile.photo?.trim() ? profile.photo : null,
-    intro: orDefault(profile.description, heroDefaults.intro),
+    intro: profile.description ?? heroDefaults.intro,
     githubUrl: formatUrl(profile.github, heroDefaults.githubUrl),
     linkedinUrl: formatUrl(profile.linkedin, heroDefaults.linkedinUrl),
     cvUrl: formatUrl(profile.cv, heroDefaults.cvUrl),
@@ -95,23 +95,19 @@ export function mapHero(profile: Profile | null): HeroData {
 
 /**
  * Homepage About section. `about_lead` / `about_body` are dedicated fields (the hero already
- * uses `description`), so this section is now editable from Admin → Profile instead of being
- * hardcoded. Blank lines in `about_body` separate paragraphs.
- */
-/**
- * Returns blanks rather than defaults when the admin hasn't written About copy. The
- * section is a Client Component that falls back to the translated default for the
- * active language — substituting an English default here would defeat that.
+ * uses `description`), editable from Admin → Profile.
+ *
+ * Carries the translatable maps through raw — the About section is a Client Component that
+ * localizes for the active language, splits `body` into paragraphs on blank lines, and falls
+ * back to the translated default when the admin hasn't written any copy. Returning blanks (not
+ * an English default) here is what lets that language-aware fallback work.
  */
 export function mapAbout(profile: Profile | null): AboutData {
-  if (!profile) return { lead: '', paragraphs: [] }
+  if (!profile) return { lead: '', body: '' }
 
   return {
-    lead: profile.about_lead?.trim() ?? '',
-    paragraphs: (profile.about_body ?? '')
-      .split(/\n\s*\n/)
-      .map((paragraph) => paragraph.trim())
-      .filter(Boolean),
+    lead: profile.about_lead ?? '',
+    body: profile.about_body ?? '',
   }
 }
 
@@ -132,8 +128,8 @@ export function mapAboutHero(profile: Profile | null): AboutHeroData {
   return {
     ...aboutHeroDefaults,
     name: orDefault(profile.name, aboutHeroDefaults.name),
-    role: orDefault(profile.title, aboutHeroDefaults.role),
-    bio: orDefault(profile.description, aboutHeroDefaults.bio),
+    role: profile.title ?? aboutHeroDefaults.role,
+    bio: profile.description ?? aboutHeroDefaults.bio,
     photo: profile.photo?.trim() ? profile.photo : null,
     githubUrl: formatUrl(profile.github, aboutHeroDefaults.githubUrl),
     linkedinUrl: formatUrl(profile.linkedin, aboutHeroDefaults.linkedinUrl),
@@ -231,15 +227,17 @@ const splitTech = (technology: string | null): string[] =>
     .filter(Boolean)
 
 function toCard(project: Project, featured: boolean): FeaturedProject {
+  const titleStr = typeof project.title === 'string' ? project.title : project.title?.id || project.title?.en || ''
+  const descStr = typeof project.description === 'string' ? project.description : project.description?.id || project.description?.en || ''
   return {
     id: String(project.id),
-    title: project.title,
+    title: titleStr,
     featured,
     motif: motifForId(project.id),
     imageUrl: project.images?.[0]?.image ?? undefined,
     images: (project.images ?? []).map((img) => img.image).filter(Boolean),
-    summary: project.description ?? '',
-    detail: project.description ?? '',
+    summary: descStr,
+    detail: descStr,
     tags: splitTech(project.technology),
     demoUrl: project.demo_url ?? '#',
     repoUrl: project.github_url ?? '#',
@@ -258,10 +256,12 @@ export function mapProjectCards(projects: Project[]): FeaturedProject[] {
 }
 
 export function mapProjectDetail(project: Project): ProjectDetail {
+  const titleStr = typeof project.title === 'string' ? project.title : project.title?.id || project.title?.en || ''
+  const descStr = typeof project.description === 'string' ? project.description : project.description?.id || project.description?.en || ''
   return {
     id: String(project.id),
-    title: project.title,
-    description: project.description ?? '',
+    title: titleStr,
+    description: descStr,
     tags: splitTech(project.technology),
     images: (project.images ?? []).map((img) => img.image).filter(Boolean),
     motif: motifForId(project.id),
@@ -327,9 +327,9 @@ export function mapEducation(educations: Education[]): EducationEntry[] {
   return [...educations]
     .sort((a, b) => (b.start_date ?? '').localeCompare(a.start_date ?? ''))
     .map((edu) => ({
-      degree: edu.degree?.trim() || 'Studies',
+      degree: edu.degree ?? 'Studies',
       institution: edu.institution,
-      field: edu.field_of_study?.trim() || '',
+      field: edu.field_of_study ?? '',
       period: formatPeriod(edu.start_date, edu.end_date),
       description: edu.description ?? '',
     }))

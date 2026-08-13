@@ -38,7 +38,7 @@ class ProjectImageController extends Controller
     {
         $validated = $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'caption' => 'nullable|string|max:255',
+            ...$this->translatableRules('caption'),
             'sort_order' => 'nullable|integer|min:0',
         ]);
 
@@ -82,7 +82,8 @@ class ProjectImageController extends Controller
             'media_ids' => 'required_without:media_id|array',
             'media_ids.*' => 'integer',
             'media_id' => 'required_without:media_ids|integer',
-            'caption' => 'nullable|string|max:255',
+            // Accept a plain string (media's own caption) or a { id, en } translation map.
+            'caption' => ['nullable'],
         ]);
 
         $mediaIds = $validated['media_ids'] ?? (isset($validated['media_id']) ? [(int)$validated['media_id']] : []);

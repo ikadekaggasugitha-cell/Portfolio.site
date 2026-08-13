@@ -6,6 +6,7 @@ import type { Testimonial } from '@/types'
 import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonTable } from '@/components/admin/ui/Skeleton'
+import { toAdminString } from '@/lib/admin-localize'
 
 /**
  * Quotes shown in the "What collaborators say" section.
@@ -57,7 +58,7 @@ export default function TestimonialsAdminPage() {
 
   function handleEdit(item: Testimonial) {
     setEditing(item)
-    setForm({ quote: item.quote, author_name: item.author_name, author_title: item.author_title ?? '', initials: item.initials ?? '', sort_order: item.sort_order })
+    setForm({ quote: toAdminString(item.quote), author_name: item.author_name, author_title: toAdminString(item.author_title), initials: item.initials ?? '', sort_order: item.sort_order })
     setShowForm(true)
   }
 
@@ -201,7 +202,7 @@ export default function TestimonialsAdminPage() {
               {items.map((item) => (
                 <tr key={item.id}>
                 <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-ink">{item.author_name}</td>
-                <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-muted">{item.author_title ?? '—'}</td>
+                <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-muted">{toAdminString(item.author_title) || '—'}</td>
                 <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-muted">{item.sort_order}</td>
                   <td className="px-4 py-3 text-right whitespace-nowrap">
                     <Button

@@ -11,11 +11,11 @@ class CertificateResource extends BaseResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
+            'title' => $this->getTranslations('title'),
             'issuer' => $this->issuer,
             'issued_date' => $this->issued_date,
             'file' => $this->file,
-            'description' => $this->description,
+            'description' => $this->getTranslations('description'),
             'expiry_date' => $this->expiry_date,
             'credential_url' => $this->credential_url,
         ];

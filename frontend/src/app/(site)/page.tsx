@@ -38,13 +38,18 @@ export const revalidate = 600
  *  nothing cached. */
 export const maxDuration = 60
 
+import { localize } from '@/lib/marketing/localize'
+import { DEFAULT_LOCALE } from '@/lib/marketing/translations'
+
 export async function generateMetadata(): Promise<Metadata> {
   // softened: metadata is not worth failing the whole route over, and a throw here
   // bypasses error.tsx entirely.
   const { data: profile } = await soften(getProfile(), null)
   const name = profile?.name?.trim() || site.name
-  const role = profile?.title?.trim() || site.role
-  const description = profile?.description?.trim() || FALLBACK_DESCRIPTION
+  const roleStr = localize(profile?.title, DEFAULT_LOCALE)
+  const descStr = localize(profile?.description, DEFAULT_LOCALE)
+  const role = roleStr.trim() || site.role
+  const description = descStr.trim() || FALLBACK_DESCRIPTION
   const title = `${name} — ${role}`
 
   return {
@@ -58,12 +63,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 function PersonJsonLd({ profile, skills }: { profile: Profile | null; skills: string[] }) {
+  const roleStr = localize(profile?.title, DEFAULT_LOCALE)
+  const descStr = localize(profile?.description, DEFAULT_LOCALE)
   const json = {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: profile?.name?.trim() || site.name,
-    jobTitle: profile?.title?.trim() || site.role,
-    description: profile?.description?.trim() || FALLBACK_DESCRIPTION,
+    jobTitle: roleStr.trim() || site.role,
+    description: descStr.trim() || FALLBACK_DESCRIPTION,
     address: {
       '@type': 'PostalAddress',
       addressLocality: profile?.location?.trim() || site.location,

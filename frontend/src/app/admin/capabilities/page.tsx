@@ -7,6 +7,7 @@ import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonTable } from '@/components/admin/ui/Skeleton'
 import { CAPABILITY_ICONS } from '@/lib/marketing/mappers'
+import { toAdminString } from '@/lib/admin-localize'
 
 /**
  * The capability cards in the "What I do" section.
@@ -60,7 +61,7 @@ export default function WhatIDoAdminPage() {
 
   function handleEdit(item: Capability) {
     setEditing(item)
-    setForm({ title: item.title, description: item.description ?? '', icon: item.icon ?? 'sparkles', sort_order: item.sort_order })
+    setForm({ title: toAdminString(item.title), description: toAdminString(item.description), icon: item.icon ?? 'sparkles', sort_order: item.sort_order })
     setShowForm(true)
   }
 
@@ -199,7 +200,7 @@ export default function WhatIDoAdminPage() {
             <tbody className="divide-y divide-hairline">
               {items.map((item) => (
                 <tr key={item.id}>
-                <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-ink">{item.title}</td>
+                <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-ink">{toAdminString(item.title)}</td>
                 <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-muted">{item.icon ?? '—'}</td>
                 <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-muted">{item.sort_order}</td>
                   <td className="px-4 py-3 text-right whitespace-nowrap">

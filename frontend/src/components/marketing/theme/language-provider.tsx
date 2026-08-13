@@ -14,6 +14,8 @@ import {
   type Locale,
   type Translations,
 } from '@/lib/marketing/translations'
+import { localize as localizeText } from '@/lib/marketing/localize'
+import type { LocalizedText } from '@/types'
 
 /**
  * Scoped language controller for the V2 marketing system.
@@ -31,6 +33,8 @@ interface LanguageContextValue {
   toggleLocale: () => void
   /** Typed translation bundle for the active locale. */
   t: Translations
+  /** Resolve an API-sourced translatable field to a string in the active locale. */
+  localize: (value: LocalizedText | null | undefined) => string
 }
 
 const LanguageContext = createContext<LanguageContextValue | null>(null)
@@ -68,9 +72,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, [locale, setLocale])
 
   const t = translations[locale] as unknown as Translations
+  const localize = useCallback(
+    (value: LocalizedText | null | undefined) => localizeText(value, locale),
+    [locale],
+  )
 
   return (
-    <LanguageContext.Provider value={{ locale, setLocale, toggleLocale, t }}>
+    <LanguageContext.Provider value={{ locale, setLocale, toggleLocale, t, localize }}>
       {children}
     </LanguageContext.Provider>
   )

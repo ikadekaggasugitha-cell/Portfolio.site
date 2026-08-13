@@ -25,7 +25,7 @@ function initials(name: string) {
 
 export function AboutHero(props: AboutHeroData = aboutHeroDefaults) {
   const { name, role, bio, photo, available, location, githubUrl, linkedinUrl, email, cvUrl } = props
-  const { t } = useTranslation()
+  const { t, localize } = useTranslation()
 
   return (
     <section className="relative overflow-hidden pb-[clamp(48px,7vw,80px)] pt-[clamp(48px,7vw,88px)]">
@@ -43,10 +43,10 @@ export function AboutHero(props: AboutHeroData = aboutHeroDefaults) {
               </h1>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="mt-3 text-[clamp(1.05rem,1.8vw,1.3rem)] font-medium text-mk-accent">{role}</p>
+              <p className="mt-3 text-[clamp(1.05rem,1.8vw,1.3rem)] font-medium text-mk-accent">{localize(role)}</p>
             </Reveal>
             <Reveal delay={0.15}>
-              <p className="mt-5 max-w-[54ch] text-[1.05rem] leading-relaxed text-mk-muted">{bio}</p>
+              <p className="mt-5 max-w-[54ch] text-[1.05rem] leading-relaxed text-mk-muted">{localize(bio)}</p>
             </Reveal>
 
             <Reveal delay={0.2}>

@@ -32,14 +32,17 @@ class EducationController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'institution' => 'required|string|max:255',
-            'degree' => 'nullable|string|max:255',
-            'field_of_study' => 'nullable|string|max:255',
-            'start_date' => 'required|date',
-            'end_date' => 'nullable|date|after:start_date',
-            'description' => 'nullable|string',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                'institution' => 'required|string|max:255',
+                ...$this->translatableRules('degree'),
+                ...$this->translatableRules('field_of_study'),
+                'start_date' => 'required|date',
+                'end_date' => 'nullable|date|after:start_date',
+                ...$this->translatableRules('description', max: null),
+            ]),
+            ['degree', 'field_of_study', 'description']
+        );
 
         $education = $this->educationService->create($validated);
         return $this->created(new EducationResource($education), 'Education created');
@@ -47,14 +50,17 @@ class EducationController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $validated = $request->validate([
-            'institution' => 'sometimes|string|max:255',
-            'degree' => 'nullable|string|max:255',
-            'field_of_study' => 'nullable|string|max:255',
-            'start_date' => 'sometimes|date',
-            'end_date' => 'nullable|date|after:start_date',
-            'description' => 'nullable|string',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                'institution' => 'sometimes|string|max:255',
+                ...$this->translatableRules('degree'),
+                ...$this->translatableRules('field_of_study'),
+                'start_date' => 'sometimes|date',
+                'end_date' => 'nullable|date|after:start_date',
+                ...$this->translatableRules('description', max: null),
+            ]),
+            ['degree', 'field_of_study', 'description']
+        );
 
         $education = $this->educationService->update($id, $validated);
         return $this->success(new EducationResource($education), 'Education updated');

@@ -32,12 +32,15 @@ class CapabilityController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'icon' => 'nullable|string|max:50',
-            'sort_order' => 'nullable|integer|min:0',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                ...$this->translatableRules('title', required: true),
+                ...$this->translatableRules('description', max: null),
+                'icon' => 'nullable|string|max:50',
+                'sort_order' => 'nullable|integer|min:0',
+            ]),
+            ['title', 'description']
+        );
 
         $capability = $this->capabilityService->create($validated);
         return $this->created(new CapabilityResource($capability), 'Capability created');
@@ -45,12 +48,15 @@ class CapabilityController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $validated = $request->validate([
-            'title' => 'sometimes|string|max:255',
-            'description' => 'nullable|string',
-            'icon' => 'nullable|string|max:50',
-            'sort_order' => 'nullable|integer|min:0',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                ...$this->translatableRules('title'),
+                ...$this->translatableRules('description', max: null),
+                'icon' => 'nullable|string|max:50',
+                'sort_order' => 'nullable|integer|min:0',
+            ]),
+            ['title', 'description']
+        );
 
         $capability = $this->capabilityService->update($id, $validated);
         return $this->success(new CapabilityResource($capability), 'Capability updated');

@@ -11,8 +11,8 @@ class CapabilityResource extends BaseResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
+            'title' => $this->getTranslations('title'),
+            'description' => $this->getTranslations('description'),
             'icon' => $this->icon,
             'sort_order' => (int) $this->sort_order,
         ];

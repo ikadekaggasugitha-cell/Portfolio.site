@@ -20,6 +20,9 @@ import { HeroBackdrop } from '@/components/marketing/sections/hero-backdrop'
  * slugs) and invalidated on save through the `pages` tag.
  */
 
+import { localize } from '@/lib/marketing/localize'
+import { DEFAULT_LOCALE } from '@/lib/marketing/translations'
+
 type Params = Promise<{ slug: string }>
 
 export const revalidate = 600
@@ -39,7 +42,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { data: page } = await soften(getPageBySlug(slug), null)
   if (!page) return { title: `Page not found · ${site.name}` }
 
-  const title = metaString(page, 'seo_title') || `${page.title} · ${site.name}`
+  const pageTitle = localize(page.title, DEFAULT_LOCALE)
+  const title = metaString(page, 'seo_title') || `${pageTitle} · ${site.name}`
   const description = metaString(page, 'seo_description')
 
   return {
@@ -61,6 +65,8 @@ export default async function CmsPage({ params }: { params: Params }) {
 
   const blocks = (page.blocks ?? []).filter((block) => block.type)
   const hasHeroBlock = blocks.some((block) => block.type === 'hero')
+  const titleStr = localize(page.title, DEFAULT_LOCALE)
+  const contentHtml = localize(page.content, DEFAULT_LOCALE)
 
   return (
     <>
@@ -73,7 +79,7 @@ export default async function CmsPage({ params }: { params: Params }) {
           <Container className="relative z-[2]">
             <Reveal>
               <h1 className="mx-auto max-w-[20ch] text-center text-[clamp(2.2rem,5.5vw,3.6rem)] font-extrabold leading-[1.05] tracking-[-0.03em] text-balance">
-                {page.title}
+                {titleStr}
               </h1>
             </Reveal>
           </Container>
@@ -86,18 +92,18 @@ export default async function CmsPage({ params }: { params: Params }) {
 
       {/* Free-form HTML from the editor's Content field. Authored by the site owner
           behind admin auth, so it is trusted markup. */}
-      {page.content?.trim() && (
+      {contentHtml?.trim() && (
         <Section>
           <Reveal>
             <div
               className="mk-prose mx-auto max-w-[72ch] text-[1.05rem] leading-relaxed text-mk-muted"
-              dangerouslySetInnerHTML={{ __html: page.content }}
+              dangerouslySetInnerHTML={{ __html: contentHtml }}
             />
           </Reveal>
         </Section>
       )}
 
-      {!blocks.length && !page.content?.trim() && (
+      {!blocks.length && !contentHtml?.trim() && (
         <Section>
           <p className="text-center text-mk-muted">This page has no content yet.</p>
         </Section>

@@ -25,9 +25,9 @@ function initials(name: string) {
 }
 
 export function Hero(props: HeroData = heroDefaults) {
-  const { name, role, photo, available, location, githubUrl, linkedinUrl, email, cvUrl, codeStack } = props
+  const { name, role, photo, available, location, githubUrl, linkedinUrl, email, cvUrl, codeStack, intro } = props
   const reduce = useReducedMotion()
-  const { t } = useTranslation()
+  const { t, localize } = useTranslation()
   const container = reduce ? {} : { initial: 'hidden', animate: 'show', variants: staggerParent }
   const item = reduce ? {} : { variants: staggerItem }
 
@@ -64,7 +64,7 @@ export function Hero(props: HeroData = heroDefaults) {
             </motion.h1>
 
             <motion.p {...item} className="mt-5 max-w-[46ch] text-[clamp(1.05rem,1.8vw,1.3rem)] text-mk-muted">
-              {t.hero.intro}
+              {localize(intro).trim() || t.hero.intro}
             </motion.p>
 
             <motion.div {...item} className="mt-8 flex flex-wrap gap-3.5">
@@ -137,7 +137,7 @@ export function Hero(props: HeroData = heroDefaults) {
                 <pre className="overflow-x-auto font-mk-mono text-[0.8rem] leading-[1.85] text-mk-muted">
                   <code>
                     <span className="text-mk-brand-soft">const</span> programmer = {'{'}
-                    {'\n'}  role: <span className="text-mk-cyan">&quot;{role}&quot;</span>,
+                    {'\n'}  role: <span className="text-mk-cyan">&quot;{localize(role)}&quot;</span>,
                     {'\n'}  based: <span className="text-mk-cyan">&quot;{location}&quot;</span>,
                     {'\n'}  <span className="text-mk-amber">stack</span>: [
                     {codeStack.map((tech, i) => (

@@ -11,8 +11,8 @@ class FaqResource extends BaseResource
     {
         return [
             'id' => $this->id,
-            'question' => $this->question,
-            'answer' => $this->answer,
+            'question' => $this->getTranslations('question'),
+            'answer' => $this->getTranslations('answer'),
             'sort_order' => (int) $this->sort_order,
         ];
     }

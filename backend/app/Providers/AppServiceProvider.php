@@ -6,6 +6,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Spatie\Translatable\Facades\Translatable;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -75,6 +76,11 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Translatable content resolves a missing locale to `id` (the primary content locale),
+        // and to any available translation as a last resort — so a server-side read of a
+        // translatable attribute (e.g. slug generation from `Project::title`) is never blank.
+        Translatable::fallback(fallbackLocale: 'id', fallbackAny: true);
+
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(200)->by($request->user()?->id ?: $request->ip());
         });

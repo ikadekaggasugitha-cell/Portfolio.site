@@ -32,15 +32,18 @@ class CertificateController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'issuer' => 'required|string|max:255',
-            'issued_date' => 'required|date',
-            'file' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'expiry_date' => 'nullable|date|after:issued_date',
-            'credential_url' => 'nullable|url|max:255',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                ...$this->translatableRules('title', required: true),
+                'issuer' => 'required|string|max:255',
+                'issued_date' => 'required|date',
+                'file' => 'nullable|string|max:255',
+                ...$this->translatableRules('description', max: null),
+                'expiry_date' => 'nullable|date|after:issued_date',
+                'credential_url' => 'nullable|url|max:255',
+            ]),
+            ['title', 'description']
+        );
 
         $certificate = $this->certificateService->create($validated);
         return $this->created(new CertificateResource($certificate), 'Certificate created');
@@ -48,15 +51,18 @@ class CertificateController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $validated = $request->validate([
-            'title' => 'sometimes|string|max:255',
-            'issuer' => 'sometimes|string|max:255',
-            'issued_date' => 'sometimes|date',
-            'file' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'expiry_date' => 'nullable|date|after:issued_date',
-            'credential_url' => 'nullable|url|max:255',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                ...$this->translatableRules('title'),
+                'issuer' => 'sometimes|string|max:255',
+                'issued_date' => 'sometimes|date',
+                'file' => 'nullable|string|max:255',
+                ...$this->translatableRules('description', max: null),
+                'expiry_date' => 'nullable|date|after:issued_date',
+                'credential_url' => 'nullable|url|max:255',
+            ]),
+            ['title', 'description']
+        );
 
         $certificate = $this->certificateService->update($id, $validated);
         return $this->success(new CertificateResource($certificate), 'Certificate updated');

@@ -11,9 +11,9 @@ class ProjectResource extends BaseResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
+            'title' => $this->getTranslations('title'),
             'slug' => $this->slug,
-            'description' => $this->description,
+            'description' => $this->getTranslations('description'),
             'github_url' => $this->github_url,
             'demo_url' => $this->demo_url,
             'technology' => $this->technology,

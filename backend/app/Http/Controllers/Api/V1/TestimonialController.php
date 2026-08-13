@@ -32,13 +32,16 @@ class TestimonialController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'quote' => 'required|string',
-            'author_name' => 'required|string|max:255',
-            'author_title' => 'nullable|string|max:255',
-            'initials' => 'nullable|string|max:4',
-            'sort_order' => 'nullable|integer|min:0',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                ...$this->translatableRules('quote', required: true, max: null),
+                'author_name' => 'required|string|max:255',
+                ...$this->translatableRules('author_title'),
+                'initials' => 'nullable|string|max:4',
+                'sort_order' => 'nullable|integer|min:0',
+            ]),
+            ['quote', 'author_title']
+        );
 
         $testimonial = $this->testimonialService->create($validated);
         return $this->created(new TestimonialResource($testimonial), 'Testimonial created');
@@ -46,13 +49,16 @@ class TestimonialController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $validated = $request->validate([
-            'quote' => 'sometimes|string',
-            'author_name' => 'sometimes|string|max:255',
-            'author_title' => 'nullable|string|max:255',
-            'initials' => 'nullable|string|max:4',
-            'sort_order' => 'nullable|integer|min:0',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                ...$this->translatableRules('quote', max: null),
+                'author_name' => 'sometimes|string|max:255',
+                ...$this->translatableRules('author_title'),
+                'initials' => 'nullable|string|max:4',
+                'sort_order' => 'nullable|integer|min:0',
+            ]),
+            ['quote', 'author_title']
+        );
 
         $testimonial = $this->testimonialService->update($id, $validated);
         return $this->success(new TestimonialResource($testimonial), 'Testimonial updated');

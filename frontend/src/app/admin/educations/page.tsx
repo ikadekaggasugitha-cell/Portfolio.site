@@ -6,6 +6,7 @@ import type { Education } from '@/types'
 import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonList } from '@/components/admin/ui/Skeleton'
+import { toAdminString } from '@/lib/admin-localize'
 
 const fields = [
   { name: 'institution', label: 'Institution', required: true },
@@ -63,11 +64,11 @@ export default function EducationsPage() {
     setEditing(item)
     setForm({
       institution: item.institution,
-      degree: item.degree || '',
-      field_of_study: item.field_of_study || '',
+      degree: toAdminString(item.degree),
+      field_of_study: toAdminString(item.field_of_study),
       start_date: item.start_date?.split('T')[0] || '',
       end_date: item.end_date?.split('T')[0] || '',
-      description: item.description || '',
+      description: toAdminString(item.description),
     })
     setShowForm(true)
   }
@@ -141,7 +142,7 @@ export default function EducationsPage() {
           <div key={item.id} className="card-stitch p-5 flex items-start justify-between">
             <div>
               <h3 className="text-[17px] font-semibold leading-[1.24] tracking-[-0.374px] text-ink stitch-heading">{item.institution}</h3>
-              <p className="text-[14px] leading-[1.43] tracking-[-0.224px] text-muted mt-1">{item.degree}{item.field_of_study ? ` - ${item.field_of_study}` : ''}</p>
+              <p className="text-[14px] leading-[1.43] tracking-[-0.224px] text-muted mt-1">{toAdminString(item.degree)}{toAdminString(item.field_of_study) ? ` - ${toAdminString(item.field_of_study)}` : ''}</p>
               <p className="text-[12px] leading-[1] tracking-[-0.12px] text-muted mt-1">{item.start_date?.split('T')[0]} &mdash; {item.end_date?.split('T')[0] || 'Present'}</p>
             </div>
             <div className="flex gap-2 shrink-0">

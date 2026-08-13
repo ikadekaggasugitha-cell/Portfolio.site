@@ -6,6 +6,7 @@ import type { Stat } from '@/types'
 import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonTable } from '@/components/admin/ui/Skeleton'
+import { toAdminString } from '@/lib/admin-localize'
 
 /**
  * Number tiles beside the About section on the homepage.
@@ -57,7 +58,7 @@ export default function StatsAdminPage() {
 
   function handleEdit(item: Stat) {
     setEditing(item)
-    setForm({ label: item.label, value: item.value, suffix: item.suffix ?? '', sort_order: item.sort_order })
+    setForm({ label: toAdminString(item.label), value: item.value, suffix: item.suffix ?? '', sort_order: item.sort_order })
     setShowForm(true)
   }
 
@@ -192,7 +193,7 @@ export default function StatsAdminPage() {
             <tbody className="divide-y divide-hairline">
               {items.map((item) => (
                 <tr key={item.id}>
-                <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-ink">{item.label}</td>
+                <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-ink">{toAdminString(item.label)}</td>
                 <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-muted">{`${item.value}${item.suffix ?? ''}`}</td>
                 <td className="px-4 py-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-muted">{item.sort_order}</td>
                   <td className="px-4 py-3 text-right whitespace-nowrap">

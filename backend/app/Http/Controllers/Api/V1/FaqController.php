@@ -32,11 +32,14 @@ class FaqController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'question' => 'required|string|max:255',
-            'answer' => 'required|string',
-            'sort_order' => 'nullable|integer|min:0',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                ...$this->translatableRules('question', required: true),
+                ...$this->translatableRules('answer', required: true, max: null),
+                'sort_order' => 'nullable|integer|min:0',
+            ]),
+            ['question', 'answer']
+        );
 
         $faq = $this->faqService->create($validated);
         return $this->created(new FaqResource($faq), 'FAQ created');
@@ -44,11 +47,14 @@ class FaqController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $validated = $request->validate([
-            'question' => 'sometimes|string|max:255',
-            'answer' => 'sometimes|string',
-            'sort_order' => 'nullable|integer|min:0',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                ...$this->translatableRules('question'),
+                ...$this->translatableRules('answer', max: null),
+                'sort_order' => 'nullable|integer|min:0',
+            ]),
+            ['question', 'answer']
+        );
 
         $faq = $this->faqService->update($id, $validated);
         return $this->success(new FaqResource($faq), 'FAQ updated');

@@ -5,37 +5,21 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import { faqs as faqDefaults, type FaqEntry } from '@/lib/marketing/content'
 import { useTranslation } from '../theme/language-provider'
-import { translations } from '@/lib/marketing/translations'
-
-/** The original English FAQ questions, used to match and translate. */
-const EN_FAQ_QUESTIONS: string[] = translations.en.faqs.map((f) => f.q)
 
 /** Accordion FAQ. Single-open, smooth height animation, keyboard accessible. */
 export function ContactFaq({ faqs = faqDefaults }: { faqs?: FaqEntry[] }) {
   const [open, setOpen] = useState<number | null>(0)
-  const { t } = useTranslation()
+  const { localize } = useTranslation()
 
   if (!faqs.length) return null
 
-  /**
-   * Translate only entries still identical to the seeded English default. Matching on
-   * the question alone meant an answer edited in the admin was overwritten by the
-   * hardcoded text, so the edit never reached the page.
-   */
-  const translated = faqs.map((faq) => {
-    const idx = EN_FAQ_QUESTIONS.indexOf(faq.q)
-    const seeded = translations.en.faqs[idx]
-    if (idx < 0 || !seeded || seeded.a !== faq.a) return faq
-    return t.faqs[idx] ?? faq
-  })
-
   return (
     <div className="mx-auto max-w-[760px]">
-      {translated.map((faq, i) => (
+      {faqs.map((faq, i) => (
         <FaqItem
-          key={`${faq.q}-${i}`}
-          question={faq.q}
-          answer={faq.a}
+          key={i}
+          question={localize(faq.q)}
+          answer={localize(faq.a)}
           open={open === i}
           onToggle={() => setOpen(open === i ? null : i)}
         />

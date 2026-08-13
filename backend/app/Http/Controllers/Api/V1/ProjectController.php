@@ -41,15 +41,18 @@ class ProjectController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'github_url' => 'nullable|url|max:255',
-            'demo_url' => 'nullable|url|max:255',
-            'technology' => 'nullable|string|max:255',
-            'is_featured' => 'sometimes|boolean',
-            'sort_order' => 'sometimes|integer|min:0',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                ...$this->translatableRules('title', required: true),
+                ...$this->translatableRules('description', max: null),
+                'github_url' => 'nullable|url|max:255',
+                'demo_url' => 'nullable|url|max:255',
+                'technology' => 'nullable|string|max:255',
+                'is_featured' => 'sometimes|boolean',
+                'sort_order' => 'sometimes|integer|min:0',
+            ]),
+            ['title', 'description']
+        );
 
         $project = $this->projectService->create($validated);
         return $this->created(new ProjectResource($project), 'Project created');
@@ -57,15 +60,18 @@ class ProjectController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $validated = $request->validate([
-            'title' => 'sometimes|string|max:255',
-            'description' => 'nullable|string',
-            'github_url' => 'nullable|url|max:255',
-            'demo_url' => 'nullable|url|max:255',
-            'technology' => 'nullable|string|max:255',
-            'is_featured' => 'sometimes|boolean',
-            'sort_order' => 'sometimes|integer|min:0',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                ...$this->translatableRules('title'),
+                ...$this->translatableRules('description', max: null),
+                'github_url' => 'nullable|url|max:255',
+                'demo_url' => 'nullable|url|max:255',
+                'technology' => 'nullable|string|max:255',
+                'is_featured' => 'sometimes|boolean',
+                'sort_order' => 'sometimes|integer|min:0',
+            ]),
+            ['title', 'description']
+        );
 
         $project = $this->projectService->update($id, $validated);
         return $this->success(new ProjectResource($project), 'Project updated');

@@ -7,6 +7,7 @@ import type { Page } from '@/types'
 import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonList } from '@/components/admin/ui/Skeleton'
+import { toAdminString } from '@/lib/admin-localize'
 
 export default function PagesList() {
   const [items, setItems] = useState<Page[]>([])
@@ -61,7 +62,7 @@ export default function PagesList() {
         {items.map((p) => (
           <div key={p.id} className="card-stitch p-4 flex items-center justify-between">
             <div>
-              <div className="font-semibold text-ink">{p.title}</div>
+              <div className="font-semibold text-ink">{toAdminString(p.title)}</div>
               <div className="text-muted text-sm">/{p.slug} • {p.is_published ? 'Published' : 'Draft'}</div>
             </div>
             <div className="flex gap-2">

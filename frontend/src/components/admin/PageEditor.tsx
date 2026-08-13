@@ -12,6 +12,8 @@ import { SkeletonForm } from '@/components/admin/ui/Skeleton'
 
 const MediaPicker = dynamic(() => import('./MediaPicker'), { ssr: false })
 
+import { toAdminString } from '@/lib/admin-localize'
+
 interface PageEditorProps {
   id: string
 }
@@ -150,7 +152,7 @@ export default function PageEditor({ id }: PageEditorProps) {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="font-display text-[28px] font-semibold stitch-heading">{isNew ? 'New Page' : page.title}</h1>
+        <h1 className="font-display text-[28px] font-semibold stitch-heading">{isNew ? 'New Page' : toAdminString(page.title)}</h1>
         <div className="flex gap-2">
           {!isNew && (
             <Button onClick={() => publish()} loading={isPublishing} loadingText="Updating...">
@@ -164,13 +166,13 @@ export default function PageEditor({ id }: PageEditorProps) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 card-stitch p-4">
           <label className="block mb-2 font-semibold">Title</label>
-          <input value={page.title || ''} onChange={(e) => setPage({ ...page, title: e.target.value })} className="w-full mb-3 px-3 py-2 border rounded" />
+          <input value={toAdminString(page.title)} onChange={(e) => setPage({ ...page, title: e.target.value })} className="w-full mb-3 px-3 py-2 border rounded" />
 
           <label className="block mb-2 font-semibold">Slug</label>
           <input value={page.slug || ''} onChange={(e) => setPage({ ...page, slug: e.target.value })} className="w-full mb-3 px-3 py-2 border rounded" />
 
           <label className="block mb-2 font-semibold">Content (HTML)</label>
-          <textarea value={page.content || ''} onChange={(e) => setPage({ ...page, content: e.target.value })} rows={12} className="w-full px-3 py-2 border rounded" />
+          <textarea value={toAdminString(page.content)} onChange={(e) => setPage({ ...page, content: e.target.value })} rows={12} className="w-full px-3 py-2 border rounded" />
 
           <div className="mt-6">
             <div className="flex items-center justify-between mb-3">

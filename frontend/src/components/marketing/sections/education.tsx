@@ -16,7 +16,7 @@ export function Education({
   id?: string
   tone?: 'canvas' | 'subtle'
 }) {
-  const { t } = useTranslation()
+  const { t, localize } = useTranslation()
   if (!entries.length) return null
 
   return (
@@ -28,21 +28,25 @@ export function Education({
         className="mb-[clamp(40px,6vw,68px)]"
       />
       <div className="mx-auto grid max-w-[900px] gap-5 md:grid-cols-2">
-        {entries.map((edu, i) => (
-          <Reveal key={`${edu.institution}-${i}`} delay={i * 0.08}>
-            <div className="h-full rounded-mk border border-mk-hairline bg-mk-surface p-7 shadow-mk-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-mk-brand-soft/60 hover:shadow-mk-md">
-              {edu.period && (
-                <span className="font-mk-mono text-[0.74rem] uppercase tracking-[0.08em] text-mk-accent">
-                  {edu.period}
-                </span>
-              )}
-              <h3 className="mt-2 text-[1.15rem] font-bold">{edu.degree}</h3>
-              <p className="mt-1 font-medium text-mk-ink">{edu.institution}</p>
-              {edu.field && <p className="mt-0.5 text-[0.92rem] text-mk-muted">{edu.field}</p>}
-              {edu.description && <p className="mt-3 text-[0.95rem] text-mk-muted">{edu.description}</p>}
-            </div>
-          </Reveal>
-        ))}
+        {entries.map((edu, i) => {
+          const field = localize(edu.field)
+          const description = localize(edu.description)
+          return (
+            <Reveal key={`${edu.institution}-${i}`} delay={i * 0.08}>
+              <div className="h-full rounded-mk border border-mk-hairline bg-mk-surface p-7 shadow-mk-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-mk-brand-soft/60 hover:shadow-mk-md">
+                {edu.period && (
+                  <span className="font-mk-mono text-[0.74rem] uppercase tracking-[0.08em] text-mk-accent">
+                    {edu.period}
+                  </span>
+                )}
+                <h3 className="mt-2 text-[1.15rem] font-bold">{localize(edu.degree)}</h3>
+                <p className="mt-1 font-medium text-mk-ink">{edu.institution}</p>
+                {field && <p className="mt-0.5 text-[0.92rem] text-mk-muted">{field}</p>}
+                {description && <p className="mt-3 text-[0.95rem] text-mk-muted">{description}</p>}
+              </div>
+            </Reveal>
+          )
+        })}
       </div>
     </Section>
   )

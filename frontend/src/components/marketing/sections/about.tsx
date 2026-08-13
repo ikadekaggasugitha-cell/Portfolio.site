@@ -1,6 +1,7 @@
 'use client'
 
 import { stats as statDefaults, type StatTile } from '@/lib/marketing/content'
+import type { LocalizedText } from '@/types'
 import { useTranslation } from '../theme/language-provider'
 import { Section } from '../primitives/section'
 import { Eyebrow } from '../primitives/eyebrow'
@@ -17,25 +18,29 @@ const STAT_LABEL_KEYS: Record<string, 'yearsShipping' | 'projectsDelivered' | 'h
 
 export function About({
   lead,
-  paragraphs,
+  body,
   stats = statDefaults,
 }: {
   /** From Admin → Profile → About section. Blank means "not written yet". */
-  lead?: string
-  paragraphs?: string[]
+  lead?: LocalizedText
+  body?: LocalizedText
   stats?: StatTile[]
 }) {
-  const { t } = useTranslation()
+  const { t, localize } = useTranslation()
 
-  // Copy written in the admin always wins — it is shown verbatim in both languages.
-  // The translated default only fills the gap while the field is still empty.
-  const resolvedLead = lead?.trim() || t.about.lead
-  const resolvedParagraphs = paragraphs?.length ? paragraphs : t.about.paragraphs
+  // Admin copy wins for the active language; the translated default only fills a still-empty field.
+  const resolvedLead = localize(lead).trim() || t.about.lead
+  const localizedBody = localize(body).trim()
+  const resolvedParagraphs = localizedBody
+    ? localizedBody.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
+    : t.about.paragraphs
 
-  const translatedStats = stats.map((stat) => ({
-    ...stat,
-    label: STAT_LABEL_KEYS[stat.label] ? t.stats[STAT_LABEL_KEYS[stat.label]] : stat.label,
-  }))
+  // Localize each stat label; a seeded English default still maps to its translation.
+  const translatedStats = stats.map((stat) => {
+    const raw = localize(stat.label)
+    const key = STAT_LABEL_KEYS[raw]
+    return { ...stat, label: key ? t.stats[key] : raw }
+  })
 
   return (
     <Section id="about">

@@ -32,12 +32,15 @@ class StatController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'label' => 'required|string|max:255',
-            'value' => 'required|integer|min:0',
-            'suffix' => 'nullable|string|max:8',
-            'sort_order' => 'nullable|integer|min:0',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                ...$this->translatableRules('label', required: true),
+                'value' => 'required|integer|min:0',
+                'suffix' => 'nullable|string|max:8',
+                'sort_order' => 'nullable|integer|min:0',
+            ]),
+            ['label']
+        );
 
         $stat = $this->statService->create($validated);
         return $this->created(new StatResource($stat), 'Stat created');
@@ -45,12 +48,15 @@ class StatController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $validated = $request->validate([
-            'label' => 'sometimes|string|max:255',
-            'value' => 'sometimes|integer|min:0',
-            'suffix' => 'nullable|string|max:8',
-            'sort_order' => 'nullable|integer|min:0',
-        ]);
+        $validated = $this->autoTranslate(
+            $request->validate([
+                ...$this->translatableRules('label'),
+                'value' => 'sometimes|integer|min:0',
+                'suffix' => 'nullable|string|max:8',
+                'sort_order' => 'nullable|integer|min:0',
+            ]),
+            ['label']
+        );
 
         $stat = $this->statService->update($id, $validated);
         return $this->success(new StatResource($stat), 'Stat updated');

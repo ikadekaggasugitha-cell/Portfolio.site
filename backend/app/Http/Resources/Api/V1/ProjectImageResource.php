@@ -23,7 +23,7 @@ class ProjectImageResource extends BaseResource
                     ? $this->image
                     : Storage::disk(config('filesystems.media_disk', 'public'))->url($this->image))
                 : null,
-            'caption' => $this->caption,
+            'caption' => $this->getTranslations('caption'),
             'sort_order' => $this->sort_order,
         ];
     }

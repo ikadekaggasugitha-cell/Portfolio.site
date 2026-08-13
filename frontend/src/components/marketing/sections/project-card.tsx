@@ -1,7 +1,10 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import type { FeaturedProject } from '@/lib/marketing/content'
+import { useTranslation } from '../theme/language-provider'
 import { ProjectMockup } from './project-mockup'
 
 /**
@@ -12,6 +15,8 @@ const cardClass =
   'group block h-full w-full overflow-hidden rounded-mk border border-mk-hairline bg-mk-surface text-left shadow-mk-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1.5 hover:border-mk-brand-soft/60 hover:shadow-mk-lg'
 
 function CardInner({ project, priority }: { project: FeaturedProject; priority?: boolean }) {
+  const { localize } = useTranslation()
+  const title = localize(project.title)
   return (
     <>
       <div className="relative aspect-[16/10] overflow-hidden">
@@ -19,7 +24,7 @@ function CardInner({ project, priority }: { project: FeaturedProject; priority?:
           {project.imageUrl ? (
             <Image
               src={project.imageUrl}
-              alt={`${project.title} preview`}
+              alt={`${title} preview`}
               fill
               sizes="(max-width: 768px) 100vw, 600px"
               className="object-cover"
@@ -37,13 +42,13 @@ function CardInner({ project, priority }: { project: FeaturedProject; priority?:
       </div>
       <div className="p-6">
         <h3 className="flex items-center gap-2 text-[1.28rem] font-bold">
-          {project.title}
+          {title}
           <ArrowUpRight
             className="size-4 text-mk-faint transition-[transform,color] duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-mk-accent"
             aria-hidden
           />
         </h3>
-        <p className="mt-2.5 line-clamp-2 text-[0.96rem] text-mk-muted">{project.summary}</p>
+        <p className="mt-2.5 line-clamp-2 text-[0.96rem] text-mk-muted">{localize(project.summary)}</p>
         {project.tags.length > 0 && (
           <div className="mt-[18px] flex flex-wrap gap-2">
             {project.tags.map((tag) => (
@@ -72,9 +77,10 @@ export function ProjectCard({
   onClick?: () => void
   priority?: boolean
 }) {
+  const { localize } = useTranslation()
   if (href) {
     return (
-      <Link href={href} className={cardClass} aria-label={`View ${project.title}`}>
+      <Link href={href} className={cardClass} aria-label={`View ${localize(project.title)}`}>
         <CardInner project={project} priority={priority} />
       </Link>
     )

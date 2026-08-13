@@ -6,6 +6,7 @@ import type { Experience } from '@/types'
 import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonList } from '@/components/admin/ui/Skeleton'
+import { toAdminString } from '@/lib/admin-localize'
 
 export default function ExperiencesPage() {
   const [items, setItems] = useState<Experience[]>([])
@@ -58,11 +59,11 @@ export default function ExperiencesPage() {
     setEditing(item)
     setForm({
       company: item.company,
-      position: item.position,
+      position: toAdminString(item.position),
       location: item.location || '',
       start_date: item.start_date?.split('T')[0] || '',
       end_date: item.end_date?.split('T')[0] || '',
-      description: item.description || '',
+      description: toAdminString(item.description),
     })
     setShowForm(true)
   }
@@ -167,7 +168,7 @@ export default function ExperiencesPage() {
         {items.map((item) => (
           <div key={item.id} className="card-stitch p-5 flex items-start justify-between">
             <div>
-              <h3 className="text-[17px] font-semibold leading-[1.24] tracking-[-0.374px] text-ink stitch-heading">{item.position}</h3>
+              <h3 className="text-[17px] font-semibold leading-[1.24] tracking-[-0.374px] text-ink stitch-heading">{toAdminString(item.position)}</h3>
               <p className="text-[14px] leading-[1.43] tracking-[-0.224px] text-muted mt-1">
                 {item.company}
                 {item.location ? ` · ${item.location}` : ''}
@@ -176,7 +177,7 @@ export default function ExperiencesPage() {
                 {item.start_date?.split('T')[0]} &mdash; {item.end_date?.split('T')[0] || 'Present'}
               </p>
               {item.description && (
-                <p className="text-[14px] leading-[1.43] tracking-[-0.224px] text-muted mt-2 line-clamp-2">{item.description}</p>
+                <p className="text-[14px] leading-[1.43] tracking-[-0.224px] text-muted mt-2 line-clamp-2">{toAdminString(item.description)}</p>
               )}
             </div>
             <div className="flex gap-2 shrink-0">

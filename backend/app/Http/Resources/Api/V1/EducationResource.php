@@ -12,11 +12,11 @@ class EducationResource extends BaseResource
         return [
             'id' => $this->id,
             'institution' => $this->institution,
-            'degree' => $this->degree,
-            'field_of_study' => $this->field_of_study,
+            'degree' => $this->getTranslations('degree'),
+            'field_of_study' => $this->getTranslations('field_of_study'),
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
-            'description' => $this->description,
+            'description' => $this->getTranslations('description'),
         ];
     }
 }
