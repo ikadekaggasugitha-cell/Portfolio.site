@@ -10,6 +10,8 @@ import { Button } from '@/components/marketing/primitives/button'
 import { ProjectGallery } from '@/components/marketing/sections/project-gallery'
 import { ProjectCard } from '@/components/marketing/sections/project-card'
 import { GithubIcon } from '@/components/marketing/icons/brand-icons'
+import { localize } from '@/lib/marketing/localize'
+import { DEFAULT_LOCALE } from '@/lib/marketing/translations'
 
 type Params = Promise<{ id: string }>
 
@@ -82,8 +84,8 @@ export default async function ProjectDetailPage({ params }: { params: Params }) 
   }
 
   const detail = mapProjectDetail(project)
-  const detailTitleStr = typeof detail.title === 'string' ? detail.title : detail.title?.id || detail.title?.en || ''
-  const detailDescStr = typeof detail.description === 'string' ? detail.description : detail.description?.id || detail.description?.en || ''
+  const detailTitleStr = localize(detail.title, DEFAULT_LOCALE)
+  const detailDescStr = localize(detail.description, DEFAULT_LOCALE)
   const related = relatedProjects(all, project.id, project.technology, 3)
 
   return (

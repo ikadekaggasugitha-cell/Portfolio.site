@@ -227,17 +227,15 @@ const splitTech = (technology: string | null): string[] =>
     .filter(Boolean)
 
 function toCard(project: Project, featured: boolean): FeaturedProject {
-  const titleStr = typeof project.title === 'string' ? project.title : project.title?.id || project.title?.en || ''
-  const descStr = typeof project.description === 'string' ? project.description : project.description?.id || project.description?.en || ''
   return {
     id: String(project.id),
-    title: titleStr,
+    title: project.title,
     featured,
     motif: motifForId(project.id),
     imageUrl: project.images?.[0]?.image ?? undefined,
     images: (project.images ?? []).map((img) => img.image).filter(Boolean),
-    summary: descStr,
-    detail: descStr,
+    summary: project.description ?? '',
+    detail: project.description ?? '',
     tags: splitTech(project.technology),
     demoUrl: project.demo_url ?? '#',
     repoUrl: project.github_url ?? '#',
@@ -256,12 +254,10 @@ export function mapProjectCards(projects: Project[]): FeaturedProject[] {
 }
 
 export function mapProjectDetail(project: Project): ProjectDetail {
-  const titleStr = typeof project.title === 'string' ? project.title : project.title?.id || project.title?.en || ''
-  const descStr = typeof project.description === 'string' ? project.description : project.description?.id || project.description?.en || ''
   return {
     id: String(project.id),
-    title: titleStr,
-    description: descStr,
+    title: project.title,
+    description: project.description ?? '',
     tags: splitTech(project.technology),
     images: (project.images ?? []).map((img) => img.image).filter(Boolean),
     motif: motifForId(project.id),
