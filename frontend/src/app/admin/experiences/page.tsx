@@ -6,7 +6,8 @@ import type { Experience } from '@/types'
 import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonList } from '@/components/admin/ui/Skeleton'
-import { toAdminString } from '@/lib/admin-localize'
+import { toAdminString, toAdminBilingual, type BilingualValue } from '@/lib/admin-localize'
+import TranslatableInput from '@/components/admin/ui/TranslatableInput'
 
 export default function ExperiencesPage() {
   const [items, setItems] = useState<Experience[]>([])
@@ -15,12 +16,12 @@ export default function ExperiencesPage() {
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({
     company: '',
-    position: '',
     location: '',
     start_date: '',
     end_date: '',
-    description: '',
   })
+  const [position, setPosition] = useState<BilingualValue>({ id: '', en: '' })
+  const [description, setDescription] = useState<BilingualValue>({ id: '', en: '' })
 
   const load = useCallback(() => {
     return api.get('/experiences').then((res) => setItems(res.data.data ?? []))
@@ -31,14 +32,16 @@ export default function ExperiencesPage() {
   }, [load])
 
   function resetForm() {
-    setForm({ company: '', position: '', location: '', start_date: '', end_date: '', description: '' })
+    setForm({ company: '', location: '', start_date: '', end_date: '' })
+    setPosition({ id: '', en: '' })
+    setDescription({ id: '', en: '' })
     setEditing(null)
     setShowForm(false)
   }
 
   const { run: submit, isPending: isSaving } = useAsyncAction(
     async () => {
-      const payload = { ...form, end_date: form.end_date || null }
+      const payload = { ...form, position, description, end_date: form.end_date || null }
       if (editing) {
         await api.put(`/experiences/${editing.id}`, payload)
       } else {
@@ -59,12 +62,12 @@ export default function ExperiencesPage() {
     setEditing(item)
     setForm({
       company: item.company,
-      position: toAdminString(item.position),
       location: item.location || '',
       start_date: item.start_date?.split('T')[0] || '',
       end_date: item.end_date?.split('T')[0] || '',
-      description: toAdminString(item.description),
     })
+    setPosition(toAdminBilingual(item.position))
+    setDescription(toAdminBilingual(item.description))
     setShowForm(true)
   }
 
@@ -89,11 +92,9 @@ export default function ExperiencesPage() {
 
   const fields = [
     { name: 'company', label: 'Company', required: true },
-    { name: 'position', label: 'Position', required: true },
     { name: 'location', label: 'Location' },
     { name: 'start_date', label: 'Start Date', type: 'date' as const, required: true },
     { name: 'end_date', label: 'End Date (leave blank for current)', type: 'date' as const },
-    { name: 'description', label: 'Description', type: 'textarea' as const },
   ]
 
   if (loading) {
@@ -127,26 +128,18 @@ export default function ExperiencesPage() {
               <label className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">
                 {f.label}{f.required && <span className="text-ink-muted-48 ml-1">*</span>}
               </label>
-              {f.type === 'textarea' ? (
-                <textarea
-                  name={f.name}
-                  value={(form as Record<string, string>)[f.name]}
-                  onChange={(e) => setForm({ ...form, [e.target.name]: e.target.value })}
-                  rows={4}
-                  className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
-                />
-              ) : (
-                <input
-                  type={f.type || 'text'}
-                  name={f.name}
-                  value={(form as Record<string, string>)[f.name]}
-                  onChange={(e) => setForm({ ...form, [e.target.name]: e.target.value })}
-                  className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
-                  required={f.required}
-                />
-              )}
+              <input
+                type={f.type || 'text'}
+                name={f.name}
+                value={(form as Record<string, string>)[f.name]}
+                onChange={(e) => setForm({ ...form, [e.target.name]: e.target.value })}
+                className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
+                required={f.required}
+              />
             </div>
           ))}
+          <TranslatableInput label="Position" value={position} onChange={setPosition} />
+          <TranslatableInput label="Description" value={description} onChange={setDescription} multiline rows={4} />
           <div className="flex gap-2">
             <Button
               type="submit"

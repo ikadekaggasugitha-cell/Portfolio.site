@@ -6,7 +6,8 @@ import type { Stat } from '@/types'
 import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonTable } from '@/components/admin/ui/Skeleton'
-import { toAdminString } from '@/lib/admin-localize'
+import { toAdminString, toAdminBilingual, type BilingualValue } from '@/lib/admin-localize'
+import TranslatableInput from '@/components/admin/ui/TranslatableInput'
 
 /**
  * Number tiles beside the About section on the homepage.
@@ -18,7 +19,8 @@ export default function StatsAdminPage() {
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState<Stat | null>(null)
   const [showForm, setShowForm] = useState(false)
-  const [form, setForm] = useState({ label: '', value: 0, suffix: '+', sort_order: 0 })
+  const [form, setForm] = useState({ value: 0, suffix: '+', sort_order: 0 })
+  const [label, setLabel] = useState<BilingualValue>({ id: '', en: '' })
 
   const load = useCallback(() => {
     return api.get('/stats').then((res) => setItems(res.data.data ?? []))
@@ -29,7 +31,8 @@ export default function StatsAdminPage() {
   }, [load])
 
   function resetForm() {
-    setForm({ label: '', value: 0, suffix: '+', sort_order: 0 })
+    setForm({ value: 0, suffix: '+', sort_order: 0 })
+    setLabel({ id: '', en: '' })
     setEditing(null)
     setShowForm(false)
   }
@@ -37,9 +40,9 @@ export default function StatsAdminPage() {
   const { run: submit, isPending: isSaving } = useAsyncAction(
     async () => {
       if (editing) {
-        await api.put(`/stats/${editing.id}`, form)
+        await api.put(`/stats/${editing.id}`, { ...form, label })
       } else {
-        await api.post('/stats', form)
+        await api.post('/stats', { ...form, label })
       }
       resetForm()
       await load()
@@ -58,7 +61,8 @@ export default function StatsAdminPage() {
 
   function handleEdit(item: Stat) {
     setEditing(item)
-    setForm({ label: toAdminString(item.label), value: item.value, suffix: item.suffix ?? '', sort_order: item.sort_order })
+    setForm({ value: item.value, suffix: item.suffix ?? '', sort_order: item.sort_order })
+    setLabel(toAdminBilingual(item.label))
     setShowForm(true)
   }
 
@@ -113,16 +117,7 @@ export default function StatsAdminPage() {
           onSubmit={handleSubmit}
           className="bg-canvas border border-hairline rounded-[18px] p-6 mb-6 max-w-md space-y-4"
         >
-          <div>
-            <label htmlFor="f-label" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">Label</label>
-            <input
-              id="f-label"
-              value={form.label}
-              onChange={(e) => setForm({ ...form, label: e.target.value })}
-              placeholder="e.g. Years shipping"
-              className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors" required
-            />
-          </div>
+          <TranslatableInput label="Label" id="f-label" value={label} onChange={setLabel} placeholder="e.g. Years shipping" />
           <div>
             <label htmlFor="f-value" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">Value</label>
             <input

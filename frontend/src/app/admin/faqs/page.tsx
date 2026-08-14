@@ -6,7 +6,8 @@ import type { Faq } from '@/types'
 import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonTable } from '@/components/admin/ui/Skeleton'
-import { toAdminString } from '@/lib/admin-localize'
+import { toAdminString, toAdminBilingual, type BilingualValue } from '@/lib/admin-localize'
+import TranslatableInput from '@/components/admin/ui/TranslatableInput'
 
 /**
  * The accordion on the Contact page.
@@ -18,7 +19,9 @@ export default function FAQAdminPage() {
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState<Faq | null>(null)
   const [showForm, setShowForm] = useState(false)
-  const [form, setForm] = useState({ question: '', answer: '', sort_order: 0 })
+  const [form, setForm] = useState({ sort_order: 0 })
+  const [question, setQuestion] = useState<BilingualValue>({ id: '', en: '' })
+  const [answer, setAnswer] = useState<BilingualValue>({ id: '', en: '' })
 
   const load = useCallback(() => {
     return api.get('/faqs').then((res) => setItems(res.data.data ?? []))
@@ -29,7 +32,9 @@ export default function FAQAdminPage() {
   }, [load])
 
   function resetForm() {
-    setForm({ question: '', answer: '', sort_order: 0 })
+    setForm({ sort_order: 0 })
+    setQuestion({ id: '', en: '' })
+    setAnswer({ id: '', en: '' })
     setEditing(null)
     setShowForm(false)
   }
@@ -37,9 +42,9 @@ export default function FAQAdminPage() {
   const { run: submit, isPending: isSaving } = useAsyncAction(
     async () => {
       if (editing) {
-        await api.put(`/faqs/${editing.id}`, form)
+        await api.put(`/faqs/${editing.id}`, { ...form, question, answer })
       } else {
-        await api.post('/faqs', form)
+        await api.post('/faqs', { ...form, question, answer })
       }
       resetForm()
       await load()
@@ -58,7 +63,9 @@ export default function FAQAdminPage() {
 
   function handleEdit(item: Faq) {
     setEditing(item)
-    setForm({ question: toAdminString(item.question), answer: toAdminString(item.answer), sort_order: item.sort_order })
+    setForm({ sort_order: item.sort_order })
+    setQuestion(toAdminBilingual(item.question))
+    setAnswer(toAdminBilingual(item.answer))
     setShowForm(true)
   }
 
@@ -113,25 +120,8 @@ export default function FAQAdminPage() {
           onSubmit={handleSubmit}
           className="bg-canvas border border-hairline rounded-[18px] p-6 mb-6 max-w-lg space-y-4"
         >
-          <div>
-            <label htmlFor="f-question" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">Question</label>
-            <input
-              id="f-question"
-              value={form.question}
-              onChange={(e) => setForm({ ...form, question: e.target.value })}
-              className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors" required
-            />
-          </div>
-          <div>
-            <label htmlFor="f-answer" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">Answer</label>
-            <textarea
-              id="f-answer"
-              value={form.answer}
-              onChange={(e) => setForm({ ...form, answer: e.target.value })}
-              rows={4}
-              className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors" required
-            />
-          </div>
+          <TranslatableInput label="Question" id="f-question" value={question} onChange={setQuestion} />
+          <TranslatableInput label="Answer" id="f-answer" value={answer} onChange={setAnswer} multiline rows={4} />
           <div>
             <label htmlFor="f-sort_order" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">Order</label>
             <input

@@ -6,7 +6,8 @@ import type { Testimonial } from '@/types'
 import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonTable } from '@/components/admin/ui/Skeleton'
-import { toAdminString } from '@/lib/admin-localize'
+import { toAdminString, toAdminBilingual, type BilingualValue } from '@/lib/admin-localize'
+import TranslatableInput from '@/components/admin/ui/TranslatableInput'
 
 /**
  * Quotes shown in the "What collaborators say" section.
@@ -18,7 +19,9 @@ export default function TestimonialsAdminPage() {
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState<Testimonial | null>(null)
   const [showForm, setShowForm] = useState(false)
-  const [form, setForm] = useState({ quote: '', author_name: '', author_title: '', initials: '', sort_order: 0 })
+  const [form, setForm] = useState({ author_name: '', initials: '', sort_order: 0 })
+  const [quote, setQuote] = useState<BilingualValue>({ id: '', en: '' })
+  const [authorTitle, setAuthorTitle] = useState<BilingualValue>({ id: '', en: '' })
 
   const load = useCallback(() => {
     return api.get('/testimonials').then((res) => setItems(res.data.data ?? []))
@@ -29,7 +32,9 @@ export default function TestimonialsAdminPage() {
   }, [load])
 
   function resetForm() {
-    setForm({ quote: '', author_name: '', author_title: '', initials: '', sort_order: 0 })
+    setForm({ author_name: '', initials: '', sort_order: 0 })
+    setQuote({ id: '', en: '' })
+    setAuthorTitle({ id: '', en: '' })
     setEditing(null)
     setShowForm(false)
   }
@@ -37,9 +42,9 @@ export default function TestimonialsAdminPage() {
   const { run: submit, isPending: isSaving } = useAsyncAction(
     async () => {
       if (editing) {
-        await api.put(`/testimonials/${editing.id}`, form)
+        await api.put(`/testimonials/${editing.id}`, { ...form, quote, author_title: authorTitle })
       } else {
-        await api.post('/testimonials', form)
+        await api.post('/testimonials', { ...form, quote, author_title: authorTitle })
       }
       resetForm()
       await load()
@@ -58,7 +63,9 @@ export default function TestimonialsAdminPage() {
 
   function handleEdit(item: Testimonial) {
     setEditing(item)
-    setForm({ quote: toAdminString(item.quote), author_name: item.author_name, author_title: toAdminString(item.author_title), initials: item.initials ?? '', sort_order: item.sort_order })
+    setForm({ author_name: item.author_name, initials: item.initials ?? '', sort_order: item.sort_order })
+    setQuote(toAdminBilingual(item.quote))
+    setAuthorTitle(toAdminBilingual(item.author_title))
     setShowForm(true)
   }
 
@@ -113,16 +120,7 @@ export default function TestimonialsAdminPage() {
           onSubmit={handleSubmit}
           className="bg-canvas border border-hairline rounded-[18px] p-6 mb-6 max-w-lg space-y-4"
         >
-          <div>
-            <label htmlFor="f-quote" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">Quote</label>
-            <textarea
-              id="f-quote"
-              value={form.quote}
-              onChange={(e) => setForm({ ...form, quote: e.target.value })}
-              rows={4}
-              className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors" required
-            />
-          </div>
+          <TranslatableInput label="Quote" id="f-quote" value={quote} onChange={setQuote} multiline rows={4} />
           <div>
             <label htmlFor="f-author_name" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">Author name</label>
             <input
@@ -132,16 +130,7 @@ export default function TestimonialsAdminPage() {
               className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors" required
             />
           </div>
-          <div>
-            <label htmlFor="f-author_title" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">Author role</label>
-            <input
-              id="f-author_title"
-              value={form.author_title}
-              onChange={(e) => setForm({ ...form, author_title: e.target.value })}
-              placeholder="e.g. CTO, PropTech Startup"
-              className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
-            />
-          </div>
+          <TranslatableInput label="Author role" id="f-author_title" value={authorTitle} onChange={setAuthorTitle} placeholder="e.g. CTO, PropTech Startup" />
           <div>
             <label htmlFor="f-initials" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">Initials</label>
             <input

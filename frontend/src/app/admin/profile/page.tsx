@@ -10,7 +10,8 @@ import Button from '@/components/admin/ui/Button'
 import ProgressBar from '@/components/admin/ui/ProgressBar'
 import { SkeletonForm } from '@/components/admin/ui/Skeleton'
 
-import { toAdminString } from '@/lib/admin-localize'
+import { toAdminString, toAdminBilingual, type BilingualValue } from '@/lib/admin-localize'
+import TranslatableInput from '@/components/admin/ui/TranslatableInput'
 
 const MediaPicker = dynamic(() => import('@/components/admin/MediaPicker'), { ssr: false })
 
@@ -20,16 +21,16 @@ export default function ProfilePage() {
   const [loadError, setLoadError] = useState(false)
   const [form, setForm] = useState({
     name: '',
-    title: '',
-    description: '',
-    about_lead: '',
-    about_body: '',
     phone: '',
     email: '',
     location: '',
     github: '',
     linkedin: '',
   })
+  const [title, setTitle] = useState<BilingualValue>({ id: '', en: '' })
+  const [description, setDescription] = useState<BilingualValue>({ id: '', en: '' })
+  const [aboutLead, setAboutLead] = useState<BilingualValue>({ id: '', en: '' })
+  const [aboutBody, setAboutBody] = useState<BilingualValue>({ id: '', en: '' })
   const [isAvailable, setIsAvailable] = useState(true)
   const [photoUrl, setPhotoUrl] = useState<string | null>(null)
   const [photoMediaId, setPhotoMediaId] = useState<number | null>(null)
@@ -51,16 +52,16 @@ export default function ProfilePage() {
           setProfile(p)
           setForm({
             name: p.name || '',
-            title: toAdminString(p.title),
-            description: toAdminString(p.description),
-            about_lead: toAdminString(p.about_lead),
-            about_body: toAdminString(p.about_body),
             phone: p.phone || '',
             email: p.email || '',
             location: p.location || '',
             github: p.github || '',
             linkedin: p.linkedin || '',
           })
+          setTitle(toAdminBilingual(p.title))
+          setDescription(toAdminBilingual(p.description))
+          setAboutLead(toAdminBilingual(p.about_lead))
+          setAboutBody(toAdminBilingual(p.about_body))
           setIsAvailable(p.is_available ?? true)
           setPhotoUrl(p.photo || null)
           setPhotoMediaId(p.photo_media_id ?? null)
@@ -95,6 +96,10 @@ export default function ProfilePage() {
       // re-resolved the URL from it, silently restoring the photo the admin just removed.
       await api.put(`/profile/${profile.id}`, {
         ...form,
+        title,
+        description,
+        about_lead: aboutLead,
+        about_body: aboutBody,
         is_available: isAvailable,
         cv: cvUrl,
         photo: photoUrl,
@@ -300,14 +305,11 @@ export default function ProfilePage() {
             />
           </div>
           <div>
-            <label className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">
-              Title
-            </label>
-            <input
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
+            <TranslatableInput
+              label="Title"
+              value={title}
+              onChange={setTitle}
+              placeholder="e.g. Full Stack Developer"
             />
           </div>
           <div>
@@ -371,53 +373,35 @@ export default function ProfilePage() {
             />
           </div>
         </div>
-        <div>
-          <label className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">
-            Description
-          </label>
-          <textarea
-            name="description"
-            value={form.description}
-            onChange={handleChange}
-            rows={5}
-            className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
-          />
-          <div className="text-sm text-muted mt-1">Shown as the hero intro and the /about bio.</div>
-        </div>
+        <TranslatableInput
+          label="Description"
+          value={description}
+          onChange={setDescription}
+          multiline
+          rows={5}
+          hint="Shown as the hero intro and the /about bio."
+        />
 
         <fieldset className="border-t border-hairline pt-4 space-y-4">
           <legend className="text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink">
             About section (homepage)
           </legend>
-          <div>
-            <label htmlFor="about-lead" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">
-              Lead line
-            </label>
-            <input
-              id="about-lead"
-              name="about_lead"
-              value={form.about_lead}
-              onChange={handleChange}
-              placeholder="One emphasised sentence that opens the About section"
-              className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
-            />
-          </div>
-          <div>
-            <label htmlFor="about-body" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">
-              Body
-            </label>
-            <textarea
-              id="about-body"
-              name="about_body"
-              value={form.about_body}
-              onChange={handleChange}
-              rows={8}
-              className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
-            />
-            <div className="text-sm text-muted mt-1">
-              Separate paragraphs with a blank line.
-            </div>
-          </div>
+          <TranslatableInput
+            label="Lead line"
+            id="about-lead"
+            value={aboutLead}
+            onChange={setAboutLead}
+            placeholder="One emphasised sentence that opens the About section"
+          />
+          <TranslatableInput
+            label="Body"
+            id="about-body"
+            value={aboutBody}
+            onChange={setAboutBody}
+            multiline
+            rows={8}
+            hint="Separate paragraphs with a blank line."
+          />
         </fieldset>
         <label className="flex items-center gap-3 cursor-pointer select-none">
           <input

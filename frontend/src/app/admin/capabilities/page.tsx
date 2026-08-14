@@ -7,7 +7,8 @@ import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonTable } from '@/components/admin/ui/Skeleton'
 import { CAPABILITY_ICONS } from '@/lib/marketing/mappers'
-import { toAdminString } from '@/lib/admin-localize'
+import { toAdminString, toAdminBilingual, type BilingualValue } from '@/lib/admin-localize'
+import TranslatableInput from '@/components/admin/ui/TranslatableInput'
 
 /**
  * The capability cards in the "What I do" section.
@@ -21,7 +22,9 @@ export default function WhatIDoAdminPage() {
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState<Capability | null>(null)
   const [showForm, setShowForm] = useState(false)
-  const [form, setForm] = useState({ title: '', description: '', icon: 'sparkles', sort_order: 0 })
+  const [form, setForm] = useState({ icon: 'sparkles', sort_order: 0 })
+  const [title, setTitle] = useState<BilingualValue>({ id: '', en: '' })
+  const [description, setDescription] = useState<BilingualValue>({ id: '', en: '' })
 
   const load = useCallback(() => {
     return api.get('/capabilities').then((res) => setItems(res.data.data ?? []))
@@ -32,7 +35,9 @@ export default function WhatIDoAdminPage() {
   }, [load])
 
   function resetForm() {
-    setForm({ title: '', description: '', icon: 'sparkles', sort_order: 0 })
+    setForm({ icon: 'sparkles', sort_order: 0 })
+    setTitle({ id: '', en: '' })
+    setDescription({ id: '', en: '' })
     setEditing(null)
     setShowForm(false)
   }
@@ -40,9 +45,9 @@ export default function WhatIDoAdminPage() {
   const { run: submit, isPending: isSaving } = useAsyncAction(
     async () => {
       if (editing) {
-        await api.put(`/capabilities/${editing.id}`, form)
+        await api.put(`/capabilities/${editing.id}`, { ...form, title, description })
       } else {
-        await api.post('/capabilities', form)
+        await api.post('/capabilities', { ...form, title, description })
       }
       resetForm()
       await load()
@@ -61,7 +66,9 @@ export default function WhatIDoAdminPage() {
 
   function handleEdit(item: Capability) {
     setEditing(item)
-    setForm({ title: toAdminString(item.title), description: toAdminString(item.description), icon: item.icon ?? 'sparkles', sort_order: item.sort_order })
+    setForm({ icon: item.icon ?? 'sparkles', sort_order: item.sort_order })
+    setTitle(toAdminBilingual(item.title))
+    setDescription(toAdminBilingual(item.description))
     setShowForm(true)
   }
 
@@ -116,26 +123,8 @@ export default function WhatIDoAdminPage() {
           onSubmit={handleSubmit}
           className="bg-canvas border border-hairline rounded-[18px] p-6 mb-6 max-w-lg space-y-4"
         >
-          <div>
-            <label htmlFor="f-title" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">Title</label>
-            <input
-              id="f-title"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-              placeholder="e.g. Backend & APIs"
-              className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors" required
-            />
-          </div>
-          <div>
-            <label htmlFor="f-description" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">Description</label>
-            <textarea
-              id="f-description"
-              value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
-              rows={4}
-              className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors"
-            />
-          </div>
+          <TranslatableInput label="Title" id="f-title" value={title} onChange={setTitle} placeholder="e.g. Backend & APIs" />
+          <TranslatableInput label="Description" id="f-description" value={description} onChange={setDescription} multiline rows={4} />
           <div>
             <label htmlFor="f-icon" className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">Icon</label>
             <select

@@ -6,15 +6,14 @@ import type { Certificate } from '@/types'
 import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonList } from '@/components/admin/ui/Skeleton'
-import { toAdminString } from '@/lib/admin-localize'
+import { toAdminString, toAdminBilingual, type BilingualValue } from '@/lib/admin-localize'
+import TranslatableInput from '@/components/admin/ui/TranslatableInput'
 
 const fields = [
-  { name: 'title', label: 'Title', required: true },
   { name: 'issuer', label: 'Issuer', required: true },
   { name: 'issued_date', label: 'Issued Date', type: 'date' as const, required: true },
   { name: 'expiry_date', label: 'Expiry Date', type: 'date' as const },
   { name: 'credential_url', label: 'Credential URL', type: 'url' as const },
-  { name: 'description', label: 'Description', type: 'textarea' as const },
 ]
 
 export default function CertificatesPage() {
@@ -23,8 +22,10 @@ export default function CertificatesPage() {
   const [editing, setEditing] = useState<Certificate | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({
-    title: '', issuer: '', issued_date: '', expiry_date: '', credential_url: '', description: '',
+    issuer: '', issued_date: '', expiry_date: '', credential_url: '',
   })
+  const [title, setTitle] = useState<BilingualValue>({ id: '', en: '' })
+  const [description, setDescription] = useState<BilingualValue>({ id: '', en: '' })
 
   const load = useCallback(() => {
     return api.get('/certificates').then((res) => setItems(res.data.data ?? []))
@@ -32,13 +33,15 @@ export default function CertificatesPage() {
   useEffect(() => { load().finally(() => setLoading(false)) }, [load])
 
   function resetForm() {
-    setForm({ title: '', issuer: '', issued_date: '', expiry_date: '', credential_url: '', description: '' })
+    setForm({ issuer: '', issued_date: '', expiry_date: '', credential_url: '' })
+    setTitle({ id: '', en: '' })
+    setDescription({ id: '', en: '' })
     setEditing(null); setShowForm(false)
   }
 
   const { run: submit, isPending: isSaving } = useAsyncAction(
     async () => {
-      const payload = { ...form, expiry_date: form.expiry_date || null }
+      const payload = { ...form, title, description, expiry_date: form.expiry_date || null }
       if (editing) {
         await api.put(`/certificates/${editing.id}`, payload)
       } else {
@@ -58,12 +61,13 @@ export default function CertificatesPage() {
   function handleEdit(item: Certificate) {
     setEditing(item)
     setForm({
-      title: toAdminString(item.title), issuer: item.issuer,
+      issuer: item.issuer,
       issued_date: item.issued_date?.split('T')[0] || '',
       expiry_date: item.expiry_date?.split('T')[0] || '',
       credential_url: item.credential_url || '',
-      description: toAdminString(item.description),
     })
+    setTitle(toAdminBilingual(item.title))
+    setDescription(toAdminBilingual(item.description))
     setShowForm(true)
   }
 
@@ -104,16 +108,14 @@ export default function CertificatesPage() {
 
       {showForm && (
         <form onSubmit={handleSubmit} className="card-stitch p-6 mb-6 max-w-xl space-y-4">
+          <TranslatableInput label="Title" value={title} onChange={setTitle} />
           {fields.map((f) => (
             <div key={f.name}>
               <label className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">{f.label}{f.required && <span className="text-ink-muted-48 ml-1">*</span>}</label>
-              {f.type === 'textarea' ? (
-                <textarea name={f.name} value={(form as Record<string, string>)[f.name]} onChange={(e) => setForm({ ...form, [e.target.name]: e.target.value })} rows={3} className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors" />
-              ) : (
-                <input type={f.type || 'text'} name={f.name} value={(form as Record<string, string>)[f.name]} onChange={(e) => setForm({ ...form, [e.target.name]: e.target.value })} className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors" required={f.required} />
-              )}
+              <input type={f.type || 'text'} name={f.name} value={(form as Record<string, string>)[f.name]} onChange={(e) => setForm({ ...form, [e.target.name]: e.target.value })} className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors" required={f.required} />
             </div>
           ))}
+          <TranslatableInput label="Description" value={description} onChange={setDescription} multiline rows={3} />
           <div className="flex gap-2">
             <Button
               type="submit"

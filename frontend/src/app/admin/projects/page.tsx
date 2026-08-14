@@ -8,11 +8,10 @@ import TagInput from '@/components/admin/TagInput'
 import { useAsyncAction } from '@/hooks/useAsyncAction'
 import Button from '@/components/admin/ui/Button'
 import { SkeletonList } from '@/components/admin/ui/Skeleton'
-import { toAdminString } from '@/lib/admin-localize'
+import { toAdminString, toAdminBilingual, type BilingualValue } from '@/lib/admin-localize'
+import TranslatableInput from '@/components/admin/ui/TranslatableInput'
 
 const fieldsBeforeTech = [
-  { name: 'title', label: 'Title', required: true },
-  { name: 'description', label: 'Description', type: 'textarea' as const },
   { name: 'github_url', label: 'GitHub URL', type: 'url' as const },
   { name: 'demo_url', label: 'Demo URL', type: 'url' as const },
 ]
@@ -34,8 +33,10 @@ export default function ProjectsPage() {
   const [editing, setEditing] = useState<Project | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({
-    title: '', description: '', github_url: '', demo_url: '', sort_order: '0',
+    github_url: '', demo_url: '', sort_order: '0',
   })
+  const [title, setTitle] = useState<BilingualValue>({ id: '', en: '' })
+  const [description, setDescription] = useState<BilingualValue>({ id: '', en: '' })
   const [techTags, setTechTags] = useState<string[]>([])
   const [isFeatured, setIsFeatured] = useState(false)
 
@@ -58,7 +59,9 @@ export default function ProjectsPage() {
   }, [items])
 
   function resetForm() {
-    setForm({ title: '', description: '', github_url: '', demo_url: '', sort_order: '0' })
+    setForm({ github_url: '', demo_url: '', sort_order: '0' })
+    setTitle({ id: '', en: '' })
+    setDescription({ id: '', en: '' })
     setTechTags([])
     setIsFeatured(false)
     setEditing(null); setShowForm(false)
@@ -68,6 +71,8 @@ export default function ProjectsPage() {
     async () => {
       const payload = {
         ...form,
+        title,
+        description,
         technology: techTags.join(', '),
         sort_order: Number(form.sort_order) || 0,
         is_featured: isFeatured,
@@ -91,12 +96,12 @@ export default function ProjectsPage() {
   function handleEdit(item: Project) {
     setEditing(item)
     setForm({
-      title: toAdminString(item.title),
-      description: toAdminString(item.description),
       github_url: item.github_url || '',
       demo_url: item.demo_url || '',
       sort_order: String(item.sort_order ?? 0),
     })
+    setTitle(toAdminBilingual(item.title))
+    setDescription(toAdminBilingual(item.description))
     setTechTags(parseTechnology(item.technology || ''))
     setIsFeatured(item.is_featured ?? false)
     setShowForm(true)
@@ -139,17 +144,14 @@ export default function ProjectsPage() {
 
       {showForm && (
         <form onSubmit={handleSubmit} className="card-stitch p-6 mb-6 max-w-xl space-y-4">
+          <TranslatableInput label="Title" value={title} onChange={setTitle} />
+          <TranslatableInput label="Description" value={description} onChange={setDescription} multiline rows={5} />
           {fieldsBeforeTech.map((f) => (
             <div key={f.name}>
-              <label className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">{f.label}{f.required && <span className="text-ink-muted-48 ml-1">*</span>}</label>
-              {f.type === 'textarea' ? (
-                <textarea name={f.name} value={(form as Record<string, string>)[f.name]} onChange={(e) => setForm({ ...form, [e.target.name]: e.target.value })} rows={5} className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors" />
-              ) : (
-                <input type={f.type || 'text'} name={f.name} value={(form as Record<string, string>)[f.name]} onChange={(e) => setForm({ ...form, [e.target.name]: e.target.value })} className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors" required={f.required} />
-              )}
+              <label className="block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-ink mb-1.5">{f.label}</label>
+              <input type={f.type || 'text'} name={f.name} value={(form as Record<string, string>)[f.name]} onChange={(e) => setForm({ ...form, [e.target.name]: e.target.value })} className="w-full bg-canvas border border-hairline text-[17px] leading-[1.47] tracking-[-0.374px] text-ink px-4 py-2.5 rounded-[11px] placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-colors" />
             </div>
           ))}
-
           <TagInput
             id="project-technology"
             label="Technology"
