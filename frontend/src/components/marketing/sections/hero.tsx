@@ -57,7 +57,7 @@ export function Hero(props: HeroData = heroDefaults) {
 
             <motion.h1
               {...item}
-              className="mt-[22px] text-[clamp(2.25rem,5.2vw,3.85rem)] font-extrabold leading-[1.08] tracking-[-0.035em] text-balance"
+              className="mt-[22px] text-[clamp(1.85rem,5.2vw,3.85rem)] font-extrabold leading-[1.08] tracking-[-0.035em] text-balance"
             >
               {t.hero.headingPre}
               <span className="mk-grad-text">{t.hero.headingAccent}</span>{t.hero.headingPost}
@@ -99,7 +99,7 @@ export function Hero(props: HeroData = heroDefaults) {
 
           {/* Photo + code strip card */}
           <motion.div
-            className="relative mx-auto w-full max-w-[420px] lg:-mt-8 lg:-translate-y-2 lg:pt-2"
+            className="relative mx-auto w-full max-w-[340px] md:max-w-[420px] lg:-mt-8 lg:-translate-y-2 lg:pt-2"
             initial={reduce ? undefined : { opacity: 0, y: 24 }}
             animate={reduce ? undefined : { opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
@@ -125,7 +125,7 @@ export function Hero(props: HeroData = heroDefaults) {
                 <span className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-white/15 bg-gradient-to-b from-white/[0.08] to-transparent" />
               </div>
 
-              <div className="border-t border-mk-hairline p-[22px]">
+              <div className="border-t border-mk-hairline p-4 md:p-[22px]">
                 <div className="mb-4 flex items-center gap-3">
                   <span className="flex gap-1.5">
                     <span className="size-[10px] rounded-full bg-[#FF5F57]" />
@@ -134,7 +134,7 @@ export function Hero(props: HeroData = heroDefaults) {
                   </span>
                   <span className="font-mk-mono text-[0.72rem] text-mk-faint">I Kadek Agga Sugitha.ts</span>
                 </div>
-                <pre className="overflow-x-auto font-mk-mono text-[0.8rem] leading-[1.85] text-mk-muted">
+                <pre className="overflow-x-auto font-mk-mono text-[0.68rem] leading-[1.75] md:text-[0.8rem] md:leading-[1.85] text-mk-muted">
                   <code>
                     <span className="text-mk-brand-soft">const</span> programmer = {'{'}
                     {'\n'}  role: <span className="text-mk-cyan">&quot;{localize(role)}&quot;</span>,

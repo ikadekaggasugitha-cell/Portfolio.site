@@ -91,7 +91,7 @@ export function Navbar() {
         scrolled ? 'border-mk-hairline' : 'border-transparent',
       )}
     >
-      <nav className="mx-auto flex h-[68px] max-w-[1200px] items-center justify-between gap-5 px-[clamp(20px,5vw,40px)]">
+      <nav className="mx-auto flex h-[60px] md:h-[68px] max-w-[1200px] items-center justify-between gap-4 md:gap-5 px-[clamp(16px,5vw,40px)]">
         <Logo textClassName="text-[1.15rem] md:text-[1.3rem]" />
 
         {/* Desktop links + sliding indicator */}
@@ -159,7 +159,7 @@ export function Navbar() {
                   href={item.href}
                   aria-current={activeHref === item.href ? 'page' : undefined}
                   className={cn(
-                    'border-b border-mk-hairline py-3.5 text-xl font-semibold',
+                    'border-b border-mk-hairline py-3.5 text-lg md:text-xl font-semibold',
                     activeHref === item.href ? 'text-mk-accent' : 'text-mk-ink',
                   )}
                 >

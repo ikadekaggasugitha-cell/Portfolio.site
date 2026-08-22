@@ -43,7 +43,7 @@ export function Skills({
         {groups.map((group, i) => {
           return (
             <Reveal key={group.title} delay={i * 0.08}>
-              <div className="group h-full rounded-mk border border-mk-hairline bg-mk-surface p-7 shadow-mk-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-mk-brand-soft/60 hover:shadow-mk-md">
+              <div className="group h-full rounded-mk border border-mk-hairline bg-mk-surface p-5 md:p-7 shadow-mk-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-mk-brand-soft/60 hover:shadow-mk-md">
                 <div className="mb-5 flex items-center gap-3">
                   <span className="grid size-[42px] place-items-center rounded-xl bg-mk-brand/10 text-mk-accent">
                     <MarketingIcon icon={group.icon} className="size-5" />

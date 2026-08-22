@@ -43,7 +43,7 @@ function Channel({
     </>
   )
   const className =
-    'flex items-center gap-3.5 rounded-mk-sm border border-mk-hairline bg-mk-surface px-5 py-4 shadow-mk-sm transition-[transform,border-color] duration-200 hover:-translate-y-0.5 hover:border-mk-brand-soft'
+    'flex items-center gap-3.5 rounded-mk-sm border border-mk-hairline bg-mk-surface px-4 py-3.5 md:px-5 md:py-4 shadow-mk-sm transition-[transform,border-color] duration-200 hover:-translate-y-0.5 hover:border-mk-brand-soft'
   return href ? (
     <a href={href} className={className}>{inner}</a>
   ) : (

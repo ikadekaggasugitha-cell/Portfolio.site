@@ -46,7 +46,7 @@ export function Footer({ githubUrl = site.githubUrl, linkedinUrl = site.linkedin
   return (
     <footer className="border-t border-mk-hairline bg-mk-surface pb-8 pt-[clamp(52px,7vw,84px)]">
       <Container>
-        <div className="grid gap-10 md:grid-cols-[2fr_1fr_1fr]">
+        <div className="grid gap-8 md:gap-10 md:grid-cols-[2fr_1fr_1fr]">
           <div>
             <Logo href="#top" textClassName="text-2xl md:text-3xl" />
             <p className="mt-4 max-w-[40ch] text-[0.96rem] text-mk-muted">

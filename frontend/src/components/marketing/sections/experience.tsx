@@ -36,13 +36,13 @@ export function Experience({
       />
 
       <div className="relative mx-auto max-w-[760px]">
-        <span aria-hidden className="absolute bottom-1.5 left-4 top-1.5 w-px bg-mk-hairline" />
+        <span aria-hidden className="absolute bottom-1.5 left-3 md:left-4 top-1.5 w-px bg-mk-hairline" />
         {entries.map((entry, i) => (
           <Reveal key={i} delay={i * 0.08}>
-            <div className="relative pb-10 pl-[52px] last:pb-0">
+            <div className="relative pb-10 pl-10 md:pl-[52px] last:pb-0">
               <span
                 className={cn(
-                  'absolute left-[6px] top-1 grid size-5 place-items-center rounded-full border-2 bg-mk-surface',
+                  'absolute left-[2px] md:left-[6px] top-1 grid size-5 place-items-center rounded-full border-2 bg-mk-surface',
                   entry.current
                     ? 'border-mk-amber shadow-[0_0_0_4px_rgba(245,158,11,0.16)]'
                     : 'border-mk-brand',

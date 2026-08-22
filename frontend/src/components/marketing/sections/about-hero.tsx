@@ -87,10 +87,10 @@ export function AboutHero(props: AboutHeroData = aboutHeroDefaults) {
           </div>
 
           {/* Portrait / monogram */}
-          <Reveal delay={0.15} className="mx-auto w-full max-w-[360px]">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[24px] border border-mk-hairline bg-mk-subtle shadow-mk-lg">
+          <Reveal delay={0.15} className="mx-auto w-full max-w-[280px] md:max-w-[360px]">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[16px] md:rounded-[24px] border border-mk-hairline bg-mk-subtle shadow-mk-lg">
               {photo ? (
-                <Image src={photo} alt={name} fill sizes="360px" className="object-cover" priority />
+                <Image src={photo} alt={name} fill sizes="(max-width: 640px) 280px, 360px" className="object-cover object-top" priority />
               ) : (
                 <div className="grid size-full place-items-center">
                   <span className="font-mk-mono text-[clamp(3rem,10vw,5rem)] font-bold text-mk-accent/80">
@@ -98,7 +98,7 @@ export function AboutHero(props: AboutHeroData = aboutHeroDefaults) {
                   </span>
                 </div>
               )}
-              <span className="pointer-events-none absolute inset-0 rounded-[24px] ring-1 ring-inset ring-white/10" />
+              <span className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-white/15 bg-gradient-to-b from-white/[0.08] to-transparent" />
             </div>
             {cvUrl && cvUrl !== '#' && (
               <a

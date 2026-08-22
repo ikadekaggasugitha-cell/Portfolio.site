@@ -91,7 +91,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-[14px] bg-mk-brand px-6 py-3.5 font-semibold text-mk-on-brand shadow-mk-brand transition-[background-color,opacity] hover:bg-mk-brand-strong disabled:opacity-60"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-[14px] bg-mk-brand px-6 py-3 md:py-3.5 font-semibold text-mk-on-brand shadow-mk-brand transition-[background-color,opacity] hover:bg-mk-brand-strong disabled:opacity-60"
       >
         {submitting ? t.contactForm.sending : t.contactForm.send}
         {!submitting && <Send className="size-[17px]" aria-hidden />}

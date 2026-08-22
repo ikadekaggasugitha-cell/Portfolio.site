@@ -30,7 +30,7 @@ export function WhatIDo({ capabilities = capabilityDefaults }: { capabilities?: 
       <div className="grid gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
         {capabilities.map((capability, i) => (
           <Reveal key={i} delay={i * 0.08}>
-            <div className="h-full rounded-mk border border-mk-hairline bg-mk-surface p-6 shadow-mk-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-mk-brand-soft/60 hover:shadow-mk-md">
+            <div className="h-full rounded-mk border border-mk-hairline bg-mk-surface p-4 md:p-6 shadow-mk-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-mk-brand-soft/60 hover:shadow-mk-md">
               <span className="grid size-[44px] place-items-center rounded-xl bg-mk-brand/10 text-mk-accent">
                 <MarketingIcon icon={capability.icon} className="size-5" />
               </span>

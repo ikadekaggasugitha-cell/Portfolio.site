@@ -31,7 +31,7 @@ export function Certificates({
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {entries.map((cert, i) => (
           <Reveal key={i} delay={i * 0.06}>
-            <div className="flex h-full flex-col rounded-mk border border-mk-hairline bg-mk-surface p-7 shadow-mk-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-mk-brand-soft/60 hover:shadow-mk-md">
+            <div className="flex h-full flex-col rounded-mk border border-mk-hairline bg-mk-surface p-5 md:p-7 shadow-mk-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-mk-brand-soft/60 hover:shadow-mk-md">
               <div className="flex items-start justify-between gap-3">
                 <span className="grid size-[42px] place-items-center rounded-xl bg-mk-brand/10 text-mk-accent">
                   <Award className="size-5" aria-hidden />

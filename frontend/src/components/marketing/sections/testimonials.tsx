@@ -23,10 +23,10 @@ export function Testimonials({
         className="mb-[clamp(40px,6vw,68px)]"
       />
 
-      <div className="grid gap-5 md:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {testimonials.map((item, i) => (
           <Reveal key={`${item.name}-${i}`} delay={i * 0.08}>
-            <figure className="flex h-full flex-col rounded-mk border border-mk-hairline bg-mk-surface p-7 shadow-mk-sm transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-mk-md">
+            <figure className="flex h-full flex-col rounded-mk border border-mk-hairline bg-mk-surface p-5 md:p-7 shadow-mk-sm transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-mk-md">
               <div aria-hidden className="font-mk-mono text-[2.4rem] leading-[0.4] text-mk-accent opacity-60">
                 &ldquo;
               </div>

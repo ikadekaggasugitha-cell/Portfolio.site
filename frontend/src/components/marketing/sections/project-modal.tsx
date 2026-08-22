@@ -61,7 +61,7 @@ export function ProjectModal({
     <AnimatePresence>
       {project && (
         <motion.div
-          className="fixed inset-0 z-[120] grid place-items-center bg-[rgba(6,9,18,0.55)] p-5 backdrop-blur-md"
+          className="fixed inset-0 z-[120] grid place-items-center bg-[rgba(6,9,18,0.55)] p-3 sm:p-5 backdrop-blur-md"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -75,7 +75,7 @@ export function ProjectModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby="pm-title"
-            className="w-[min(620px,100%)] max-h-[88vh] overflow-auto rounded-[22px] border border-mk-hairline bg-mk-surface shadow-mk-lg"
+            className="w-[min(620px,100%)] max-h-[88vh] overflow-auto rounded-[16px] sm:rounded-[22px] border border-mk-hairline bg-mk-surface shadow-mk-lg"
             initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: 10 }}
             animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 8 }}
@@ -104,7 +104,7 @@ export function ProjectModal({
               </button>
             </div>
 
-            <div className="p-7">
+            <div className="p-5 md:p-7">
               <span className="font-mk-mono text-[0.72rem] uppercase tracking-[0.18em] text-mk-accent">
                 Case study
               </span>

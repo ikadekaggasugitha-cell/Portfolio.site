@@ -33,7 +33,7 @@ export function Education({
           const description = localize(edu.description)
           return (
             <Reveal key={`${edu.institution}-${i}`} delay={i * 0.08}>
-              <div className="h-full rounded-mk border border-mk-hairline bg-mk-surface p-7 shadow-mk-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-mk-brand-soft/60 hover:shadow-mk-md">
+              <div className="h-full rounded-mk border border-mk-hairline bg-mk-surface p-5 md:p-7 shadow-mk-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-mk-brand-soft/60 hover:shadow-mk-md">
                 {edu.period && (
                   <span className="font-mk-mono text-[0.74rem] uppercase tracking-[0.08em] text-mk-accent">
                     {edu.period}
