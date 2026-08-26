@@ -1,8 +1,7 @@
 'use client'
 
 import { Mail } from 'lucide-react'
-import { navItems, site } from '@/lib/marketing/content'
-import { localeHref } from '@/lib/marketing/i18n'
+import { site } from '@/lib/marketing/content'
 import { useTranslation } from '../theme/language-provider'
 import { Container } from '../primitives/container'
 import { GithubIcon, LinkedinIcon } from '../icons/brand-icons'
@@ -12,103 +11,53 @@ const social = 'grid size-[42px] place-items-center rounded-xl border border-mk-
 
 const isLive = (href: string | undefined) => Boolean(href && href !== '#')
 
-/** Map each nav href to the key used in translations.nav */
-const navLabelKey: Record<string, 'home' | 'about' | 'projects' | 'contact'> = {
-  '/': 'home',
-  '/about': 'about',
-  '/projects': 'projects',
-  '/contact': 'contact',
-}
-
+/**
+ * Single-band footer: brand + one-line description on the left, social icons
+ * on the right, copyright underneath. Route links live in the always-visible
+ * navbar and the CV lives in the hero, so the footer repeats neither.
+ */
 export interface FooterLinks {
   githubUrl?: string
   linkedinUrl?: string
   email?: string
-  cvUrl?: string
 }
 
 /** Falls back to the static `site` defaults when no live profile data is passed. */
-export function Footer({ githubUrl = site.githubUrl, linkedinUrl = site.linkedinUrl, email = site.email, cvUrl = site.cvUrl }: FooterLinks = {}) {
-  const { t, locale } = useTranslation()
+export function Footer({ githubUrl = site.githubUrl, linkedinUrl = site.linkedinUrl, email = site.email }: FooterLinks = {}) {
+  const { t } = useTranslation()
   const year = new Date().getFullYear()
 
-  const elsewhereLinks = [
-    isLive(githubUrl) && { label: 'GitHub', href: githubUrl! },
-    isLive(linkedinUrl) && { label: 'LinkedIn', href: linkedinUrl! },
-    { label: 'Email', href: `mailto:${email}` },
-    isLive(cvUrl) && { label: t.footer.downloadCv, href: cvUrl! },
-  ].filter((link): link is { label: string; href: string } => Boolean(link))
-
-  const translatedNavItems = navItems.map((item) => ({
-    label: navLabelKey[item.href] ? t.nav[navLabelKey[item.href]] : item.label,
-    href: localeHref(locale, item.href),
-  }))
-
   return (
-    <footer className="border-t border-mk-hairline bg-mk-surface pb-8 pt-[clamp(52px,7vw,84px)]">
+    <footer className="border-t border-mk-hairline bg-mk-surface pb-8 pt-[clamp(40px,5vw,64px)]">
       <Container>
-        <div className="grid gap-8 md:gap-10 md:grid-cols-[2fr_1fr_1fr]">
-          <div>
-            <Logo href="#top" textClassName="text-2xl md:text-3xl" />
-            <p className="mt-4 max-w-[40ch] text-[0.96rem] text-mk-muted">
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-10">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-5">
+            <Logo href="#top" textClassName="text-xl md:text-2xl" />
+            <p className="max-w-[46ch] text-[0.92rem] leading-relaxed text-mk-muted md:border-l md:border-mk-hairline md:pl-5">
               {t.footer.description}
             </p>
-            <div className="mt-5 flex gap-2.5">
-              {isLive(githubUrl) && (
-                <a href={githubUrl} aria-label="GitHub" className={social}>
-                  <GithubIcon className="size-[19px]" />
-                </a>
-              )}
-              {isLive(linkedinUrl) && (
-                <a href={linkedinUrl} aria-label="LinkedIn" className={social}>
-                  <LinkedinIcon className="size-[19px]" />
-                </a>
-              )}
-              <a href={`mailto:${email}`} aria-label="Email" className={social}>
-                <Mail className="size-[19px]" aria-hidden />
-              </a>
-            </div>
           </div>
-
-          <FooterCol
-            title={t.footer.navigate}
-            links={translatedNavItems}
-          />
-          <FooterCol title={t.footer.elsewhere} links={elsewhereLinks} />
+          <div className="flex gap-2.5">
+            {isLive(githubUrl) && (
+              <a href={githubUrl} aria-label="GitHub" className={social}>
+                <GithubIcon className="size-[19px]" />
+              </a>
+            )}
+            {isLive(linkedinUrl) && (
+              <a href={linkedinUrl} aria-label="LinkedIn" className={social}>
+                <LinkedinIcon className="size-[19px]" />
+              </a>
+            )}
+            <a href={`mailto:${email}`} aria-label="Email" className={social}>
+              <Mail className="size-[19px]" aria-hidden />
+            </a>
+          </div>
         </div>
 
-        <div className="mt-11 flex flex-wrap items-center justify-between gap-3 border-t border-mk-hairline pt-6 text-[0.85rem] text-mk-faint">
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-mk-hairline pt-6 text-[0.85rem] text-mk-faint">
           <p>© {year} {site.name}. {t.footer.allRightsReserved}</p>
         </div>
       </Container>
     </footer>
-  )
-}
-
-function FooterCol({
-  title,
-  links,
-}: {
-  title: string
-  links: { label: string; href: string }[]
-}) {
-  return (
-    <div>
-      <h3 className="mb-4 font-mk-mono text-[0.78rem] font-semibold uppercase tracking-[0.1em] text-mk-faint">
-        {title}
-      </h3>
-      <ul className="flex flex-col gap-1">
-        {links.map((link) => (
-          <li key={link.label}>
-            <a
-              href={link.href}
-              className="inline-block py-1 text-[0.95rem] text-mk-muted transition-colors hover:text-mk-accent"
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
   )
 }

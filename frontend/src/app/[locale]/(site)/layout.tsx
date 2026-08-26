@@ -13,7 +13,7 @@ import { isLocale } from '@/lib/marketing/i18n'
  * route group and does not appear in the path.
  *
  * Fetches the profile here (in addition to page.tsx / about's own fetch) so
- * the footer's social/CV links reflect live admin data too — Next.js
+ * the footer's social links reflect live admin data too — Next.js
  * memoizes identical fetch() calls within a single request, so this doesn't
  * add an extra network round trip.
  */
@@ -30,10 +30,10 @@ export default async function SiteLayout({
   // children, not the layout itself), so an outage would blow past it to the global
   // error page. The page body still throws, so nothing bad gets cached.
   const { data: profile } = await soften(getProfile(), null)
-  const { githubUrl, linkedinUrl, email, cvUrl } = mapHero(profile)
+  const { githubUrl, linkedinUrl, email } = mapHero(profile)
 
   return (
-    <MarketingShell locale={locale} footerLinks={{ githubUrl, linkedinUrl, email, cvUrl }}>
+    <MarketingShell locale={locale} footerLinks={{ githubUrl, linkedinUrl, email }}>
       {children}
     </MarketingShell>
   )

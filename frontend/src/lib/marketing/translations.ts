@@ -269,9 +269,6 @@ const en = {
   footer: {
     description:
       'Full Stack Developer building reliable software — web, backend and automation — from Jakarta, Indonesia.',
-    navigate: 'Navigate',
-    elsewhere: 'Elsewhere',
-    downloadCv: 'Download CV',
     allRightsReserved: 'All rights reserved.',
   },
 
@@ -638,9 +635,6 @@ const id = {
   footer: {
     description:
       'Full Stack Developer membangun perangkat lunak andal — web, backend, dan otomasi — dari Jakarta, Indonesia.',
-    navigate: 'Navigasi',
-    elsewhere: 'Lainnya',
-    downloadCv: 'Unduh CV',
     allRightsReserved: 'Hak cipta dilindungi.',
   },
 
