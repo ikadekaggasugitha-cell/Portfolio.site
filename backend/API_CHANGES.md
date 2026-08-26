@@ -81,3 +81,18 @@ Admin write endpoints (`POST/PUT`) now accept and validate the new fields:
   `ProjectService::paginateFiltered()` and the `ProjectRepositoryInterface`.
 - The paginated envelope is produced by `ApiResponse::paginated()` (new trait
   method); `success()` is unchanged for all other endpoints.
+
+## Media URL resolution (read-time)
+
+`Media::url` is now resolved **at read time** from the current media disk
+(`filesystems.media_disk`) via a `getUrlAttribute` accessor, instead of
+returning the absolute URL snapshotted at upload time. Response shapes are
+unchanged; only the value can differ:
+
+- Rows with a `path` always return `Storage::disk(media_disk)->url(path)` —
+  switching disks (e.g. `public` → `s3` for Vercel) repairs old rows on read.
+- Rows with only an external URL (no path) pass through untouched.
+
+Affects every response that exposes media URLs: `MediaResource.url`,
+`Profile.photo` (when backed by `photo_media_id`), and media attached to
+project images.
