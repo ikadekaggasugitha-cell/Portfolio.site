@@ -12,6 +12,7 @@ import { translations, type Locale, type Translations } from '@/lib/marketing/tr
 import { localize as localizeText } from '@/lib/marketing/localize'
 import { LOCALE_COOKIE, swapLocale } from '@/lib/marketing/i18n'
 import type { LocalizedText } from '@/types'
+import { captureLocaleScrollAnchor, useLocaleScrollRestore } from './use-locale-scroll-restore'
 
 /**
  * Locale controller for the V2 marketing system.
@@ -21,6 +22,10 @@ import type { LocalizedText } from '@/types'
  * navigating to the same route under the other prefix and remembering the
  * choice in a cookie the middleware reads on the next direct visit. Server
  * components re-render natively in the new language; no hydration flash.
+ *
+ * Navigation runs with `scroll: false` and, when the reader is inside a
+ * `<section id>`, re-docks that section after commit (see
+ * use-locale-scroll-restore) so toggling never yanks them back to the top.
  */
 
 interface LanguageContextValue {
@@ -45,10 +50,14 @@ export function LanguageProvider({
   const router = useRouter()
   const pathname = usePathname()
 
+  useLocaleScrollRestore(pathname)
+
   const setLocale = useCallback(
     (next: Locale) => {
       document.cookie = `${LOCALE_COOKIE}=${next};path=/;max-age=31536000;samesite=lax`
-      router.push(swapLocale(pathname, next))
+      const target = swapLocale(pathname, next)
+      captureLocaleScrollAnchor(target)
+      router.push(target, { scroll: false })
     },
     [router, pathname],
   )
