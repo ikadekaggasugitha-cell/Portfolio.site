@@ -2,6 +2,9 @@ import Image from 'next/image'
 import type { PageBlock } from '@/types'
 import { getProjects } from '@/lib/marketing/api.server'
 import { mapProjects } from '@/lib/marketing/mappers'
+import { localizeBlockData } from '@/lib/marketing/localize'
+import { translations, type Locale } from '@/lib/marketing/translations'
+import { localeHref } from '@/lib/marketing/i18n'
 import { Section } from '../primitives/section'
 import { Container } from '../primitives/container'
 import { SectionHeading } from '../primitives/section-heading'
@@ -14,9 +17,18 @@ import { HeroBackdrop } from './hero-backdrop'
  * Renders the block types the admin's Pages editor can produce
  * (see components/admin/PageEditor.tsx): hero, text, cta and recent-projects.
  *
- * Block `data` is free-form JSON from the editor, so every field is read defensively
- * and an unrecognised block type renders nothing rather than breaking the page.
+ * Block `data` may be locale-keyed ({ id: {...}, en: {...} }); the payload for
+ * the active locale is resolved up front (with fallback), so each block reads
+ * plain strings. An unrecognised block type renders nothing rather than
+ * breaking the page.
  */
+
+function resolveData(
+  data: Record<string, unknown> | undefined,
+  locale: Locale,
+): Record<string, unknown> {
+  return localizeBlockData(data as Parameters<typeof localizeBlockData>[0], locale)
+}
 
 const str = (data: Record<string, unknown> | undefined, key: string): string =>
   typeof data?.[key] === 'string' ? (data[key] as string).trim() : ''
@@ -28,7 +40,8 @@ const num = (data: Record<string, unknown> | undefined, key: string): number | n
   return null
 }
 
-function HeroBlock({ data }: { data?: Record<string, unknown> }) {
+function HeroBlock({ data: rawData, locale }: { data?: Record<string, unknown>; locale: Locale }) {
+  const data = resolveData(rawData, locale)
   const heading = str(data, 'heading')
   const subheading = str(data, 'subheading')
   const background = str(data, 'background_url')
@@ -80,8 +93,8 @@ function HeroBlock({ data }: { data?: Record<string, unknown> }) {
  * owner through an authenticated admin route, so it is trusted markup — the same trust
  * model as the page's own `content` field.
  */
-function TextBlock({ data }: { data?: Record<string, unknown> }) {
-  const content = str(data, 'content')
+function TextBlock({ data: rawData, locale }: { data?: Record<string, unknown>; locale: Locale }) {
+  const content = str(resolveData(rawData, locale), 'content')
   if (!content) return null
   return (
     <Section>
@@ -95,7 +108,8 @@ function TextBlock({ data }: { data?: Record<string, unknown> }) {
   )
 }
 
-function CtaBlock({ data }: { data?: Record<string, unknown> }) {
+function CtaBlock({ data: rawData, locale }: { data?: Record<string, unknown>; locale: Locale }) {
+  const data = resolveData(rawData, locale)
   const text = str(data, 'text')
   const url = str(data, 'url')
   if (!text || !url) return null
@@ -112,7 +126,14 @@ function CtaBlock({ data }: { data?: Record<string, unknown> }) {
   )
 }
 
-async function RecentProjectsBlock({ data }: { data?: Record<string, unknown> }) {
+async function RecentProjectsBlock({
+  data: rawData,
+  locale,
+}: {
+  data?: Record<string, unknown>
+  locale: Locale
+}) {
+  const data = resolveData(rawData, locale)
   const count = Math.min(Math.max(num(data, 'count') ?? 4, 1), 12)
   const filter = str(data, 'filter').toLowerCase()
 
@@ -129,18 +150,19 @@ async function RecentProjectsBlock({ data }: { data?: Record<string, unknown> })
   const projects = mapProjects(matching, count)
   if (!projects.length) return null
 
+  const t = translations[locale]
   return (
     <Section id="recent-projects" tone="subtle">
       <SectionHeading
-        eyebrow="Work"
-        title="Recent projects"
+        eyebrow={t.pageBlocks.recentEyebrow}
+        title={t.pageBlocks.recentTitle}
         align="center"
         className="mb-[clamp(40px,6vw,68px)]"
       />
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {projects.map((project, i) => (
           <Reveal key={project.id} delay={Math.min(i, 5) * 0.06}>
-            <ProjectCard project={project} href={`/projects/${project.id}`} />
+            <ProjectCard project={project} href={localeHref(locale, `/projects/${project.id}`)} />
           </Reveal>
         ))}
       </div>
@@ -148,16 +170,16 @@ async function RecentProjectsBlock({ data }: { data?: Record<string, unknown> })
   )
 }
 
-export function PageBlockRenderer({ block }: { block: PageBlock }) {
+export function PageBlockRenderer({ block, locale }: { block: PageBlock; locale: Locale }) {
   switch (block.type) {
     case 'hero':
-      return <HeroBlock data={block.data} />
+      return <HeroBlock data={block.data} locale={locale} />
     case 'text':
-      return <TextBlock data={block.data} />
+      return <TextBlock data={block.data} locale={locale} />
     case 'cta':
-      return <CtaBlock data={block.data} />
+      return <CtaBlock data={block.data} locale={locale} />
     case 'recent-projects':
-      return <RecentProjectsBlock data={block.data} />
+      return <RecentProjectsBlock data={block.data} locale={locale} />
     default:
       return null
   }

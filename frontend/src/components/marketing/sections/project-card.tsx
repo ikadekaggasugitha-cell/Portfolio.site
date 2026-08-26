@@ -15,7 +15,7 @@ const cardClass =
   'group block h-full w-full overflow-hidden rounded-mk border border-mk-hairline bg-mk-surface text-left shadow-mk-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1.5 hover:border-mk-brand-soft/60 hover:shadow-mk-lg'
 
 function CardInner({ project, priority }: { project: FeaturedProject; priority?: boolean }) {
-  const { localize } = useTranslation()
+  const { localize, t } = useTranslation()
   const title = localize(project.title)
   return (
     <>
@@ -36,7 +36,7 @@ function CardInner({ project, priority }: { project: FeaturedProject; priority?:
         </div>
         {project.featured && (
           <span className="mk-tag-featured absolute left-3.5 top-3.5 rounded-lg px-2.5 py-1.5 font-mk-mono text-[0.66rem] font-semibold uppercase tracking-[0.12em]">
-            ★ Featured
+            ★ {t.projectCard.featured}
           </span>
         )}
       </div>
@@ -77,10 +77,10 @@ export function ProjectCard({
   onClick?: () => void
   priority?: boolean
 }) {
-  const { localize } = useTranslation()
+  const { localize, t } = useTranslation()
   if (href) {
     return (
-      <Link href={href} className={cardClass} aria-label={`View ${localize(project.title)}`}>
+      <Link href={href} className={cardClass} aria-label={`${t.projectCard.view} ${localize(project.title)}`}>
         <CardInner project={project} priority={priority} />
       </Link>
     )

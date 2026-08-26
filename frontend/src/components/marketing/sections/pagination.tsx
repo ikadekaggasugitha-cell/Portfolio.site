@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { PageMeta } from '@/lib/marketing/api.server'
+import { translations, type Locale } from '@/lib/marketing/translations'
+import { localeHref } from '@/lib/marketing/i18n'
 import { cn } from '@/lib/utils'
 
 /** Server-rendered numbered pagination that preserves the active search/tag. */
@@ -8,12 +10,16 @@ export function Pagination({
   meta,
   search,
   technology,
+  locale,
 }: {
   meta: PageMeta
   search: string
   technology: string
+  locale: Locale
 }) {
   if (meta.last_page <= 1) return null
+
+  const t = translations[locale].pagination
 
   const href = (page: number) => {
     const params = new URLSearchParams()
@@ -21,7 +27,7 @@ export function Pagination({
     if (technology) params.set('tech', technology)
     if (page > 1) params.set('page', String(page))
     const qs = params.toString()
-    return qs ? `/projects?${qs}` : '/projects'
+    return qs ? `${localeHref(locale, '/projects')}?${qs}` : localeHref(locale, '/projects')
   }
 
   const { current_page: current, last_page: last } = meta
@@ -30,9 +36,9 @@ export function Pagination({
   const disabled = 'cursor-not-allowed border-mk-hairline/60 text-mk-faint/50'
 
   return (
-    <nav aria-label="Pagination" className="mt-14 flex items-center justify-center gap-2">
+    <nav aria-label={t.page} className="mt-14 flex items-center justify-center gap-2">
       {current > 1 ? (
-        <Link href={href(current - 1)} aria-label="Previous page" className={cn(cell, idle)}>
+        <Link href={href(current - 1)} aria-label={t.previous} className={cn(cell, idle)}>
           <ChevronLeft className="size-4" aria-hidden />
         </Link>
       ) : (
@@ -48,7 +54,7 @@ export function Pagination({
           <Link
             key={p}
             href={href(p)}
-            aria-label={`Page ${p}`}
+            aria-label={`${t.page} ${p}`}
             aria-current={p === current ? 'page' : undefined}
             className={cn(cell, p === current ? 'border-transparent bg-mk-brand text-mk-on-brand' : idle)}
           >
@@ -58,7 +64,7 @@ export function Pagination({
       )}
 
       {current < last ? (
-        <Link href={href(current + 1)} aria-label="Next page" className={cn(cell, idle)}>
+        <Link href={href(current + 1)} aria-label={t.next} className={cn(cell, idle)}>
           <ChevronRight className="size-4" aria-hidden />
         </Link>
       ) : (

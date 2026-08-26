@@ -3,9 +3,11 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ArrowUp } from 'lucide-react'
+import { useTranslation } from '../theme/language-provider'
 
 export function ScrollToTop() {
   const reduce = useReducedMotion()
+  const { t } = useTranslation()
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -20,7 +22,7 @@ export function ScrollToTop() {
       {visible && (
         <motion.button
           type="button"
-          aria-label="Scroll to top"
+          aria-label={t.nav.scrollTop}
           onClick={() => window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' })}
           initial={{ opacity: 0, y: 16, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}

@@ -18,7 +18,7 @@ export function ProjectModal({
   onClose: () => void
 }) {
   const reduce = useReducedMotion()
-  const { localize } = useTranslation()
+  const { localize, t } = useTranslation()
   const panelRef = useRef<HTMLDivElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
   const lastFocused = useRef<HTMLElement | null>(null)
@@ -97,7 +97,7 @@ export function ProjectModal({
                 ref={closeRef}
                 type="button"
                 onClick={onClose}
-                aria-label="Close case study"
+                aria-label={t.projectModal.close}
                 className="absolute right-3.5 top-3.5 grid size-9 place-items-center rounded-[10px] bg-mk-surface/90 text-mk-ink shadow-mk-sm transition-colors hover:bg-mk-surface"
               >
                 <X className="size-[18px]" aria-hidden />
@@ -106,7 +106,7 @@ export function ProjectModal({
 
             <div className="p-5 md:p-7">
               <span className="font-mk-mono text-[0.72rem] uppercase tracking-[0.18em] text-mk-accent">
-                Case study
+                {t.projectModal.caseStudy}
               </span>
               <h3 id="pm-title" className="mt-3 text-[1.5rem] font-extrabold tracking-[-0.02em]">
                 {localize(project.title)}
@@ -130,7 +130,7 @@ export function ProjectModal({
                     href={project.demoUrl}
                     className="inline-flex items-center gap-2 rounded-[14px] bg-mk-brand px-6 py-3 text-[0.95rem] font-semibold text-mk-on-brand shadow-mk-brand transition-colors hover:bg-mk-brand-strong"
                   >
-                    Live demo
+                    {t.projectModal.liveDemo}
                     <ExternalLink className="size-[17px]" aria-hidden />
                   </a>
                 )}
@@ -140,7 +140,7 @@ export function ProjectModal({
                     className="inline-flex items-center gap-2 rounded-[14px] border border-mk-hairline bg-mk-surface px-6 py-3 text-[0.95rem] font-semibold text-mk-ink shadow-mk-sm transition-colors hover:border-mk-brand-soft"
                   >
                     <GithubIcon className="size-[17px]" />
-                    Source
+                    {t.projectModal.viewSource}
                   </a>
                 )}
               </div>

@@ -26,6 +26,7 @@ const en = {
     letsTalk: "Let's talk",
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
+    scrollTop: 'Scroll to top',
   },
 
   /* ---- Hero ---- */
@@ -280,6 +281,66 @@ const en = {
     title: 'Academic background',
   },
 
+  /* ---- Project detail page ---- */
+  projectDetail: {
+    backToProjects: 'Back to projects',
+    links: 'Links',
+    liveDemo: 'Live demo',
+    viewSource: 'View source',
+    builtWith: 'Built with',
+    relatedProjects: 'Related projects',
+    notFoundTitle: 'Project not found',
+    notFoundBody: "The project you're looking for doesn't exist or may have been removed.",
+    noDescription: 'No description provided for this project yet.',
+  },
+
+  /* ---- CMS pages (/pages/[slug]) ---- */
+  cmsPage: {
+    noContentYet: 'This page has no content yet.',
+  },
+
+  /* ---- Site error boundary ---- */
+  siteError: {
+    title: 'This page is taking a break',
+    body: "We couldn't load the latest content just now. It's usually back within a moment.",
+    tryAgain: 'Try again',
+    goHome: 'Go home',
+  },
+
+  /* ---- 404 ---- */
+  notFoundPage: {
+    title: 'Page not found',
+    body: "The page you're looking for doesn't exist or may have been moved.",
+    backHome: 'Back to home',
+  },
+
+  /* ---- Pagination (aria labels) ---- */
+  pagination: {
+    previous: 'Previous page',
+    next: 'Next page',
+    page: 'Page',
+  },
+
+  /* ---- Project modal ---- */
+  projectModal: {
+    caseStudy: 'Case study',
+    liveDemo: 'Live demo',
+    viewSource: 'Source',
+    close: 'Close case study',
+  },
+
+  /* ---- Project card ---- */
+  projectCard: {
+    featured: 'Featured',
+    view: 'View',
+  },
+
+  /* ---- CMS page blocks ---- */
+  pageBlocks: {
+    recentEyebrow: 'Work',
+    recentTitle: 'Recent projects',
+  },
+
   /* ---- Certificates (about page) ---- */
   certificates: {
     eyebrow: 'Credentials',
@@ -353,6 +414,7 @@ const id = {
     letsTalk: 'Hubungi Saya',
     openMenu: 'Buka menu',
     closeMenu: 'Tutup menu',
+    scrollTop: 'Kembali ke atas',
   },
 
   hero: {
@@ -585,6 +647,58 @@ const id = {
   education: {
     eyebrow: 'Pendidikan',
     title: 'Latar belakang akademik',
+  },
+
+  projectDetail: {
+    backToProjects: 'Kembali ke proyek',
+    links: 'Tautan',
+    liveDemo: 'Demo langsung',
+    viewSource: 'Lihat kode',
+    builtWith: 'Dibangun dengan',
+    relatedProjects: 'Proyek terkait',
+    notFoundTitle: 'Proyek tidak ditemukan',
+    notFoundBody: 'Proyek yang Anda cari tidak ada atau mungkin telah dihapus.',
+    noDescription: 'Belum ada deskripsi untuk proyek ini.',
+  },
+
+  cmsPage: {
+    noContentYet: 'Halaman ini belum memiliki konten.',
+  },
+
+  siteError: {
+    title: 'Halaman ini sedang istirahat',
+    body: 'Kami tidak bisa memuat konten terbaru saat ini. Biasanya pulih dalam beberapa saat.',
+    tryAgain: 'Coba lagi',
+    goHome: 'Ke beranda',
+  },
+
+  notFoundPage: {
+    title: 'Halaman tidak ditemukan',
+    body: 'Halaman yang Anda cari tidak ada atau mungkin telah dipindahkan.',
+    backHome: 'Kembali ke beranda',
+  },
+
+  pagination: {
+    previous: 'Halaman sebelumnya',
+    next: 'Halaman berikutnya',
+    page: 'Halaman',
+  },
+
+  projectModal: {
+    caseStudy: 'Studi kasus',
+    liveDemo: 'Demo langsung',
+    viewSource: 'Sumber',
+    close: 'Tutup studi kasus',
+  },
+
+  projectCard: {
+    featured: 'Unggulan',
+    view: 'Lihat',
+  },
+
+  pageBlocks: {
+    recentEyebrow: 'Karya',
+    recentTitle: 'Proyek Terbaru',
   },
 
   certificates: {

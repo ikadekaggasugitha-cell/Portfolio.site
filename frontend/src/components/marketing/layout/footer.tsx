@@ -2,6 +2,7 @@
 
 import { Mail } from 'lucide-react'
 import { navItems, site } from '@/lib/marketing/content'
+import { localeHref } from '@/lib/marketing/i18n'
 import { useTranslation } from '../theme/language-provider'
 import { Container } from '../primitives/container'
 import { GithubIcon, LinkedinIcon } from '../icons/brand-icons'
@@ -28,7 +29,7 @@ export interface FooterLinks {
 
 /** Falls back to the static `site` defaults when no live profile data is passed. */
 export function Footer({ githubUrl = site.githubUrl, linkedinUrl = site.linkedinUrl, email = site.email, cvUrl = site.cvUrl }: FooterLinks = {}) {
-  const { t } = useTranslation()
+  const { t, locale } = useTranslation()
   const year = new Date().getFullYear()
 
   const elsewhereLinks = [
@@ -40,7 +41,7 @@ export function Footer({ githubUrl = site.githubUrl, linkedinUrl = site.linkedin
 
   const translatedNavItems = navItems.map((item) => ({
     label: navLabelKey[item.href] ? t.nav[navLabelKey[item.href]] : item.label,
-    href: item.href,
+    href: localeHref(locale, item.href),
   }))
 
   return (

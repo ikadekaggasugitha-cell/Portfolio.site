@@ -3,6 +3,9 @@ import { serializeJsonLd } from '@/lib/json-ld'
 import { getFaqs, getProfile, soften } from '@/lib/marketing/api.server'
 import { liveOrFallback, mapContact, mapFaqs } from '@/lib/marketing/mappers'
 import { faqs as faqDefaults, site } from '@/lib/marketing/content'
+import type { Locale } from '@/lib/marketing/translations'
+import { buildAlternates, isLocale, ogLocales } from '@/lib/marketing/i18n'
+import { notFound } from 'next/navigation'
 import { Section } from '@/components/marketing/primitives/section'
 import { Reveal } from '@/components/marketing/primitives/reveal'
 import { ContactHero } from '@/components/marketing/sections/contact-hero'
@@ -28,17 +31,27 @@ export const revalidate = 600
  *  nothing cached. */
 export const maxDuration = 60
 
-export async function generateMetadata(): Promise<Metadata> {
+type PageParams = Promise<{ locale: string }>
+
+async function resolveLocale(params: PageParams): Promise<Locale> {
+  const { locale } = await params
+  if (!isLocale(locale)) notFound()
+  return locale
+}
+
+export async function generateMetadata({ params }: { params: PageParams }): Promise<Metadata> {
+  const locale = await resolveLocale(params)
   // softened: metadata is not worth failing the whole route over, and a throw here
   // bypasses error.tsx entirely.
   const { data: profile } = await soften(getProfile(), null)
   const name = profile?.name?.trim() || site.name
   const title = `Contact · ${name}`
+  const og = ogLocales(locale)
   return {
     title,
     description: DESCRIPTION,
-    alternates: { canonical: '/contact' },
-    openGraph: { type: 'website', title, description: DESCRIPTION, siteName: name },
+    alternates: buildAlternates(locale, '/contact'),
+    openGraph: { type: 'website', title, description: DESCRIPTION, siteName: name, ...og, url: '/contact' },
     twitter: { card: 'summary_large_image', title, description: DESCRIPTION },
   }
 }

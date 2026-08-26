@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { Loader2, Search, SlidersHorizontal, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useTranslation } from '../theme/language-provider'
@@ -24,6 +24,8 @@ export function ProjectsControls({
   total: number
 }) {
   const router = useRouter()
+  // Current route incl. the /id|/en prefix — filtering only swaps the query string.
+  const basePath = usePathname()
   const [pending, startTransition] = useTransition()
   const [query, setQuery] = useState(search)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
@@ -41,7 +43,7 @@ export function ProjectsControls({
     if (nextSearch.trim()) params.set('search', nextSearch.trim())
     if (nextTech.trim()) params.set('tech', nextTech.trim())
     const qs = params.toString()
-    return qs ? `/projects?${qs}` : '/projects'
+    return qs ? `${basePath}?${qs}` : basePath
   }
 
   const navigate = (url: string) => startTransition(() => router.replace(url, { scroll: false }))

@@ -2,6 +2,9 @@ import type { Metadata } from 'next'
 import { getProjectTechnologies, getProjectsPage } from '@/lib/marketing/api.server'
 import { mapProjectCards } from '@/lib/marketing/mappers'
 import { projects as projectDefaults, site } from '@/lib/marketing/content'
+import type { Locale } from '@/lib/marketing/translations'
+import { buildAlternates, isLocale, ogLocales } from '@/lib/marketing/i18n'
+import { notFound } from 'next/navigation'
 import { Container } from '@/components/marketing/primitives/container'
 import { Reveal } from '@/components/marketing/primitives/reveal'
 import { ProjectCard } from '@/components/marketing/sections/project-card'
@@ -21,21 +24,40 @@ const PER_PAGE = 9
 const DESCRIPTION =
   'Selected work by I Kadek Agga Sugitha — web applications, backend services, dashboards and automation tooling built with React, Next.js, Node.js and modern cloud infrastructure.'
 
-export const metadata: Metadata = {
-  title: `Projects · ${site.name}`,
-  description: DESCRIPTION,
-  alternates: { canonical: '/projects' },
-  openGraph: { type: 'website', title: `Projects · ${site.name}`, description: DESCRIPTION, siteName: site.name },
-  twitter: { card: 'summary_large_image', title: `Projects · ${site.name}`, description: DESCRIPTION },
-}
-
 type SearchParams = Promise<Record<string, string | string[] | undefined>>
+type PageParams = Promise<{ locale: string }>
+
+async function resolveLocale(params: PageParams): Promise<Locale> {
+  const { locale } = await params
+  if (!isLocale(locale)) notFound()
+  return locale
+}
 
 function firstParam(value: string | string[] | undefined): string {
   return (Array.isArray(value) ? value[0] : value) ?? ''
 }
 
-export default async function ProjectsPage({ searchParams }: { searchParams: SearchParams }) {
+export async function generateMetadata({ params }: { params: PageParams }): Promise<Metadata> {
+  const locale = await resolveLocale(params)
+  const title = `Projects · ${site.name}`
+  const og = ogLocales(locale)
+  return {
+    title,
+    description: DESCRIPTION,
+    alternates: buildAlternates(locale, '/projects'),
+    openGraph: { type: 'website', title, description: DESCRIPTION, siteName: site.name, ...og, url: '/projects' },
+    twitter: { card: 'summary_large_image', title, description: DESCRIPTION },
+  }
+}
+
+export default async function ProjectsPage({
+  searchParams,
+  params,
+}: {
+  searchParams: SearchParams
+  params: PageParams
+}) {
+  const locale = await resolveLocale(params)
   const sp = await searchParams
   const search = firstParam(sp.search).trim()
   const technology = firstParam(sp.tech).trim()
@@ -78,11 +100,15 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Sea
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {cards.map((project, i) => (
                   <Reveal key={project.id} delay={Math.min(i, 5) * 0.06}>
-                    <ProjectCard project={project} href={`/projects/${project.id}`} priority={i < 3} />
+                    <ProjectCard
+                      project={project}
+                      href={`/${locale}/projects/${project.id}`}
+                      priority={i < 3}
+                    />
                   </Reveal>
                 ))}
               </div>
-              <Pagination meta={meta} search={search} technology={technology} />
+              <Pagination meta={meta} search={search} technology={technology} locale={locale} />
             </>
           )}
         </Container>

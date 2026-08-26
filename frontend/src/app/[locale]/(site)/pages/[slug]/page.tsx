@@ -21,9 +21,16 @@ import { HeroBackdrop } from '@/components/marketing/sections/hero-backdrop'
  */
 
 import { localize } from '@/lib/marketing/localize'
-import { DEFAULT_LOCALE } from '@/lib/marketing/translations'
+import { translations, type Locale } from '@/lib/marketing/translations'
+import { buildAlternates, isLocale, ogLocales } from '@/lib/marketing/i18n'
 
-type Params = Promise<{ slug: string }>
+type Params = Promise<{ locale: string; slug: string }>
+
+async function resolveParams(params: Params): Promise<{ locale: Locale; slug: string }> {
+  const { locale, slug } = await params
+  if (!isLocale(locale)) notFound()
+  return { locale, slug }
+}
 
 export const revalidate = 600
 
@@ -38,25 +45,33 @@ const metaString = (page: { meta?: Record<string, unknown> | null }, key: string
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const { slug } = await params
+  const { locale, slug } = await resolveParams(params)
   const { data: page } = await soften(getPageBySlug(slug), null)
-  if (!page) return { title: `Page not found · ${site.name}` }
+  if (!page) return { title: `404 · ${site.name}` }
 
-  const pageTitle = localize(page.title, DEFAULT_LOCALE)
+  const pageTitle = localize(page.title, locale)
   const title = metaString(page, 'seo_title') || `${pageTitle} · ${site.name}`
   const description = metaString(page, 'seo_description')
 
   return {
     title,
     ...(description ? { description } : {}),
-    alternates: { canonical: `/pages/${page.slug}` },
-    openGraph: { type: 'article', title, description, siteName: site.name },
+    alternates: buildAlternates(locale, `/pages/${page.slug}`),
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+      siteName: site.name,
+      ...ogLocales(locale),
+      url: `/pages/${page.slug}`,
+    },
     twitter: { card: 'summary_large_image', title, description },
   }
 }
 
 export default async function CmsPage({ params }: { params: Params }) {
-  const { slug } = await params
+  const { locale, slug } = await resolveParams(params)
+  const t = translations[locale]
   const { data: page } = await getPageBySlug(slug)
 
   // A missing slug and an unreachable API both mean we have nothing to show. Rendering
@@ -65,8 +80,8 @@ export default async function CmsPage({ params }: { params: Params }) {
 
   const blocks = (page.blocks ?? []).filter((block) => block.type)
   const hasHeroBlock = blocks.some((block) => block.type === 'hero')
-  const titleStr = localize(page.title, DEFAULT_LOCALE)
-  const contentHtml = localize(page.content, DEFAULT_LOCALE)
+  const titleStr = localize(page.title, locale)
+  const contentHtml = localize(page.content, locale)
 
   return (
     <>
@@ -87,7 +102,7 @@ export default async function CmsPage({ params }: { params: Params }) {
       )}
 
       {blocks.map((block, i) => (
-        <PageBlockRenderer key={String(block.id ?? i)} block={block} />
+        <PageBlockRenderer key={String(block.id ?? i)} block={block} locale={locale} />
       ))}
 
       {/* Free-form HTML from the editor's Content field. Authored by the site owner
@@ -105,7 +120,7 @@ export default async function CmsPage({ params }: { params: Params }) {
 
       {!blocks.length && !contentHtml?.trim() && (
         <Section>
-          <p className="text-center text-mk-muted">This page has no content yet.</p>
+          <p className="text-center text-mk-muted">{t.cmsPage.noContentYet}</p>
         </Section>
       )}
     </>

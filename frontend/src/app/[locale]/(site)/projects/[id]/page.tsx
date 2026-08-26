@@ -11,12 +11,20 @@ import { ProjectGallery } from '@/components/marketing/sections/project-gallery'
 import { ProjectCard } from '@/components/marketing/sections/project-card'
 import { GithubIcon } from '@/components/marketing/icons/brand-icons'
 import { localize } from '@/lib/marketing/localize'
-import { DEFAULT_LOCALE } from '@/lib/marketing/translations'
+import { translations, type Locale } from '@/lib/marketing/translations'
+import { buildAlternates, isLocale, localeHref, ogLocales } from '@/lib/marketing/i18n'
+import { notFound } from 'next/navigation'
 
-type Params = Promise<{ id: string }>
+type Params = Promise<{ locale: string; id: string }>
+
+async function resolveParams(params: Params): Promise<{ locale: Locale; id: string }> {
+  const { locale, id } = await params
+  if (!isLocale(locale)) notFound()
+  return { locale, id }
+}
 
 /**
- * Bounded regeneration window — see the note in (site)/page.tsx. Also matters here because
+ * Bounded regeneration window — see the note in page.tsx. Also matters here because
  * generateStaticParams only knows the ids that existed at build time; a project added later
  * is rendered on demand and must not be cached indefinitely.
  */
@@ -27,18 +35,18 @@ export const revalidate = 600
  *  nothing cached. */
 export const maxDuration = 60
 
-/** Pre-render known projects at build; unknown ids still render on-demand (ISR). */
+/** Pre-render known projects at build (both locales); unknown ids still render on-demand (ISR). */
 export async function generateStaticParams() {
   const { data: projects } = await getProjects(100)
-  return projects.map((p) => ({ id: String(p.id) }))
+  return projects.flatMap((p) => ['id', 'en'].map((locale) => ({ id: String(p.id), locale })))
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const { id } = await params
+  const { locale, id } = await resolveParams(params)
   const { data: project } = await soften(getProjectById(id), null)
 
   if (!project) {
-    return { title: `Project not found · ${site.name}` }
+    return { title: `${translations[locale].projectDetail.notFoundTitle} · ${site.name}` }
   }
 
   const projectTitle = typeof project.title === 'string' ? project.title : project.title?.id || project.title?.en || ''
@@ -46,16 +54,19 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const title = `${projectTitle} · ${site.name}`
   const description = projectDesc.trim() || `${projectTitle} — a project by ${site.name}.`
   const image = project.images?.[0]?.image
+  const path = `/projects/${project.id}`
 
   return {
     title,
     description,
-    alternates: { canonical: `/projects/${project.id}` },
+    alternates: buildAlternates(locale, path),
     openGraph: {
       type: 'article',
       title,
       description,
       siteName: site.name,
+      ...ogLocales(locale),
+      url: localeHref(locale, path),
       images: image ? [{ url: image }] : undefined,
     },
     twitter: { card: 'summary_large_image', title, description, images: image ? [image] : undefined },
@@ -63,19 +74,20 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 export default async function ProjectDetailPage({ params }: { params: Params }) {
-  const { id } = await params
+  const { locale, id } = await resolveParams(params)
+  const t = translations[locale]
   const [{ data: project }, { data: all }] = await Promise.all([getProjectById(id), getProjects(100)])
 
   if (!project) {
     return (
       <Section id="project-detail">
         <div className="mx-auto max-w-[440px] py-16 text-center">
-          <h1 className="text-3xl font-extrabold tracking-[-0.02em]">Project not found</h1>
-          <p className="mt-3 text-mk-muted">The project you&apos;re looking for doesn&apos;t exist or may have been removed.</p>
+          <h1 className="text-3xl font-extrabold tracking-[-0.02em]">{t.projectDetail.notFoundTitle}</h1>
+          <p className="mt-3 text-mk-muted">{t.projectDetail.notFoundBody}</p>
           <div className="mt-8 flex justify-center">
-            <Button href="/projects" variant="ghost">
+            <Button href={localeHref(locale, '/projects')} variant="ghost">
               <ArrowLeft className="size-[17px]" aria-hidden />
-              Back to projects
+              {t.projectDetail.backToProjects}
             </Button>
           </div>
         </div>
@@ -84,19 +96,19 @@ export default async function ProjectDetailPage({ params }: { params: Params }) 
   }
 
   const detail = mapProjectDetail(project)
-  const detailTitleStr = localize(detail.title, DEFAULT_LOCALE)
-  const detailDescStr = localize(detail.description, DEFAULT_LOCALE)
+  const detailTitleStr = localize(detail.title, locale)
+  const detailDescStr = localize(detail.description, locale)
   const related = relatedProjects(all, project.id, project.technology, 3)
 
   return (
     <Section id="project-detail">
       <Reveal>
         <Link
-          href="/projects"
+          href={localeHref(locale, '/projects')}
           className="inline-flex items-center gap-2 text-[0.9rem] font-medium text-mk-muted transition-colors hover:text-mk-ink"
         >
           <ArrowLeft className="size-4" aria-hidden />
-          Back to projects
+          {t.projectDetail.backToProjects}
         </Link>
       </Reveal>
 
@@ -125,7 +137,7 @@ export default async function ProjectDetailPage({ params }: { params: Params }) 
       <div className="mt-10 grid gap-10 lg:grid-cols-[1.6fr_1fr] lg:items-start">
         <Reveal>
           <div className="whitespace-pre-line text-[1.05rem] leading-relaxed text-mk-muted">
-            {detailDescStr || 'No description provided for this project yet.'}
+            {detailDescStr || t.projectDetail.noDescription}
           </div>
         </Reveal>
 
@@ -133,18 +145,18 @@ export default async function ProjectDetailPage({ params }: { params: Params }) 
           <div className="rounded-mk border border-mk-hairline bg-mk-surface p-6 shadow-mk-sm">
             {(detail.demoUrl || detail.repoUrl) && (
               <>
-                <h2 className="font-mk-mono text-[0.72rem] uppercase tracking-[0.1em] text-mk-faint">Links</h2>
+                <h2 className="font-mk-mono text-[0.72rem] uppercase tracking-[0.1em] text-mk-faint">{t.projectDetail.links}</h2>
                 <div className="mt-3 flex flex-col gap-2.5">
                   {detail.demoUrl && (
                     <Button href={detail.demoUrl} size="md" className="w-full">
-                      Live demo
+                      {t.projectDetail.liveDemo}
                       <ExternalLink className="size-[16px]" aria-hidden />
                     </Button>
                   )}
                   {detail.repoUrl && (
                     <Button href={detail.repoUrl} variant="ghost" size="md" className="w-full">
                       <GithubIcon className="size-[16px]" />
-                      View source
+                      {t.projectDetail.viewSource}
                     </Button>
                   )}
                 </div>
@@ -153,7 +165,7 @@ export default async function ProjectDetailPage({ params }: { params: Params }) 
 
             {detail.tags.length > 0 && (
               <div className={detail.demoUrl || detail.repoUrl ? 'mt-6' : ''}>
-                <h2 className="font-mk-mono text-[0.72rem] uppercase tracking-[0.1em] text-mk-faint">Built with</h2>
+                <h2 className="font-mk-mono text-[0.72rem] uppercase tracking-[0.1em] text-mk-faint">{t.projectDetail.builtWith}</h2>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {detail.tags.map((tag) => (
                     <span
@@ -174,12 +186,12 @@ export default async function ProjectDetailPage({ params }: { params: Params }) 
       {related.length > 0 && (
         <div className="mt-[clamp(64px,9vw,110px)]">
           <Reveal>
-            <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-extrabold tracking-[-0.02em]">Related projects</h2>
+            <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-extrabold tracking-[-0.02em]">{t.projectDetail.relatedProjects}</h2>
           </Reveal>
           <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {related.map((p, i) => (
               <Reveal key={p.id} delay={i * 0.08}>
-                <ProjectCard project={p} href={`/projects/${p.id}`} />
+                <ProjectCard project={p} href={localeHref(locale, `/projects/${p.id}`)} />
               </Reveal>
             ))}
           </div>

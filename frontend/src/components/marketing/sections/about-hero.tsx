@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { Mail } from 'lucide-react'
 import { aboutHeroDefaults, type AboutHeroData } from '@/lib/marketing/content'
+import { localeHref } from '@/lib/marketing/i18n'
 import { useTranslation } from '../theme/language-provider'
 import { Container } from '../primitives/container'
 import { Eyebrow } from '../primitives/eyebrow'
@@ -25,7 +26,7 @@ function initials(name: string) {
 
 export function AboutHero(props: AboutHeroData = aboutHeroDefaults) {
   const { name, role, bio, photo, available, location, githubUrl, linkedinUrl, email, cvUrl } = props
-  const { t, localize } = useTranslation()
+  const { t, localize, locale } = useTranslation()
 
   return (
     <section className="relative overflow-hidden pb-[clamp(48px,7vw,80px)] pt-[clamp(48px,7vw,88px)]">
@@ -63,7 +64,7 @@ export function AboutHero(props: AboutHeroData = aboutHeroDefaults) {
 
             <Reveal delay={0.25}>
               <div className="mt-7 flex flex-wrap items-center gap-3.5">
-                <Button href="/contact" size="lg">
+                <Button href={localeHref(locale, '/contact')} size="lg">
                   {t.aboutPage.getInTouch}
                   <Mail className="size-[17px]" aria-hidden />
                 </Button>

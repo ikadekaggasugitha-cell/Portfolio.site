@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Search } from 'lucide-react'
+import { localeHref } from '@/lib/marketing/i18n'
 import { useTranslation } from '../theme/language-provider'
 import { SectionHeading } from '../primitives/section-heading'
 
@@ -27,7 +28,7 @@ export function ProjectsPageHeading() {
  * Client component so it can read translated strings.
  */
 export function ProjectsEmptyState({ hasFilters }: { hasFilters: boolean }) {
-  const { t } = useTranslation()
+  const { t, locale } = useTranslation()
   return (
     <div className="mx-auto max-w-[440px] rounded-mk border border-dashed border-mk-hairline bg-mk-surface/60 px-6 py-16 text-center">
       <div className="mx-auto mb-4 grid size-12 place-items-center rounded-full bg-mk-brand/10 text-mk-accent">
@@ -41,7 +42,7 @@ export function ProjectsEmptyState({ hasFilters }: { hasFilters: boolean }) {
       </p>
       {hasFilters && (
         <Link
-          href="/projects"
+          href={localeHref(locale, '/projects')}
           className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-mk-hairline bg-mk-surface px-4 py-2 text-[0.88rem] font-semibold transition-colors hover:border-mk-brand-soft"
         >
           {t.projectsPage.clearFilters}

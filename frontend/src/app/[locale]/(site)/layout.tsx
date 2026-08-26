@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react'
+import { notFound } from 'next/navigation'
 import { MarketingShell } from '@/components/marketing/layout/marketing-shell'
 import { getProfile, soften } from '@/lib/marketing/api.server'
 import { mapHero } from '@/lib/marketing/mappers'
+import { isLocale } from '@/lib/marketing/i18n'
 
 /**
  * Shared layout for every V2 public route (/, /about, /projects, …).
@@ -15,7 +17,15 @@ import { mapHero } from '@/lib/marketing/mappers'
  * memoizes identical fetch() calls within a single request, so this doesn't
  * add an extra network round trip.
  */
-export default async function SiteLayout({ children }: { children: ReactNode }) {
+export default async function SiteLayout({
+  children,
+  params,
+}: {
+  children: ReactNode
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  if (!isLocale(locale)) notFound()
   // softened: a layout throw escapes (site)/error.tsx (the boundary wraps the layout's
   // children, not the layout itself), so an outage would blow past it to the global
   // error page. The page body still throws, so nothing bad gets cached.
@@ -23,7 +33,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
   const { githubUrl, linkedinUrl, email, cvUrl } = mapHero(profile)
 
   return (
-    <MarketingShell footerLinks={{ githubUrl, linkedinUrl, email, cvUrl }}>
+    <MarketingShell locale={locale} footerLinks={{ githubUrl, linkedinUrl, email, cvUrl }}>
       {children}
     </MarketingShell>
   )

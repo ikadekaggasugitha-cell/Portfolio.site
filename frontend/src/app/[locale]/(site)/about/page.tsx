@@ -34,29 +34,49 @@ export const revalidate = 600
 export const maxDuration = 60
 
 import { localize } from '@/lib/marketing/localize'
-import { DEFAULT_LOCALE } from '@/lib/marketing/translations'
+import type { Locale } from '@/lib/marketing/translations'
+import { buildAlternates, isLocale, ogLocales } from '@/lib/marketing/i18n'
+import { notFound } from 'next/navigation'
 
-export async function generateMetadata(): Promise<Metadata> {
+type PageParams = Promise<{ locale: string }>
+
+async function resolveLocale(params: PageParams): Promise<Locale> {
+  const { locale } = await params
+  if (!isLocale(locale)) notFound()
+  return locale
+}
+
+export async function generateMetadata({ params }: { params: PageParams }): Promise<Metadata> {
+  const locale = await resolveLocale(params)
   // softened: metadata is not worth failing the whole route over, and a throw here
   // bypasses error.tsx entirely.
   const { data: profile } = await soften(getProfile(), null)
   const name = profile?.name?.trim() || site.name
-  const descStr = localize(profile?.description, DEFAULT_LOCALE)
+  const descStr = localize(profile?.description, locale)
   const description = descStr.trim() || FALLBACK_BIO
   const title = `About · ${name}`
+  const og = ogLocales(locale)
 
   return {
     title,
     description,
-    alternates: { canonical: '/about' },
-    openGraph: { type: 'profile', title, description, siteName: name },
+    alternates: buildAlternates(locale, '/about'),
+    openGraph: { type: 'profile', title, description, siteName: name, ...og, url: '/about' },
     twitter: { card: 'summary_large_image', title, description },
   }
 }
 
-function PersonJsonLd({ profile, skills }: { profile: Profile | null; skills: string[] }) {
-  const titleStr = localize(profile?.title, DEFAULT_LOCALE)
-  const descStr = localize(profile?.description, DEFAULT_LOCALE)
+function PersonJsonLd({
+  profile,
+  skills,
+  locale,
+}: {
+  profile: Profile | null
+  skills: string[]
+  locale: Locale
+}) {
+  const titleStr = localize(profile?.title, locale)
+  const descStr = localize(profile?.description, locale)
   const json = {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -74,7 +94,8 @@ function PersonJsonLd({ profile, skills }: { profile: Profile | null; skills: st
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(json) }} />
 }
 
-export default async function AboutPage() {
+export default async function AboutPage({ params }: { params: PageParams }) {
+  const locale = await resolveLocale(params)
   const [{ data: profile }, { ok: skillsOk, data: skills }] = await Promise.all([
     getProfile(),
     getSkills(),
@@ -87,7 +108,7 @@ export default async function AboutPage() {
 
   return (
     <>
-      <PersonJsonLd profile={profile} skills={knowsAbout} />
+      <PersonJsonLd profile={profile} skills={knowsAbout} locale={locale} />
       <AboutHero {...mapAboutHero(profile)} />
       <Suspense fallback={<SkillsSkeleton />}>
         <AboutSkillsLive />

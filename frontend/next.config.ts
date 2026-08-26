@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // Required so 404s render app/global-not-found.tsx — this app uses multiple
+  // root layouts ([locale] public vs admin), where per-segment not-found
+  // boundaries don't fire for unmatched URLs.
+  experimental: {
+    globalNotFound: true,
+  },
   images: {
     remotePatterns: [
       {

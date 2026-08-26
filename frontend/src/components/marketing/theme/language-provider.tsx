@@ -4,27 +4,23 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
-  useState,
+  useMemo,
   type ReactNode,
 } from 'react'
-import {
-  translations,
-  DEFAULT_LOCALE,
-  type Locale,
-  type Translations,
-} from '@/lib/marketing/translations'
+import { useRouter, usePathname } from 'next/navigation'
+import { translations, type Locale, type Translations } from '@/lib/marketing/translations'
 import { localize as localizeText } from '@/lib/marketing/localize'
+import { LOCALE_COOKIE, swapLocale } from '@/lib/marketing/i18n'
 import type { LocalizedText } from '@/types'
 
 /**
- * Scoped language controller for the V2 marketing system.
+ * Locale controller for the V2 marketing system.
  *
- * Same localStorage-persist pattern as ThemeProvider: reads stored preference
- * after mount, toggles between `'en'` and `'id'`, and exposes a `t` object
- * with every translated string for the active locale.
- *
- * Default locale: **id** (Indonesian).
+ * The active locale is a *URL fact* — `/id/...` or `/en/...` — passed in as a
+ * prop by the [locale] root layout. Switching language therefore means
+ * navigating to the same route under the other prefix and remembering the
+ * choice in a cookie the middleware reads on the next direct visit. Server
+ * components re-render natively in the new language; no hydration flash.
  */
 
 interface LanguageContextValue {
@@ -38,50 +34,41 @@ interface LanguageContextValue {
 }
 
 const LanguageContext = createContext<LanguageContextValue | null>(null)
-const STORAGE_KEY = 'agga-locale'
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE)
+export function LanguageProvider({
+  locale,
+  children,
+}: {
+  locale: Locale
+  children: ReactNode
+}) {
+  const router = useRouter()
+  const pathname = usePathname()
 
-  // Hydrate from localStorage after mount (server render always uses default).
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY) as Locale | null
-      if (stored === 'en' || stored === 'id') setLocaleState(stored)
-    } catch {
-      /* SSR or storage error — keep default */
-    }
-  }, [])
-
-  // Set `lang` attribute on <html> so screen readers pick up the language.
-  useEffect(() => {
-    document.documentElement.lang = locale === 'id' ? 'id' : 'en'
-  }, [locale])
-
-  const setLocale = useCallback((next: Locale) => {
-    setLocaleState(next)
-    try {
-      localStorage.setItem(STORAGE_KEY, next)
-    } catch {
-      /* ignore */
-    }
-  }, [])
+  const setLocale = useCallback(
+    (next: Locale) => {
+      document.cookie = `${LOCALE_COOKIE}=${next};path=/;max-age=31536000;samesite=lax`
+      router.push(swapLocale(pathname, next))
+    },
+    [router, pathname],
+  )
 
   const toggleLocale = useCallback(() => {
     setLocale(locale === 'id' ? 'en' : 'id')
   }, [locale, setLocale])
 
-  const t = translations[locale] as unknown as Translations
-  const localize = useCallback(
-    (value: LocalizedText | null | undefined) => localizeText(value, locale),
-    [locale],
-  )
+  const value = useMemo<LanguageContextValue>(() => {
+    const t = translations[locale] as unknown as Translations
+    return {
+      locale,
+      setLocale,
+      toggleLocale,
+      t,
+      localize: (value) => localizeText(value, locale),
+    }
+  }, [locale, setLocale, toggleLocale])
 
-  return (
-    <LanguageContext.Provider value={{ locale, setLocale, toggleLocale, t, localize }}>
-      {children}
-    </LanguageContext.Provider>
-  )
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
 }
 
 /** Access the current locale and translations. Must be within a LanguageProvider. */

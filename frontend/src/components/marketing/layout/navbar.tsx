@@ -7,6 +7,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { navItems } from '@/lib/marketing/content'
+import { localeHref, stripLocale } from '@/lib/marketing/i18n'
 import { useTranslation } from '../theme/language-provider'
 import { ThemeToggle } from '../theme/theme-toggle'
 import { LanguageToggle } from '../theme/language-toggle'
@@ -29,9 +30,12 @@ function isActive(pathname: string | null, href: string) {
 }
 
 export function Navbar() {
-  const pathname = usePathname()
+  const rawPathname = usePathname()
+  // Route path without the /id|/en segment — active states and link targets
+  // are locale-independent; the prefix is re-applied at render time.
+  const pathname = stripLocale(rawPathname ?? '') || '/'
   const reduce = useReducedMotion()
-  const { t } = useTranslation()
+  const { t, locale } = useTranslation()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -103,30 +107,33 @@ export function Navbar() {
             transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 400, damping: 34 }}
             style={{ left: 0 }}
           />
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              ref={(el) => {
-                linkRefs.current[item.href] = el
-              }}
-              onMouseEnter={() => moveTo(item.href)}
-              aria-current={activeHref === item.href ? 'page' : undefined}
-              className={cn(
-                'relative z-10 rounded-full px-4 py-[9px] text-[0.92rem] font-medium transition-colors',
-                activeHref === item.href ? 'text-mk-ink' : 'text-mk-muted hover:text-mk-ink',
-              )}
-            >
-              {label(item.href, item.label)}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const href = localeHref(locale, item.href)
+            return (
+              <Link
+                key={item.href}
+                href={href}
+                ref={(el) => {
+                  linkRefs.current[item.href] = el
+                }}
+                onMouseEnter={() => moveTo(item.href)}
+                aria-current={activeHref === item.href ? 'page' : undefined}
+                className={cn(
+                  'relative z-10 rounded-full px-4 py-[9px] text-[0.92rem] font-medium transition-colors',
+                  activeHref === item.href ? 'text-mk-ink' : 'text-mk-muted hover:text-mk-ink',
+                )}
+              >
+                {label(item.href, item.label)}
+              </Link>
+            )
+          })}
         </div>
 
         <div className="flex items-center gap-2.5">
           <LanguageToggle />
           <ThemeToggle />
           <div className="hidden sm:block">
-            <Button href="/contact" size="md" className="px-[18px] py-2.5 text-[0.9rem]">
+            <Button href={localeHref(locale, '/contact')} size="md" className="px-[18px] py-2.5 text-[0.9rem]">
               {t.nav.letsTalk}
             </Button>
           </div>
@@ -156,7 +163,7 @@ export function Navbar() {
               {navItems.map((item) => (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={localeHref(locale, item.href)}
                   aria-current={activeHref === item.href ? 'page' : undefined}
                   className={cn(
                     'border-b border-mk-hairline py-3.5 text-lg md:text-xl font-semibold',
@@ -167,7 +174,7 @@ export function Navbar() {
                 </Link>
               ))}
               <div className="pt-4">
-                <Button href="/contact" size="lg" className="w-full">
+                <Button href={localeHref(locale, '/contact')} size="lg" className="w-full">
                   {t.nav.letsTalk}
                 </Button>
               </div>
