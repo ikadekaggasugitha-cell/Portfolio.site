@@ -18,9 +18,12 @@ docker/mysql/data/
 !/backend/storage/logs/.gitkeep
 /backend/.phpunit.result.cache
 /backend/.env
+/backend/.env.local-backup
+/backend/.env.aiven-migration
 
 # Root — a stray `npm install` here once committed 2689 files; keep it shut.
 /node_modules/
+.next/
 
 # Frontend
 /frontend/node_modules/
