@@ -21,7 +21,7 @@ export const site = {
   cvUrl: '#',
   tagline: 'building reliable software, end to end.',
   intro:
-    "Hi, I'm I Kadek Agga Sugitha — an Full Stack Developer who builds software end to end: web applications, REST APIs and backend services, databases, and the automation that ties them together.",
+    "Hi, I'm I Kadek Agga Sugitha, an Full Stack Developer who builds software end to end: web applications, REST APIs and backend services, databases, and the automation that ties them together.",
 } as const
 
 // Page-level navigation — the V2 site is multi-page (/, /about, and, once
@@ -67,7 +67,7 @@ export const capabilities: Capability[] = [
   },
   {
     title: 'Backend & APIs',
-    description: 'REST APIs and backend services with Node.js and Express — the systems that power the frontend.',
+    description: 'REST APIs and backend services with Node.js and Express, the systems that power the frontend.',
     icon: 'server',
   },
   {
@@ -125,7 +125,7 @@ export const projects: FeaturedProject[] = [
     featured: true,
     motif: 'cms',
     summary:
-      'A full personal-site platform: Next.js frontend, a custom admin dashboard, media library and content blocks — the system powering this very site.',
+      'A full personal-site platform: Next.js frontend, a custom admin dashboard, media library and content blocks, the system powering this very site.',
     detail:
       'A production content platform with a public Next.js site and a full admin CMS: profile, projects, skills, experience, media library and page builder. Built for speed (99 Lighthouse) and easy content editing without touching code.',
     tags: ['Next.js', 'TypeScript', 'Tailwind', 'REST API'],
@@ -151,7 +151,7 @@ export const projects: FeaturedProject[] = [
     featured: false,
     motif: 'commerce',
     summary:
-      'Headless storefront with cart, checkout and a Stripe-powered payment flow — optimized for conversion.',
+      'Headless storefront with cart, checkout and a Stripe-powered payment flow, optimized for conversion.',
     detail:
       'A conversion-focused headless commerce build: fast product pages, persistent cart and a streamlined Stripe checkout. Measurable lift in conversion after launch thanks to performance and UX work.',
     tags: ['Next.js', 'Stripe', 'MongoDB'],
@@ -184,16 +184,16 @@ export interface TimelineEntry {
 
 export const timeline: TimelineEntry[] = [
   {
-    period: '2023 — Present',
+    period: '2023 - Present',
     role: 'Fullstack Software Engineer',
     company: 'Sinergi Investasi Properti',
     location: 'Jakarta, Indonesia',
     description:
-      "Own the company's web platform end to end — a Next.js frontend backed by a custom CMS and admin dashboard. Built the content pipeline, media library and public site with a focus on speed and maintainability.",
+      "Own the company's web platform end to end: a Next.js frontend backed by a custom CMS and admin dashboard. Built the content pipeline, media library and public site with a focus on speed and maintainability.",
     current: true,
   },
   {
-    period: '2021 — 2023',
+    period: '2021 - 2023',
     role: 'Web Developer',
     company: 'Freelance & Agency Work',
     location: 'Remote',
@@ -201,12 +201,12 @@ export const timeline: TimelineEntry[] = [
       'Delivered 30+ client websites and web apps across e-commerce, dashboards and marketing sites. Introduced reusable component systems that cut delivery time significantly.',
   },
   {
-    period: '2019 — 2021',
+    period: '2019 - 2021',
     role: 'Junior Software Engineer',
     company: 'Early career',
     location: 'Indonesia',
     description:
-      'Cut my teeth building internal tools and REST APIs. Learned to ship, measure and iterate — and fell in love with the full stack.',
+      'Cut my teeth building internal tools and REST APIs. Learned to ship, measure and iterate, and fell in love with the full stack.',
   },
 ]
 
@@ -250,11 +250,11 @@ export interface FaqEntry {
 export const faqs: FaqEntry[] = [
   {
     q: 'What kind of projects do you take on?',
-    a: "Web applications, dashboards, REST APIs, database design, and internal tooling or automation — not just websites. I'm happy to own a problem end to end or join an existing team on a specific piece of the stack.",
+      a: "Web applications, dashboards, REST APIs, database design, and internal tooling or automation, not just websites. I'm happy to own a problem end to end or join an existing team on a specific piece of the stack.",
   },
   {
     q: 'Are you available for full-time roles?',
-    a: "Yes — I'm open to full-time positions, contract work and freelance projects. Remote-first, and comfortable across time zones.",
+      a: "Yes, I'm open to full-time positions, contract work and freelance projects. Remote-first, and comfortable across time zones.",
   },
   {
     q: 'How do we get started?',

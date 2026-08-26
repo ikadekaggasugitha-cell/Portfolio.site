@@ -34,19 +34,19 @@ const en = {
     available: 'AVAILABLE FOR NEW WORK',
     headingPre: 'Full Stack Developer building ',
     headingAccent: 'reliable software',
-    headingPost: ' — from web apps to backend systems.',
+    headingPost: 'from web apps to backend systems.',
     viewWork: 'View my work',
     downloadCv: 'Download CV',
     intro:
-      "Hi, I'm I Kadek Agga Sugitha — a Full Stack Developer who builds software end to end: web applications, REST APIs and backend services, databases, and the automation that ties them together.",
+      "Hi, I'm I Kadek Agga Sugitha, a Full Stack Developer who builds software end to end: web applications, REST APIs and backend services, databases, and the automation that ties them together.",
   },
 
   /* ---- About ---- */
   about: {
-    eyebrow: '01 — About',
-    lead: 'I build software that solves real problems — across web, backend, data and automation.',
+    eyebrow: '01. About',
+    lead: 'I build software that solves real problems across web, backend, data and automation.',
     paragraphs: [
-      "I'm an IT Full Stack Developer who works across the stack: web applications, backend services and APIs, database design, and the automation and tooling that keeps it all running smoothly. I care about the details that make software feel reliable — clean architecture, sensible data models, and interfaces people actually enjoy using.",
+      "I'm an IT Full Stack Developer who works across the stack: web applications, backend services and APIs, database design, and the automation and tooling that keeps it all running smoothly. I care about the details that make software feel reliable: clean architecture, sensible data models, and interfaces people actually enjoy using.",
       'From designing PostgreSQL schemas and REST APIs to building responsive frontends and scripting deployment pipelines, I like owning a problem end to end rather than staying in one lane. Currently building internal platforms and public-facing products in the property-tech space.',
     ],
   },
@@ -61,8 +61,8 @@ const en = {
 
   /* ---- What I Do ---- */
   whatIDo: {
-    eyebrow: '02 — What I do',
-    title: 'Software, end to end — not just websites',
+    eyebrow: '02. What I do',
+    title: 'Software, end to end, not just websites',
     titleAccent: 'not just websites',
     subtitle:
       "A general-purpose Full Stack Developer's toolkit: the frontend is one part of a bigger picture.",
@@ -75,7 +75,7 @@ const en = {
       {
         title: 'Backend & APIs',
         description:
-          'REST APIs and backend services with Node.js and Express — the systems that power the frontend.',
+          'REST APIs and backend services with Node.js and Express, the systems that power the frontend.',
       },
       {
         title: 'Data & Databases',
@@ -92,11 +92,11 @@ const en = {
 
   /* ---- Skills ---- */
   skills: {
-    eyebrow: '03 — Capabilities',
+    eyebrow: '03. Capabilities',
     title: 'A stack that covers the whole product',
     titleAccent: 'whole product',
     subtitle:
-      'The tools I reach for daily — grouped by where they live in the stack.',
+      'The tools I reach for daily, grouped by where they live in the stack.',
     // about-page variant
     aboutEyebrow: 'Toolkit',
     aboutTitle: 'Skills & tools',
@@ -107,7 +107,7 @@ const en = {
 
   /* ---- Work / Featured Projects ---- */
   work: {
-    eyebrow: '04 — Selected work',
+    eyebrow: '04. Selected work',
     title: "Things I've designed & shipped",
     subtitle:
       'A few representative projects. Open any card for a quick case study, or browse them all.',
@@ -115,7 +115,7 @@ const en = {
 
   /* ---- Testimonials ---- */
   testimonials: {
-    eyebrow: '05 — Kind words',
+    eyebrow: '05. Kind words',
     title: 'What collaborators say',
     quotes: [
       {
@@ -141,22 +141,22 @@ const en = {
 
   /* ---- Experience ---- */
   experience: {
-    eyebrow: '06 — Experience',
+    eyebrow: '06. Experience',
     title: 'The road so far',
     // about-page variant
     aboutEyebrow: 'Career',
     aboutTitle: "Where I've worked",
     entries: [
       {
-        period: '2023 — Present',
+        period: '2023 - Present',
         role: 'Fullstack Software Engineer',
         company: 'Sinergi Investasi Properti',
         location: 'Jakarta, Indonesia',
         description:
-          "Own the company's web platform end to end — a Next.js frontend backed by a custom CMS and admin dashboard. Built the content pipeline, media library and public site with a focus on speed and maintainability.",
+          "Own the company's web platform end to end: a Next.js frontend backed by a custom CMS and admin dashboard. Built the content pipeline, media library and public site with a focus on speed and maintainability.",
       },
       {
-        period: '2021 — 2023',
+        period: '2021 - 2023',
         role: 'Web Developer',
         company: 'Freelance & Agency Work',
         location: 'Remote',
@@ -164,23 +164,23 @@ const en = {
           'Delivered 30+ client websites and web apps across e-commerce, dashboards and marketing sites. Introduced reusable component systems that cut delivery time significantly.',
       },
       {
-        period: '2019 — 2021',
+        period: '2019 - 2021',
         role: 'Junior Software Engineer',
         company: 'Early career',
         location: 'Indonesia',
         description:
-          'Cut my teeth building internal tools and REST APIs. Learned to ship, measure and iterate — and fell in love with the full stack.',
+          'Cut my teeth building internal tools and REST APIs. Learned to ship, measure and iterate, and fell in love with the full stack.',
       },
     ],
   },
 
   /* ---- Contact (landing section) ---- */
   contact: {
-    eyebrow: '07 — Contact',
+    eyebrow: '07. Contact',
     title: "Let's build something great together",
     titleAccent: 'great together',
     subtitle:
-      'Have a project or role in mind? Send a message — I usually reply within a day.',
+      'Have a project or role in mind? Send a message, I usually reply within a day.',
   },
 
   /* ---- Contact Form ---- */
@@ -195,7 +195,7 @@ const en = {
     messagePlaceholder: 'Tell me a bit about your project or role…',
     send: 'Send message',
     sending: 'Sending…',
-    success: "Message sent — I'll reply within a day.",
+    success: "Message sent. I'll reply within a day.",
     error: 'Something went wrong. Please email me directly instead.',
   },
 
@@ -205,7 +205,7 @@ const en = {
     heading: "Let's build something ",
     headingAccent: 'great together',
     subtitle:
-      'Have a project, role or idea in mind? Tell me about it below — I usually reply within a day.',
+      'Have a project, role or idea in mind? Tell me about it below, I usually reply within a day.',
     availableForWork: 'AVAILABLE FOR WORK',
   },
 
@@ -253,7 +253,7 @@ const en = {
     noMatch: 'No projects match your search',
     noPublished: 'No projects published yet',
     tryDifferent: 'Try a different keyword or clear the filters.',
-    checkBack: 'Case studies are on the way — check back soon.',
+      checkBack: 'Case studies are on the way, check back soon.',
     clearFilters: 'Clear filters',
     searchPlaceholder: 'Search projects by name, description or technology…',
     searchLabel: 'Search projects',
@@ -268,7 +268,7 @@ const en = {
   /* ---- Footer ---- */
   footer: {
     description:
-      'Full Stack Developer building reliable software — web, backend and automation — from Jakarta, Indonesia.',
+      'Full Stack Developer building reliable software, web, backend and automation, from Jakarta, Indonesia.',
     allRightsReserved: 'All rights reserved.',
   },
 
@@ -349,11 +349,11 @@ const en = {
   faqs: [
     {
       q: 'What kind of projects do you take on?',
-      a: "Web applications, dashboards, REST APIs, database design, and internal tooling or automation — not just websites. I'm happy to own a problem end to end or join an existing team on a specific piece of the stack.",
+      a: "Web applications, dashboards, REST APIs, database design, and internal tooling or automation, not just websites. I'm happy to own a problem end to end or join an existing team on a specific piece of the stack.",
     },
     {
       q: 'Are you available for full-time roles?',
-      a: "Yes — I'm open to full-time positions, contract work and freelance projects. Remote-first, and comfortable across time zones.",
+      a: "Yes, I'm open to full-time positions, contract work and freelance projects. Remote-first, and comfortable across time zones.",
     },
     {
       q: 'How do we get started?',
@@ -367,7 +367,7 @@ const en = {
       id: 'portfolio-cms',
       title: 'Portfolio CMS Platform',
       summary:
-        'A full personal-site platform: Next.js frontend, a custom admin dashboard, media library and content blocks — the system powering this very site.',
+        'A full personal-site platform: Next.js frontend, a custom admin dashboard, media library and content blocks, the system powering this very site.',
       detail:
         'A production content platform with a public Next.js site and a full admin CMS: profile, projects, skills, experience, media library and page builder. Built for speed (99 Lighthouse) and easy content editing without touching code.',
     },
@@ -383,7 +383,7 @@ const en = {
       id: 'ecommerce-storefront',
       title: 'E-commerce Storefront',
       summary:
-        'Headless storefront with cart, checkout and a Stripe-powered payment flow — optimized for conversion.',
+        'Headless storefront with cart, checkout and a Stripe-powered payment flow, optimized for conversion.',
       detail:
         'A conversion-focused headless commerce build: fast product pages, persistent cart and a streamlined Stripe checkout. Measurable lift in conversion after launch thanks to performance and UX work.',
     },
@@ -418,18 +418,18 @@ const id = {
     available: 'TERSEDIA UNTUK PROYEK BARU',
     headingPre: 'Full Stack Developer membangun ',
     headingAccent: 'perangkat lunak andal',
-    headingPost: ' — dari aplikasi web hingga sistem backend.',
+    headingPost: 'dari aplikasi web hingga sistem backend.',
     viewWork: 'Lihat karya saya',
     downloadCv: 'Unduh CV',
     intro:
-      'Hai, saya I Kadek Agga Sugitha — seorang Full Stack Developer yang membangun perangkat lunak dari ujung ke ujung: aplikasi web, REST API dan layanan backend, database, serta otomasi yang menghubungkan semuanya.',
+      'Hai, saya I Kadek Agga Sugitha, seorang Full Stack Developer yang membangun perangkat lunak dari ujung ke ujung: aplikasi web, REST API dan layanan backend, database, serta otomasi yang menghubungkan semuanya.',
   },
 
   about: {
-    eyebrow: '01 — Tentang',
-    lead: 'Saya membangun perangkat lunak yang menyelesaikan masalah nyata — di seluruh web, backend, data, dan otomasi.',
+    eyebrow: '01. Tentang',
+    lead: 'Saya membangun perangkat lunak yang menyelesaikan masalah nyata, di seluruh web, backend, data, dan otomasi.',
     paragraphs: [
-      'Saya seorang Full Stack Developer IT yang bekerja di seluruh stack: aplikasi web, layanan backend dan API, desain database, serta otomasi dan tooling yang menjaga semuanya berjalan lancar. Saya peduli dengan detail yang membuat perangkat lunak terasa andal — arsitektur yang bersih, model data yang masuk akal, dan antarmuka yang benar-benar dinikmati pengguna.',
+      'Saya seorang Full Stack Developer IT yang bekerja di seluruh stack: aplikasi web, layanan backend dan API, desain database, serta otomasi dan tooling yang menjaga semuanya berjalan lancar. Saya peduli dengan detail yang membuat perangkat lunak terasa andal: arsitektur yang bersih, model data yang masuk akal, dan antarmuka yang benar-benar dinikmati pengguna.',
       'Dari mendesain skema PostgreSQL dan REST API hingga membangun frontend yang responsif dan menyusun pipeline deployment, saya suka menyelesaikan masalah dari ujung ke ujung daripada hanya fokus di satu area. Saat ini sedang membangun platform internal dan produk publik di bidang property-tech.',
     ],
   },
@@ -442,8 +442,8 @@ const id = {
   },
 
   whatIDo: {
-    eyebrow: '02 — Layanan',
-    title: 'Software menyeluruh — bukan hanya website',
+    eyebrow: '02. Layanan',
+    title: 'Software menyeluruh, bukan hanya website',
     titleAccent: 'bukan hanya website',
     subtitle:
       'Toolkit Full Stack Developer serba guna: frontend hanyalah satu bagian dari gambaran yang lebih besar.',
@@ -456,7 +456,7 @@ const id = {
       {
         title: 'Backend & API',
         description:
-          'REST API dan layanan backend dengan Node.js dan Express — sistem yang menggerakkan frontend.',
+          'REST API dan layanan backend dengan Node.js dan Express, sistem yang menggerakkan frontend.',
       },
       {
         title: 'Data & Database',
@@ -472,11 +472,11 @@ const id = {
   },
 
   skills: {
-    eyebrow: '03 — Kemampuan',
+    eyebrow: '03. Kemampuan',
     title: 'Stack yang mencakup seluruh produk',
     titleAccent: 'seluruh produk',
     subtitle:
-      'Tools yang saya gunakan setiap hari — dikelompokkan berdasarkan posisinya di stack.',
+      'Tools yang saya gunakan setiap hari, dikelompokkan berdasarkan posisinya di stack.',
     aboutEyebrow: 'Toolkit',
     aboutTitle: 'Keahlian & tools',
     aboutTitleAccent: 'tools',
@@ -485,14 +485,14 @@ const id = {
   },
 
   work: {
-    eyebrow: '04 — Karya Pilihan',
+    eyebrow: '04. Karya Pilihan',
     title: 'Hal-hal yang saya desain & kirim',
     subtitle:
       'Beberapa proyek representatif. Buka kartu mana saja untuk studi kasus singkat, atau telusuri semuanya.',
   },
 
   testimonials: {
-    eyebrow: '05 — Kata Mereka',
+    eyebrow: '05. Kata Mereka',
     title: 'Apa kata rekan kerja',
     quotes: [
       {
@@ -517,21 +517,21 @@ const id = {
   },
 
   experience: {
-    eyebrow: '06 — Pengalaman',
+    eyebrow: '06. Pengalaman',
     title: 'Perjalanan sejauh ini',
     aboutEyebrow: 'Karir',
     aboutTitle: 'Tempat saya bekerja',
     entries: [
       {
-        period: '2023 — Sekarang',
+        period: '2023 - Sekarang',
         role: 'Fullstack Software Engineer',
         company: 'Sinergi Investasi Properti',
         location: 'Jakarta, Indonesia',
         description:
-          'Mengelola platform web perusahaan secara end to end — frontend Next.js didukung CMS kustom dan dashboard admin. Membangun pipeline konten, perpustakaan media, dan situs publik dengan fokus pada kecepatan dan kemudahan pemeliharaan.',
+          'Mengelola platform web perusahaan secara end to end, frontend Next.js didukung CMS kustom dan dashboard admin. Membangun pipeline konten, perpustakaan media, dan situs publik dengan fokus pada kecepatan dan kemudahan pemeliharaan.',
       },
       {
-        period: '2021 — 2023',
+        period: '2021 - 2023',
         role: 'Web Developer',
         company: 'Freelance & Agensi',
         location: 'Remote',
@@ -539,22 +539,22 @@ const id = {
           'Menyelesaikan 30+ website dan web app klien di bidang e-commerce, dashboard, dan situs pemasaran. Memperkenalkan sistem komponen reusable yang memangkas waktu pengerjaan secara signifikan.',
       },
       {
-        period: '2019 — 2021',
+        period: '2019 - 2021',
         role: 'Junior Software Engineer',
         company: 'Karir awal',
         location: 'Indonesia',
         description:
-          'Mengasah kemampuan membangun tools internal dan REST API. Belajar untuk merilis, mengukur, dan iterasi — dan jatuh cinta dengan full stack.',
+          'Mengasah kemampuan membangun tools internal dan REST API. Belajar untuk merilis, mengukur, dan iterasi, dan jatuh cinta dengan full stack.',
       },
     ],
   },
 
   contact: {
-    eyebrow: '07 — Kontak',
+    eyebrow: '07. Kontak',
     title: 'Mari bangun sesuatu yang hebat bersama',
     titleAccent: 'hebat bersama',
     subtitle:
-      'Punya proyek atau peran yang terlintas? Kirim pesan — saya biasanya membalas dalam sehari.',
+      'Punya proyek atau peran yang terlintas? Kirim pesan, saya biasanya membalas dalam sehari.',
   },
 
   contactForm: {
@@ -568,7 +568,7 @@ const id = {
     messagePlaceholder: 'Ceritakan sedikit tentang proyek atau peran Anda…',
     send: 'Kirim pesan',
     sending: 'Mengirim…',
-    success: 'Pesan terkirim — saya akan membalas dalam sehari.',
+    success: 'Pesan terkirim. Saya akan membalas dalam sehari.',
     error: 'Terjadi kesalahan. Silakan email saya langsung.',
   },
 
@@ -577,7 +577,7 @@ const id = {
     heading: 'Mari bangun sesuatu yang ',
     headingAccent: 'hebat bersama',
     subtitle:
-      'Punya proyek, peran, atau ide? Ceritakan di bawah ini — saya biasanya membalas dalam sehari.',
+      'Punya proyek, peran, atau ide? Ceritakan di bawah ini, saya biasanya membalas dalam sehari.',
     availableForWork: 'TERSEDIA UNTUK PROYEK',
   },
 
@@ -620,7 +620,7 @@ const id = {
     noMatch: 'Tidak ada proyek yang cocok dengan pencarian Anda',
     noPublished: 'Belum ada proyek yang dipublikasikan',
     tryDifferent: 'Coba kata kunci lain atau hapus filter.',
-    checkBack: 'Studi kasus sedang dalam perjalanan — kembali lagi nanti.',
+      checkBack: 'Studi kasus sedang dalam perjalanan, kembali lagi nanti.',
     clearFilters: 'Hapus filter',
     searchPlaceholder: 'Cari proyek berdasarkan nama, deskripsi, atau teknologi…',
     searchLabel: 'Cari proyek',
@@ -634,7 +634,7 @@ const id = {
 
   footer: {
     description:
-      'Full Stack Developer membangun perangkat lunak andal — web, backend, dan otomasi — dari Jakarta, Indonesia.',
+      'Full Stack Developer membangun perangkat lunak andal, web, backend, dan otomasi, dari Jakarta, Indonesia.',
     allRightsReserved: 'Hak cipta dilindungi.',
   },
 
@@ -704,11 +704,11 @@ const id = {
   faqs: [
     {
       q: 'Proyek seperti apa yang Anda kerjakan?',
-      a: 'Aplikasi web, dashboard, REST API, desain database, dan tooling internal atau otomasi — bukan hanya website. Saya senang menangani masalah dari ujung ke ujung atau bergabung dengan tim yang sudah ada di bagian stack tertentu.',
+      a: 'Aplikasi web, dashboard, REST API, desain database, dan tooling internal atau otomasi, bukan hanya website. Saya senang menangani masalah dari ujung ke ujung atau bergabung dengan tim yang sudah ada di bagian stack tertentu.',
     },
     {
       q: 'Apakah Anda tersedia untuk posisi penuh waktu?',
-      a: 'Ya — saya terbuka untuk posisi penuh waktu, kontrak, dan proyek freelance. Remote-first, dan nyaman bekerja lintas zona waktu.',
+      a: 'Ya, saya terbuka untuk posisi penuh waktu, kontrak, dan proyek freelance. Remote-first, dan nyaman bekerja lintas zona waktu.',
     },
     {
       q: 'Bagaimana cara memulai?',
@@ -721,7 +721,7 @@ const id = {
       id: 'portfolio-cms',
       title: 'Platform CMS Portofolio',
       summary:
-        'Platform situs personal lengkap: frontend Next.js, dashboard admin kustom, perpustakaan media, dan blok konten — sistem yang menggerakkan situs ini.',
+        'Platform situs personal lengkap: frontend Next.js, dashboard admin kustom, perpustakaan media, dan blok konten, sistem yang menggerakkan situs ini.',
       detail:
         'Platform konten produksi dengan situs Next.js publik dan CMS admin lengkap: profil, proyek, skill, pengalaman, perpustakaan media, dan page builder. Dibangun untuk kecepatan (99 Lighthouse) dan pengeditan konten yang mudah tanpa menyentuh kode.',
     },
@@ -737,7 +737,7 @@ const id = {
       id: 'ecommerce-storefront',
       title: 'Toko E-commerce',
       summary:
-        'Storefront headless dengan keranjang, checkout, dan alur pembayaran Stripe — dioptimalkan untuk konversi.',
+        'Storefront headless dengan keranjang, checkout, dan alur pembayaran Stripe, dioptimalkan untuk konversi.',
       detail:
         'Build e-commerce headless yang berfokus pada konversi: halaman produk cepat, keranjang persisten, dan checkout Stripe yang efisien. Peningkatan konversi yang terukur setelah peluncuran berkat performa dan pekerjaan UX.',
     },

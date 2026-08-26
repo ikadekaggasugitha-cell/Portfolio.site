@@ -299,7 +299,7 @@ function yearOf(value: string | null): string | null {
 function formatPeriod(start: string | null, end: string | null): string {
   const startYear = yearOf(start)
   const endLabel = end ? yearOf(end) : 'Present'
-  if (startYear && endLabel) return `${startYear} — ${endLabel}`
+  if (startYear && endLabel) return `${startYear} - ${endLabel}`
   return startYear ?? endLabel ?? ''
 }
 
