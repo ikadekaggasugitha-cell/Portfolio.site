@@ -10,7 +10,7 @@ import Button from '@/components/admin/ui/Button'
 import ProgressBar from '@/components/admin/ui/ProgressBar'
 import { SkeletonForm } from '@/components/admin/ui/Skeleton'
 
-import { toAdminString, toAdminBilingual, type BilingualValue } from '@/lib/admin-localize'
+import { toAdminBilingual, type BilingualValue } from '@/lib/admin-localize'
 import TranslatableInput from '@/components/admin/ui/TranslatableInput'
 
 const MediaPicker = dynamic(() => import('@/components/admin/MediaPicker'), { ssr: false })

@@ -114,7 +114,7 @@ export interface PageMeta {
 
 /** `ok: false` means the API was unreachable (network error, timeout or HTTP error).
  *  `ok: true` with empty `data` means the admin simply has no content of that type. */
-export interface Fetched<T> {
+interface Fetched<T> {
   ok: boolean
   data: T
 }
