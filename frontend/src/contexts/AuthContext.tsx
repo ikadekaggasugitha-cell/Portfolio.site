@@ -65,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const isAdmin = user?.email === 'admin@example.com'
+  const isAdmin = user?.email === 'admin@porto.com'
 
   return (
     <AuthContext.Provider

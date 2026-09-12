@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
  * email too. Run with: php artisan db:seed --class=ResetAdminPasswordSeeder
  *
  * Env overrides (all optional):
- * ADMIN_RESET_EMAIL=admin@example.com   the account to find (default admin@example.com)
+ * ADMIN_RESET_EMAIL=admin@porto.com   the account to find (default admin@porto.com)
  * ADMIN_NEW_EMAIL=new@example.com       change the email to this
  * ADMIN_RESET_PASSWORD=SomeP4ss         set this exact password (default: random)
  */
@@ -19,7 +19,7 @@ class ResetAdminPasswordSeeder extends Seeder
 {
     public function run(): void
     {
-        $email = env('ADMIN_RESET_EMAIL', 'admin@example.com');
+        $email = env('ADMIN_RESET_EMAIL', 'admin@porto.com');
         $newEmail = env('ADMIN_NEW_EMAIL');
         $password = env('ADMIN_RESET_PASSWORD') ?: Str::random(18);
 

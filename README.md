@@ -69,7 +69,7 @@ The seeder creates two **local-only** accounts for development:
 
 | Email | Password | Role |
 |-------|----------|------|
-| `admin@example.com` | `password` | admin |
+| `admin@porto.com` | `password` | admin |
 | `test@example.com` | `password` | regular user |
 
 ⚠️ These are dev fixtures, not production credentials — rotate/replace them (`php artisan tinker` → update the seeded user's password, or add a fresh admin and delete the fixture one) before treating any environment as production. Production credentials are set directly in Vercel's environment variables and are never committed to the repo.

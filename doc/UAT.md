@@ -96,7 +96,7 @@ Contoh data:
 Email
 
 ```
-admin@example.com
+admin@porto.com
 ```
 
 Password
