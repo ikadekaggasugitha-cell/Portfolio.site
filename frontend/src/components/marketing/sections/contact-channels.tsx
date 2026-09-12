@@ -36,9 +36,9 @@ function Channel({
       <span className="grid size-[42px] flex-none place-items-center rounded-xl bg-mk-brand/10 text-mk-accent">
         {icon}
       </span>
-      <span>
+      <span className="min-w-0">
         <span className="block font-mk-mono text-[0.68rem] uppercase tracking-[0.1em] text-mk-faint">{label}</span>
-        <span className="mt-0.5 block text-[0.96rem] font-semibold">{value}</span>
+        <span className="mt-0.5 block [overflow-wrap:anywhere] text-[0.96rem] font-semibold">{value}</span>
       </span>
     </>
   )

@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import Sidebar from '@/components/admin/Sidebar'
 import Navbar from '@/components/admin/Navbar'
 import { useRouter, usePathname } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import '@/styles/stitch_modernized_theme_redesign.css'
 import { GlobalLoadingProvider } from '@/components/admin/ui/GlobalLoadingOverlay'
 import Spinner from '@/components/admin/ui/Spinner'
@@ -49,6 +49,12 @@ export function AdminShell({
 }) {
   const pathname = usePathname()
   const isLoginPage = pathname === '/admin/login'
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  // Close the mobile sidebar drawer whenever the route changes.
+  useEffect(() => {
+    setSidebarOpen(false)
+  }, [pathname])
 
   return (
     <ThemeProvider>
@@ -75,10 +81,17 @@ export function AdminShell({
               </div>
             ) : (
               <div className="admin-theme flex min-h-screen bg-surface">
-                <Sidebar />
-                <div className="flex-1 flex flex-col">
-                  <Navbar />
-                  <main className="flex-1 p-6">{children}</main>
+                <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+                {sidebarOpen && (
+                  <div
+                    className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+                    onClick={() => setSidebarOpen(false)}
+                    aria-hidden
+                  />
+                )}
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <Navbar onMenuClick={() => setSidebarOpen((v) => !v)} />
+                  <main className="flex-1 p-4 sm:p-6">{children}</main>
                 </div>
               </div>
             )}

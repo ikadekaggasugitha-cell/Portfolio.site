@@ -14,7 +14,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.42.2",
     "lucide-react": "^1.25.0",
-    "next": "15.5.20",
+    "next": "^15.5.25",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hot-toast": "^2.6.0",
@@ -30,5 +30,9 @@
     "eslint-config-next": "15.5.20",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "sharp": "^0.35.4",
+    "postcss": "^8.5.28"
   }
 }

@@ -95,8 +95,8 @@ export function Navbar() {
         scrolled ? 'border-mk-hairline' : 'border-transparent',
       )}
     >
-      <nav className="mx-auto flex h-[60px] md:h-[68px] max-w-[1200px] items-center justify-between gap-4 md:gap-5 px-[clamp(16px,5vw,40px)]">
-        <Logo textClassName="text-[1.15rem] md:text-[1.3rem]" />
+      <nav className="mx-auto flex h-[60px] md:h-[68px] max-w-[1200px] items-center justify-between gap-3 md:gap-5 px-[clamp(14px,5vw,40px)]">
+        <Logo textClassName="text-[1.02rem] sm:text-[1.15rem] md:text-[1.3rem]" />
 
         {/* Desktop links + sliding indicator */}
         <div className="relative hidden items-center gap-1 md:flex" onMouseLeave={() => moveTo(activeHref)}>
@@ -129,10 +129,10 @@ export function Navbar() {
           })}
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 sm:gap-2.5">
           <LanguageToggle />
           <ThemeToggle />
-          <div className="hidden sm:block">
+          <div className="hidden lg:block">
             <Button href={localeHref(locale, '/contact')} size="md" className="px-[18px] py-2.5 text-[0.9rem]">
               {t.nav.letsTalk}
             </Button>

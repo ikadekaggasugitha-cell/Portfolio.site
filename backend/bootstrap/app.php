@@ -3,6 +3,7 @@
 use App\Exceptions\ApiExceptionHandler;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\JwtMiddleware;
+use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -21,6 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'jwt.auth' => JwtMiddleware::class,
             'admin' => AdminMiddleware::class,
         ]);
+
+        // Baseline OWASP security headers on every response.
+        $middleware->append(SecurityHeaders::class);
 
         $middleware->api(prepend: [
             'throttle:api',

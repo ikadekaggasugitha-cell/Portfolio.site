@@ -175,7 +175,7 @@ export default function StatsAdminPage() {
           </p>
         </div>
       ) : (
-        <div className="bg-canvas border border-hairline rounded-[18px] overflow-hidden">
+        <div className="bg-canvas border border-hairline rounded-[18px] overflow-x-auto">
           <table className="w-full">
             <thead className="bg-canvas-parchment border-b border-hairline">
               <tr>

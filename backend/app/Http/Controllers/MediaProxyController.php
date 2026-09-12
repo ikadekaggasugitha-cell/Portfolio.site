@@ -31,10 +31,22 @@ class MediaProxyController extends Controller
 
         $mime = $disk->mimeType($path) ?: $this->guessMimeFromPath($path);
 
-        return response($disk->get($path), 200, [
+        $headers = [
             'Content-Type' => $mime,
             'Cache-Control' => 'public, max-age=31536000, immutable',
-        ]);
+            // Never let the browser MIME-sniff a stored object into an executable type.
+            'X-Content-Type-Options' => 'nosniff',
+        ];
+
+        // SVGs are XML documents that can carry <script>. When opened as a top-level
+        // document they would execute in this origin, so neutralise scripts (they still
+        // render fine as <img>/inline art) and force download rather than inline render.
+        if (str_contains($mime, 'svg')) {
+            $headers['Content-Security-Policy'] = "default-src 'none'; style-src 'unsafe-inline'; sandbox";
+            $headers['Content-Disposition'] = 'attachment';
+        }
+
+        return response($disk->get($path), 200, $headers);
     }
 
     private function guessMimeFromPath(string $path): string

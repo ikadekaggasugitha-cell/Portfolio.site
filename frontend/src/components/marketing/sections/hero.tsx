@@ -39,7 +39,7 @@ export function Hero(props: HeroData = heroDefaults) {
       <Container className="relative z-[2]">
         <div className="grid items-center gap-[clamp(32px,5vw,72px)] lg:grid-cols-[1.05fr_0.95fr]">
           {/* Copy */}
-          <motion.div className="max-w-[620px]" {...container}>
+          <motion.div className="max-w-[620px] min-w-0" {...container}>
             {available && (
               <motion.span
                 {...item}
@@ -60,7 +60,7 @@ export function Hero(props: HeroData = heroDefaults) {
               className="mt-[22px] text-[clamp(1.85rem,5.2vw,3.85rem)] font-extrabold leading-[1.08] tracking-[-0.035em] text-balance"
             >
               {t.hero.headingPre}
-              <span className="mk-grad-text">{t.hero.headingAccent}</span>{t.hero.headingPost}
+              <span className="mk-grad-text">{t.hero.headingAccent}</span>{' '}{t.hero.headingPost}
             </motion.h1>
 
             <motion.p {...item} className="mt-5 max-w-[46ch] text-[clamp(1.05rem,1.8vw,1.3rem)] text-mk-muted">
@@ -99,7 +99,7 @@ export function Hero(props: HeroData = heroDefaults) {
 
           {/* Photo + code strip card */}
           <motion.div
-            className="relative mx-auto w-full max-w-[340px] md:max-w-[420px] lg:-mt-8 lg:-translate-y-2 lg:pt-2"
+            className="relative mx-auto w-full min-w-0 max-w-[340px] md:max-w-[420px] lg:-mt-8 lg:-translate-y-2 lg:pt-2"
             initial={reduce ? undefined : { opacity: 0, y: 24 }}
             animate={reduce ? undefined : { opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}

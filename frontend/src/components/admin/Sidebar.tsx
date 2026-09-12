@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { X } from 'lucide-react'
 
 /** Grouped so the homepage copy sections don't get lost among the CV-style records.
  *  Pages and Media existed as routes but were never linked here. */
@@ -42,13 +43,33 @@ const navGroups = [
   },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({
+  open = false,
+  onClose,
+}: {
+  open?: boolean
+  onClose?: () => void
+}) {
   const pathname = usePathname()
 
   return (
-    <aside className="w-64 sidebar-stitch bg-surface text-ink min-h-screen p-5">
-      <div className="text-sm font-semibold tracking-[-0.12px] mb-8 opacity-90">
-        Portfolio Admin
+    <aside
+      className={`sidebar-stitch bg-surface text-ink fixed inset-y-0 left-0 z-50 w-64 overflow-y-auto p-5 transition-transform duration-300 ease-out lg:static lg:z-auto lg:min-h-screen lg:translate-x-0 ${
+        open ? 'translate-x-0' : '-translate-x-full'
+      }`}
+    >
+      <div className="mb-8 flex items-center justify-between">
+        <span className="text-sm font-semibold tracking-[-0.12px] opacity-90">
+          Portfolio Admin
+        </span>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close menu"
+          className="grid size-8 place-items-center rounded-[8px] text-body-on-dark opacity-70 transition-colors hover:bg-white/10 hover:opacity-100 lg:hidden"
+        >
+          <X className="size-5" />
+        </button>
       </div>
       <nav className="space-y-5">
         {navGroups.map((group, i) => (
