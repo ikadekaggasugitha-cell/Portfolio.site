@@ -42,8 +42,9 @@ export async function SkillsLive() {
 }
 
 export async function ProjectsLive() {
-  const { data } = await getProjects(4)
-  const projects = mapProjects(data, 4)
+  // Home shows only a small teaser; the full list lives on the /projects page.
+  const { data } = await getProjects(2)
+  const projects = mapProjects(data, 2)
   if (!projects.length) return null
   return <FeaturedProjects projects={projects} />
 }
