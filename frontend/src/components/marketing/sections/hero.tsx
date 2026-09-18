@@ -2,17 +2,13 @@
 
 import Image from 'next/image'
 import { motion, useReducedMotion } from 'framer-motion'
-import { ArrowRight, Download, Mail } from 'lucide-react'
+import { ArrowRight, Download } from 'lucide-react'
 import { heroDefaults, type HeroData } from '@/lib/marketing/content'
 import { useTranslation } from '../theme/language-provider'
 import { Container } from '../primitives/container'
 import { Button } from '../primitives/button'
 import { HeroBackdrop } from './hero-backdrop'
-import { GithubIcon, LinkedinIcon } from '../icons/brand-icons'
 import { staggerItem, staggerParent } from '@/lib/marketing/motion'
-
-const socialClass =
-  'grid size-[42px] place-items-center rounded-xl border border-mk-hairline bg-mk-surface text-mk-muted shadow-mk-sm transition-[color,border-color,transform] duration-200 hover:-translate-y-[3px] hover:border-mk-brand-soft hover:text-mk-ink'
 
 /** First + last initial, for the photo placeholder before one is uploaded. */
 function initials(name: string) {
@@ -25,7 +21,7 @@ function initials(name: string) {
 }
 
 export function Hero(props: HeroData = heroDefaults) {
-  const { name, role, photo, available, location, githubUrl, linkedinUrl, email, cvUrl, codeStack, intro } = props
+  const { name, role, photo, available, location, cvUrl, codeStack, intro } = props
   const reduce = useReducedMotion()
   const { t, localize } = useTranslation()
   const container = reduce ? {} : { initial: 'hidden', animate: 'show', variants: staggerParent }
@@ -80,22 +76,6 @@ export function Hero(props: HeroData = heroDefaults) {
                   {t.hero.downloadCv}
                 </Button>
               )}
-            </motion.div>
-
-            <motion.div {...item} className="mt-8 flex gap-2.5">
-              {githubUrl && githubUrl !== '#' && (
-                <a href={githubUrl} aria-label="GitHub" className={socialClass}>
-                  <GithubIcon className="size-[19px]" />
-                </a>
-              )}
-              {linkedinUrl && linkedinUrl !== '#' && (
-                <a href={linkedinUrl} aria-label="LinkedIn" className={socialClass}>
-                  <LinkedinIcon className="size-[19px]" />
-                </a>
-              )}
-              <a href={`mailto:${email}`} aria-label="Email" className={socialClass}>
-                <Mail className="size-[19px]" aria-hidden />
-              </a>
             </motion.div>
           </motion.div>
 

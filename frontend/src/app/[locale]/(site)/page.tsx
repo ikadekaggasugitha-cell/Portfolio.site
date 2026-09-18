@@ -3,13 +3,11 @@ import { Suspense } from 'react'
 import type { Profile } from '@/types'
 import { serializeJsonLd } from '@/lib/json-ld'
 import { getProfile, getSkills, soften } from '@/lib/marketing/api.server'
-import { mapContact, mapHero } from '@/lib/marketing/mappers'
+import { mapHero } from '@/lib/marketing/mappers'
 import { site } from '@/lib/marketing/content'
 import { Hero } from '@/components/marketing/sections/hero'
-import { Contact } from '@/components/marketing/sections/contact'
 import {
   AboutLive,
-  ExperienceLive,
   ProjectsLive,
   SkillsLive,
   TestimonialsLive,
@@ -17,7 +15,6 @@ import {
   WhatIDoLive,
 } from '@/components/marketing/sections/live-sections'
 import {
-  ExperienceSkeleton,
   ProjectsSkeleton,
   SkillsSkeleton,
 } from '@/components/marketing/sections/section-skeletons'
@@ -138,10 +135,6 @@ export default async function HomePage({ params }: { params: PageParams }) {
       <Suspense fallback={null}>
         <TestimonialsLive />
       </Suspense>
-      <Suspense fallback={<ExperienceSkeleton />}>
-        <ExperienceLive />
-      </Suspense>
-      <Contact {...mapContact(profile)} />
     </>
   )
 }
