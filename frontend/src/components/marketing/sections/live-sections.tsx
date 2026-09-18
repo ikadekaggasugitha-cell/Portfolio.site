@@ -9,7 +9,6 @@ import {
 } from '@/lib/marketing/api.server'
 import {
   categorizeSkills,
-  liveOrFallback,
   mapAbout,
   mapCapabilities,
   mapExperience,
@@ -18,15 +17,6 @@ import {
   mapStats,
   mapTestimonials,
 } from '@/lib/marketing/mappers'
-import {
-  capabilities as capabilityDefaults,
-  marqueeItems as marqueeDefaults,
-  projects as projectDefaults,
-  skillGroups as skillGroupDefaults,
-  stats as statDefaults,
-  testimonials as testimonialDefaults,
-  timeline as timelineDefaults,
-} from '@/lib/marketing/content'
 import { Skills } from './skills'
 import { FeaturedProjects } from './featured-projects'
 import { Experience } from './experience'
@@ -40,35 +30,35 @@ import { Testimonials } from './testimonials'
  * prop-driven section. Each is wrapped in <Suspense> on the page so it can stream
  * with a skeleton fallback instead of holding up the whole response.
  *
- * A section hides itself when the admin has no content of that kind, and falls back
- * to the static defaults only when the API was unreachable — see `liveOrFallback`.
+ * A section hides itself when the admin has no content of that kind. We do not
+ * publish representative defaults because dummy portfolio content looks real.
  */
 
 export async function SkillsLive() {
-  const { ok, data } = await getSkills()
-  const groups = liveOrFallback(categorizeSkills(data), ok, skillGroupDefaults)
+  const { data } = await getSkills()
+  const groups = categorizeSkills(data)
   if (!groups.length) return null
   return <Skills groups={groups} />
 }
 
 export async function ProjectsLive() {
-  const { ok, data } = await getProjects(4)
-  const projects = liveOrFallback(mapProjects(data, 4), ok, projectDefaults.slice(0, 4))
+  const { data } = await getProjects(4)
+  const projects = mapProjects(data, 4)
   if (!projects.length) return null
   return <FeaturedProjects projects={projects} />
 }
 
 export async function ExperienceLive() {
-  const { ok, data } = await getExperiences()
-  const entries = liveOrFallback(mapExperience(data), ok, timelineDefaults)
+  const { data } = await getExperiences()
+  const entries = mapExperience(data)
   if (!entries.length) return null
   return <Experience entries={entries} />
 }
 
 /** Technology marquee, driven by Admin → Skills rather than a second hand-kept list. */
 export async function TrustStripLive() {
-  const { ok, data } = await getSkills()
-  return <TrustStrip items={liveOrFallback(mapMarqueeItems(data), ok, [...marqueeDefaults])} />
+  const { data } = await getSkills()
+  return <TrustStrip items={mapMarqueeItems(data)} />
 }
 
 /**
@@ -76,20 +66,16 @@ export async function TrustStripLive() {
  * their own request, which is why this takes `profile` as a prop instead of re-fetching.
  */
 export async function AboutLive({ profile }: { profile: Profile | null }) {
-  const { ok, data } = await getStats()
-  return <About {...mapAbout(profile)} stats={liveOrFallback(mapStats(data), ok, statDefaults)} />
+  const { data } = await getStats()
+  return <About {...mapAbout(profile)} stats={mapStats(data)} />
 }
 
 export async function WhatIDoLive() {
-  const { ok, data } = await getCapabilities()
-  return <WhatIDo capabilities={liveOrFallback(mapCapabilities(data), ok, capabilityDefaults)} />
+  const { data } = await getCapabilities()
+  return <WhatIDo capabilities={mapCapabilities(data)} />
 }
 
 export async function TestimonialsLive() {
-  const { ok, data } = await getTestimonials()
-  return (
-    <Testimonials
-      testimonials={liveOrFallback(mapTestimonials(data), ok, testimonialDefaults)}
-    />
-  )
+  const { data } = await getTestimonials()
+  return <Testimonials testimonials={mapTestimonials(data)} />
 }

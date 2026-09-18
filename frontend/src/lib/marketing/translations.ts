@@ -31,14 +31,13 @@ const en = {
 
   /* ---- Hero ---- */
   hero: {
-    available: 'AVAILABLE FOR NEW WORK',
-    headingPre: 'Full Stack Developer building ',
-    headingAccent: 'reliable software',
-    headingPost: 'from web apps to backend systems.',
-    viewWork: 'View my work',
+    available: 'OPEN TO WORK',
+    headingPre: 'Building Reliable',
+    headingAccent: 'End-to-End Solutions',
+    headingPost: 'from Complex Business Workflows',
+    viewWork: 'My Work',
     downloadCv: 'Download CV',
-    intro:
-      "Hi, I'm I Kadek Agga Sugitha, a Full Stack Developer who builds software end to end: web applications, REST APIs and backend services, databases, and the automation that ties them together.",
+
   },
 
   /* ---- About ---- */
@@ -253,7 +252,7 @@ const en = {
     noMatch: 'No projects match your search',
     noPublished: 'No projects published yet',
     tryDifferent: 'Try a different keyword or clear the filters.',
-      checkBack: 'Case studies are on the way, check back soon.',
+    checkBack: 'Case studies are on the way, check back soon.',
     clearFilters: 'Clear filters',
     searchPlaceholder: 'Search projects by name, description or technology…',
     searchLabel: 'Search projects',
@@ -268,7 +267,7 @@ const en = {
   /* ---- Footer ---- */
   footer: {
     description:
-      'Full Stack Developer building reliable software, web, backend and automation, from Jakarta, Indonesia.',
+      'Full-Stack Developer • Web, Backend & Automation • Jakarta, Indonesia',
     allRightsReserved: 'All rights reserved.',
   },
 
@@ -415,14 +414,13 @@ const id = {
   },
 
   hero: {
-    available: 'TERSEDIA UNTUK PROYEK BARU',
-    headingPre: 'Full Stack Developer membangun ',
-    headingAccent: 'perangkat lunak andal',
-    headingPost: 'dari aplikasi web hingga sistem backend.',
-    viewWork: 'Lihat karya saya',
+    available: 'TERBUKA UNTUK PELUANG KERJA',
+    headingPre: 'Membangun Solusi',
+    headingAccent: 'End-to-End Reliable',
+    headingPost: 'dari Alur Kerja Bisnis yang Kompleks',
+    viewWork: 'Karya Saya',
     downloadCv: 'Unduh CV',
-    intro:
-      'Hai, saya I Kadek Agga Sugitha, seorang Full Stack Developer yang membangun perangkat lunak dari ujung ke ujung: aplikasi web, REST API dan layanan backend, database, serta otomasi yang menghubungkan semuanya.',
+
   },
 
   about: {
@@ -620,7 +618,7 @@ const id = {
     noMatch: 'Tidak ada proyek yang cocok dengan pencarian Anda',
     noPublished: 'Belum ada proyek yang dipublikasikan',
     tryDifferent: 'Coba kata kunci lain atau hapus filter.',
-      checkBack: 'Studi kasus sedang dalam perjalanan, kembali lagi nanti.',
+    checkBack: 'Studi kasus sedang dalam perjalanan, kembali lagi nanti.',
     clearFilters: 'Hapus filter',
     searchPlaceholder: 'Cari proyek berdasarkan nama, deskripsi, atau teknologi…',
     searchLabel: 'Cari proyek',
@@ -762,10 +760,10 @@ export const translations = { en, id } as const
 type DeepStringify<T> = T extends string
   ? string
   : T extends readonly (infer U)[]
-    ? DeepStringify<U>[]
-    : T extends object
-      ? { [K in keyof T]: DeepStringify<T[K]> }
-      : T
+  ? DeepStringify<U>[]
+  : T extends object
+  ? { [K in keyof T]: DeepStringify<T[K]> }
+  : T
 
 /** The shape of a single locale's translation bundle. */
 export type Translations = DeepStringify<typeof en>

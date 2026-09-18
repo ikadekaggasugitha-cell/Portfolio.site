@@ -1,6 +1,6 @@
 'use client'
 
-import { capabilities as capabilityDefaults, type Capability } from '@/lib/marketing/content'
+import type { Capability } from '@/lib/marketing/content'
 import { useTranslation } from '../theme/language-provider'
 import { Section } from '../primitives/section'
 import { SectionHeading } from '../primitives/section-heading'
@@ -12,7 +12,7 @@ import { MarketingIcon } from '../primitives/marketing-icon'
  * and automation — so the page reads as an IT Full Stack Developer working across the
  * stack rather than someone who only builds websites.
  */
-export function WhatIDo({ capabilities = capabilityDefaults }: { capabilities?: Capability[] }) {
+export function WhatIDo({ capabilities = [] }: { capabilities?: Capability[] }) {
   const { t, localize } = useTranslation()
   if (!capabilities.length) return null
 

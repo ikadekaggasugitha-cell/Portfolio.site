@@ -41,13 +41,6 @@ export interface StatTile {
   label: LocalizedText
 }
 
-export const stats: StatTile[] = [
-  { value: 5, suffix: '+', label: 'Years shipping' },
-  { value: 42, suffix: '+', label: 'Projects delivered' },
-  { value: 18, suffix: '+', label: 'Happy clients' },
-  { value: 99, suffix: '%', label: 'On-time delivery' },
-]
-
 /**
  * "What I do" — the general scope of work, shown right after About so the
  * page reads as an IT Full Stack Developer working across the stack, not a
@@ -59,41 +52,11 @@ export interface Capability {
   icon: string | LucideIcon
 }
 
-export const capabilities: Capability[] = [
-  {
-    title: 'Web & Applications',
-    description: 'Responsive web apps, dashboards and internal tools built with React and Next.js.',
-    icon: 'globe',
-  },
-  {
-    title: 'Backend & APIs',
-    description: 'REST APIs and backend services with Node.js and Express, the systems that power the frontend.',
-    icon: 'server',
-  },
-  {
-    title: 'Data & Databases',
-    description: 'Schema design and data modeling with PostgreSQL and MongoDB, built to stay maintainable as they grow.',
-    icon: 'database',
-  },
-  {
-    title: 'Automation & DevOps',
-    description: 'CI/CD pipelines, Docker containers and scripts that keep deployment and maintenance painless.',
-    icon: 'settings',
-  },
-]
-
 export interface SkillGroup {
   title: string
   icon: string | LucideIcon
   skills: string[]
 }
-
-export const skillGroups: SkillGroup[] = [
-  { title: 'Frontend', icon: 'frontend', skills: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
-  { title: 'Backend', icon: 'backend', skills: ['Node.js', 'Express.js', 'PostgreSQL', 'MongoDB', 'REST APIs'] },
-  { title: 'DevOps & Cloud', icon: 'devops', skills: ['Docker', 'AWS', 'Git', 'CI / CD', 'Nginx'] },
-  { title: 'Design & Craft', icon: 'design', skills: ['Figma', 'UI / UX', 'Design systems', 'Accessibility'] },
-]
 
 /**
  * `motif` drives a distinct, per-project stylized mockup (see ProjectMockup) —
@@ -118,61 +81,6 @@ export interface FeaturedProject {
   repoUrl: string
 }
 
-export const projects: FeaturedProject[] = [
-  {
-    id: 'portfolio-cms',
-    title: 'Portfolio CMS Platform',
-    featured: true,
-    motif: 'cms',
-    summary:
-      'A full personal-site platform: Next.js frontend, a custom admin dashboard, media library and content blocks, the system powering this very site.',
-    detail:
-      'A production content platform with a public Next.js site and a full admin CMS: profile, projects, skills, experience, media library and page builder. Built for speed (99 Lighthouse) and easy content editing without touching code.',
-    tags: ['Next.js', 'TypeScript', 'Tailwind', 'REST API'],
-    demoUrl: '#',
-    repoUrl: '#',
-  },
-  {
-    id: 'analytics-dashboard',
-    title: 'Realtime Analytics Dashboard',
-    featured: false,
-    motif: 'analytics',
-    summary:
-      'Live metrics dashboard with streaming charts, role-based access and sub-second updates over WebSockets.',
-    detail:
-      'A dashboard that ingests event streams and renders live KPIs with smooth, GPU-accelerated charts. Includes role-based access, saved views and CSV export. Backend on Node + Postgres with a WebSocket layer for realtime.',
-    tags: ['React', 'Node.js', 'PostgreSQL', 'WebSocket'],
-    demoUrl: '#',
-    repoUrl: '#',
-  },
-  {
-    id: 'ecommerce-storefront',
-    title: 'E-commerce Storefront',
-    featured: false,
-    motif: 'commerce',
-    summary:
-      'Headless storefront with cart, checkout and a Stripe-powered payment flow, optimized for conversion.',
-    detail:
-      'A conversion-focused headless commerce build: fast product pages, persistent cart and a streamlined Stripe checkout. Measurable lift in conversion after launch thanks to performance and UX work.',
-    tags: ['Next.js', 'Stripe', 'MongoDB'],
-    demoUrl: '#',
-    repoUrl: '#',
-  },
-  {
-    id: 'devops-toolkit',
-    title: 'DevOps Automation Toolkit',
-    featured: false,
-    motif: 'devops',
-    summary:
-      'CLI + dashboard to provision, deploy and monitor containerized services with one command.',
-    detail:
-      'Internal tooling that wraps Docker and AWS into a friendly CLI and dashboard: one command to provision, deploy and roll back services, with health monitoring and log streaming built in.',
-    tags: ['Docker', 'AWS', 'Node.js', 'CI/CD'],
-    demoUrl: '#',
-    repoUrl: '#',
-  },
-]
-
 export interface TimelineEntry {
   period: string
   role: LocalizedText
@@ -182,34 +90,6 @@ export interface TimelineEntry {
   current?: boolean
 }
 
-export const timeline: TimelineEntry[] = [
-  {
-    period: '2023 - Present',
-    role: 'Fullstack Software Engineer',
-    company: 'Sinergi Investasi Properti',
-    location: 'Jakarta, Indonesia',
-    description:
-      "Own the company's web platform end to end: a Next.js frontend backed by a custom CMS and admin dashboard. Built the content pipeline, media library and public site with a focus on speed and maintainability.",
-    current: true,
-  },
-  {
-    period: '2021 - 2023',
-    role: 'Web Developer',
-    company: 'Freelance & Agency Work',
-    location: 'Remote',
-    description:
-      'Delivered 30+ client websites and web apps across e-commerce, dashboards and marketing sites. Introduced reusable component systems that cut delivery time significantly.',
-  },
-  {
-    period: '2019 - 2021',
-    role: 'Junior Software Engineer',
-    company: 'Early career',
-    location: 'Indonesia',
-    description:
-      'Cut my teeth building internal tools and REST APIs. Learned to ship, measure and iterate, and fell in love with the full stack.',
-  },
-]
-
 export interface Testimonial {
   quote: LocalizedText
   name: string
@@ -217,54 +97,11 @@ export interface Testimonial {
   initials: string
 }
 
-export const testimonials: Testimonial[] = [
-  {
-    quote:
-      'Agga delivered our platform ahead of schedule and the code was spotless. Rare to find someone equally strong on backend architecture and frontend polish.',
-    name: 'Rina Dewanti',
-    title: 'Product Lead',
-    initials: 'RD',
-  },
-  {
-    quote:
-      'The dashboard he built is fast, intuitive and still easy for our team to extend a year later. Exactly the kind of engineer you want owning a product.',
-    name: 'Made Surya',
-    title: 'CTO, PropTech Startup',
-    initials: 'MS',
-  },
-  {
-    quote:
-      'Communicative, detail-obsessed and genuinely cares about UX. Our conversion improved measurably after his rebuild.',
-    name: 'Anita Kusuma',
-    title: 'Marketing Director',
-    initials: 'AK',
-  },
-]
-
 /** A contact-page FAQ entry. Editable from Admin -> FAQ. */
 export interface FaqEntry {
   q: LocalizedText
   a: LocalizedText
 }
-
-export const faqs: FaqEntry[] = [
-  {
-    q: 'What kind of projects do you take on?',
-      a: "Web applications, dashboards, REST APIs, database design, and internal tooling or automation, not just websites. I'm happy to own a problem end to end or join an existing team on a specific piece of the stack.",
-  },
-  {
-    q: 'Are you available for full-time roles?',
-      a: "Yes, I'm open to full-time positions, contract work and freelance projects. Remote-first, and comfortable across time zones.",
-  },
-  {
-    q: 'How do we get started?',
-    a: "Send a message with a rough scope and timeline. I'll reply within a day to set up a quick call and share a plan.",
-  },
-]
-
-export const marqueeItems = [
-  'TypeScript', 'React', 'Next.js', 'Node.js', 'PostgreSQL', 'Docker', 'AWS', 'Tailwind CSS',
-]
 
 /* ---------------------------------------------------------------------------
  * View models — the shape each section consumes. Mappers (lib/marketing/mappers.ts)

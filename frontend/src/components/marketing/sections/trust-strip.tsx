@@ -1,10 +1,8 @@
-import { marqueeItems } from '@/lib/marketing/content'
-
 /**
  * Auto-scrolling technology marquee. Decorative; pauses on hover.
  * `items` comes from live skills so it tracks Admin -> Skills.
  */
-export function TrustStrip({ items = marqueeItems }: { items?: string[] }) {
+export function TrustStrip({ items = [] }: { items?: string[] }) {
   if (!items.length) return null
   const loop = [...items, ...items]
   return (

@@ -1,6 +1,6 @@
 'use client'
 
-import { stats as statDefaults, type StatTile } from '@/lib/marketing/content'
+import type { StatTile } from '@/lib/marketing/content'
 import type { LocalizedText } from '@/types'
 import { useTranslation } from '../theme/language-provider'
 import { Section } from '../primitives/section'
@@ -16,10 +16,13 @@ const STAT_LABEL_KEYS: Record<string, 'yearsShipping' | 'projectsDelivered' | 'h
   'On-time delivery': 'onTimeDelivery',
 }
 
+const removeStandaloneDashes = (text: string) =>
+  text.replace(/\s+[—–-]\s+/g, ' ')
+
 export function About({
   lead,
   body,
-  stats = statDefaults,
+  stats = [],
 }: {
   /** From Admin → Profile → About section. Blank means "not written yet". */
   lead?: LocalizedText
@@ -29,11 +32,11 @@ export function About({
   const { t, localize } = useTranslation()
 
   // Admin copy wins for the active language; the translated default only fills a still-empty field.
-  const resolvedLead = localize(lead).trim() || t.about.lead
+  const resolvedLead = removeStandaloneDashes(localize(lead).trim() || t.about.lead)
   const localizedBody = localize(body).trim()
   const resolvedParagraphs = localizedBody
-    ? localizedBody.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
-    : t.about.paragraphs
+    ? localizedBody.split(/\n\s*\n/).map((p) => removeStandaloneDashes(p.trim())).filter(Boolean)
+    : t.about.paragraphs.map(removeStandaloneDashes)
 
   // Localize each stat label; a seeded English default still maps to its translation.
   const translatedStats = stats.map((stat) => {

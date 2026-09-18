@@ -3,11 +3,11 @@
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
-import { faqs as faqDefaults, type FaqEntry } from '@/lib/marketing/content'
+import type { FaqEntry } from '@/lib/marketing/content'
 import { useTranslation } from '../theme/language-provider'
 
 /** Accordion FAQ. Single-open, smooth height animation, keyboard accessible. */
-export function ContactFaq({ faqs = faqDefaults }: { faqs?: FaqEntry[] }) {
+export function ContactFaq({ faqs = [] }: { faqs?: FaqEntry[] }) {
   const [open, setOpen] = useState<number | null>(0)
   const { localize } = useTranslation()
 

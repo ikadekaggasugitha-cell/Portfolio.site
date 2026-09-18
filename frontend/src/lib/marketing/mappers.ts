@@ -47,22 +47,6 @@ import {
   type TimelineEntry,
 } from './content'
 
-/* --------------------------- Fallback policy ------------------------ */
-
-/**
- * Decides when the static defaults in `content.ts` may stand in for live data.
- *
- * Live content always wins. When the API answered but the admin has no content of that
- * kind, we render nothing — "I deleted them all" is a legitimate published state, and the
- * old behaviour of silently re-inserting seeded demo content meant the admin panel could
- * never actually empty a section. Defaults are only used when the API was unreachable, so
- * an outage degrades to a plausible page instead of a blank one.
- */
-export function liveOrFallback<T>(mapped: T[], apiReachable: boolean, fallback: T[]): T[] {
-  if (mapped.length) return mapped
-  return apiReachable ? [] : fallback
-}
-
 /* ----------------------------- Profile ----------------------------- */
 
 /** `??` only substitutes null/undefined; treat empty strings as "missing" too. */
@@ -174,8 +158,8 @@ const CATEGORY_BY_SKILL: Record<string, CategoryKey> = {
  * (older rows), falls back to inferring from the skill name. Unknown category
  * strings become their own group so the backend can add categories freely.
  *
- * Returns an empty array for an empty input — see `liveOrFallback`, which owns
- * the decision of when static defaults are appropriate.
+ * Returns an empty array for an empty input; the caller hides the section rather
+ * than substituting representative defaults.
  */
 export function categorizeSkills(skills: Skill[]): SkillGroup[] {
   const groups = new Map<string, { title: string; icon: string; skills: string[] }>()

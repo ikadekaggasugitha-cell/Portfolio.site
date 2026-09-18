@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import { projects as projectDefaults, type FeaturedProject } from '@/lib/marketing/content'
+import type { FeaturedProject } from '@/lib/marketing/content'
 import { useTranslation } from '../theme/language-provider'
 import { Section } from '../primitives/section'
 import { SectionHeading } from '../primitives/section-heading'
@@ -9,10 +9,11 @@ import { Reveal } from '../primitives/reveal'
 import { ProjectCard } from './project-card'
 import { ProjectModal } from './project-modal'
 
-export function FeaturedProjects({ projects = projectDefaults }: { projects?: FeaturedProject[] }) {
+export function FeaturedProjects({ projects = [] }: { projects?: FeaturedProject[] }) {
   const [active, setActive] = useState<FeaturedProject | null>(null)
   const close = useCallback(() => setActive(null), [])
   const { t } = useTranslation()
+  if (!projects.length) return null
 
   return (
     <Section id="work">

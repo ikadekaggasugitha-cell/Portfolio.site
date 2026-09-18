@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { serializeJsonLd } from '@/lib/json-ld'
 import { getFaqs, getProfile, soften } from '@/lib/marketing/api.server'
-import { liveOrFallback, mapContact, mapFaqs } from '@/lib/marketing/mappers'
-import { faqs as faqDefaults, site } from '@/lib/marketing/content'
+import { mapContact, mapFaqs } from '@/lib/marketing/mappers'
+import { site } from '@/lib/marketing/content'
 import type { Locale } from '@/lib/marketing/translations'
 import { buildAlternates, isLocale, ogLocales } from '@/lib/marketing/i18n'
 import { notFound } from 'next/navigation'
@@ -67,12 +67,12 @@ function ContactJsonLd() {
 }
 
 export default async function ContactPage() {
-  const [{ data: profile }, { ok: faqsOk, data: faqRecords }] = await Promise.all([
+  const [{ data: profile }, { data: faqRecords }] = await Promise.all([
     getProfile(),
     getFaqs(),
   ])
   const data = mapContact(profile)
-  const faqs = liveOrFallback(mapFaqs(faqRecords), faqsOk, faqDefaults)
+  const faqs = mapFaqs(faqRecords)
 
   return (
     <>

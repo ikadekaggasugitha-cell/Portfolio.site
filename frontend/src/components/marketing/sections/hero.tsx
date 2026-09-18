@@ -63,9 +63,11 @@ export function Hero(props: HeroData = heroDefaults) {
               <span className="mk-grad-text">{t.hero.headingAccent}</span>{' '}{t.hero.headingPost}
             </motion.h1>
 
-            <motion.p {...item} className="mt-5 max-w-[46ch] text-[clamp(1.05rem,1.8vw,1.3rem)] text-mk-muted">
-              {localize(intro).trim() || t.hero.intro}
-            </motion.p>
+            {localize(intro).trim() && (
+              <motion.p {...item} className="mt-5 max-w-[46ch] text-[clamp(1.05rem,1.8vw,1.3rem)] text-mk-muted">
+                {localize(intro).trim()}
+              </motion.p>
+            )}
 
             <motion.div {...item} className="mt-8 flex flex-wrap gap-3.5">
               <Button href="#work" size="lg">

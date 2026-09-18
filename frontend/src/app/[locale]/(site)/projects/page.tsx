@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { getProjectTechnologies, getProjectsPage } from '@/lib/marketing/api.server'
 import { mapProjectCards } from '@/lib/marketing/mappers'
-import { projects as projectDefaults, site } from '@/lib/marketing/content'
+import { site } from '@/lib/marketing/content'
 import type { Locale } from '@/lib/marketing/translations'
 import { buildAlternates, isLocale, ogLocales } from '@/lib/marketing/i18n'
 import { notFound } from 'next/navigation'
@@ -63,17 +63,13 @@ export default async function ProjectsPage({
   const technology = firstParam(sp.tech).trim()
   const page = Math.max(1, Number.parseInt(firstParam(sp.page), 10) || 1)
 
-  const [{ ok, items, meta }, tags] = await Promise.all([
+  const [{ items, meta }, tags] = await Promise.all([
     getProjectsPage({ page, perPage: PER_PAGE, search, technology }),
     getProjectTechnologies(),
   ])
 
   const hasFilters = search !== '' || technology !== ''
-  let cards = mapProjectCards(items)
-  // Representative projects stand in only when the API was unreachable. A successful
-  // empty response means there genuinely are no projects yet, and showing seeded demo
-  // cards there would misrepresent the admin's actual content.
-  if (!ok && cards.length === 0 && !hasFilters && page === 1) cards = projectDefaults
+  const cards = mapProjectCards(items)
 
   const total = meta.total || cards.length
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { timeline, type TimelineEntry } from '@/lib/marketing/content'
+import type { TimelineEntry } from '@/lib/marketing/content'
 import { cn } from '@/lib/utils'
 import { useTranslation } from '../theme/language-provider'
 import { Section } from '../primitives/section'
@@ -16,7 +16,7 @@ interface ExperienceProps {
 }
 
 export function Experience({
-  entries = timeline,
+  entries = [],
   id = 'experience',
   tone = 'subtle',
   aboutVariant = false,
@@ -25,6 +25,7 @@ export function Experience({
 
   const eyebrow = aboutVariant ? t.experience.aboutEyebrow : t.experience.eyebrow
   const title = aboutVariant ? t.experience.aboutTitle : t.experience.title
+  if (!entries.length) return null
 
   return (
     <Section id={id} tone={tone}>

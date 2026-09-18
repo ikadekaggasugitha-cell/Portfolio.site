@@ -1,6 +1,6 @@
 'use client'
 
-import { skillGroups, type SkillGroup } from '@/lib/marketing/content'
+import type { SkillGroup } from '@/lib/marketing/content'
 import { useTranslation } from '../theme/language-provider'
 import { Section } from '../primitives/section'
 import { SectionHeading } from '../primitives/section-heading'
@@ -16,7 +16,7 @@ interface SkillsProps {
 }
 
 export function Skills({
-  groups = skillGroups,
+  groups = [],
   id = 'skills',
   tone = 'subtle',
   aboutVariant = false,
@@ -27,6 +27,7 @@ export function Skills({
   const title = aboutVariant ? t.skills.aboutTitle : t.skills.title
   const titleAccent = aboutVariant ? t.skills.aboutTitleAccent : t.skills.titleAccent
   const subtitle = aboutVariant ? t.skills.aboutSubtitle : t.skills.subtitle
+  if (!groups.length) return null
 
   return (
     <Section id={id} tone={tone}>

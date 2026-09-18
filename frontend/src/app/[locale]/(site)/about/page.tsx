@@ -3,8 +3,8 @@ import { Suspense } from 'react'
 import type { Profile } from '@/types'
 import { serializeJsonLd } from '@/lib/json-ld'
 import { getProfile, getSkills, soften } from '@/lib/marketing/api.server'
-import { liveOrFallback, mapAboutHero } from '@/lib/marketing/mappers'
-import { site, skillGroups } from '@/lib/marketing/content'
+import { mapAboutHero } from '@/lib/marketing/mappers'
+import { site } from '@/lib/marketing/content'
 import { AboutHero } from '@/components/marketing/sections/about-hero'
 import {
   AboutCertificatesLive,
@@ -18,7 +18,7 @@ import {
 } from '@/components/marketing/sections/section-skeletons'
 
 const FALLBACK_BIO =
-  'I Kadek Agga Sugitha is an Full Stack Developer building reliable software end to end — web applications, backend APIs, databases and automation — with TypeScript, React, Next.js, Node.js and cloud infrastructure.'
+  'Turning Complex Workflows into Dependable Digital Solutions'
 
 /**
  * Bounded regeneration window. Without an explicit segment value the route inherits its
@@ -96,15 +96,13 @@ function PersonJsonLd({
 
 export default async function AboutPage({ params }: { params: PageParams }) {
   const locale = await resolveLocale(params)
-  const [{ data: profile }, { ok: skillsOk, data: skills }] = await Promise.all([
+  const [{ data: profile }, { data: skills }] = await Promise.all([
     getProfile(),
     getSkills(),
   ])
-  const knowsAbout = liveOrFallback(
-    skills.map((skill) => skill.skill_name?.trim()).filter((name): name is string => Boolean(name)),
-    skillsOk,
-    skillGroups.flatMap((group) => group.skills),
-  )
+  const knowsAbout = skills
+    .map((skill) => skill.skill_name?.trim())
+    .filter((name): name is string => Boolean(name))
 
   return (
     <>

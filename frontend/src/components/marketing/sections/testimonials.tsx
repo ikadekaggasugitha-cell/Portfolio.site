@@ -1,13 +1,13 @@
 'use client'
 
-import { testimonials as testimonialDefaults, type Testimonial } from '@/lib/marketing/content'
+import type { Testimonial } from '@/lib/marketing/content'
 import { useTranslation } from '../theme/language-provider'
 import { Section } from '../primitives/section'
 import { SectionHeading } from '../primitives/section-heading'
 import { Reveal } from '../primitives/reveal'
 
 export function Testimonials({
-  testimonials = testimonialDefaults,
+  testimonials = [],
 }: {
   testimonials?: Testimonial[]
 }) {
