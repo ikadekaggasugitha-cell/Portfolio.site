@@ -32,7 +32,7 @@ const en = {
   /* ---- Hero ---- */
   hero: {
     available: 'OPEN TO WORK',
-    headingPre: 'Building Reliable',
+    headingPre: 'Building Reliable ',
     headingAccent: 'End-to-End Solutions',
     headingPost: 'from Complex Business Workflows',
     viewWork: 'My Work',
@@ -415,7 +415,7 @@ const id = {
 
   hero: {
     available: 'TERBUKA UNTUK PELUANG KERJA',
-    headingPre: 'Membangun Solusi',
+    headingPre: 'Membangun Solusi ',
     headingAccent: 'End-to-End Reliable',
     headingPost: 'dari Alur Kerja Bisnis yang Kompleks',
     viewWork: 'Karya Saya',
